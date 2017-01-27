@@ -1,5 +1,3 @@
-
-
 Object = {
     table = {};
     new = function(x,y)
