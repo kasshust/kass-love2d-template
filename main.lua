@@ -8,7 +8,6 @@ function love.load()
     W,H = 640,480
     love.window.setMode(W, H, {resizable=true, minwidth = W, minheight = H})
 
-
     scenemanager = SceneManager:new(Room1.new())
 end
 function love.update(dt)
