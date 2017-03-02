@@ -25,7 +25,7 @@ function love.load()
 end
 function love.update(dt)
     scenemanager:update(dt)
-    collectgarbage("collect")
+    --collectgarbage("collect")
     love.keyboard.updateKeys()
 end
 function love.draw()
