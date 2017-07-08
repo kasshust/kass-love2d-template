@@ -3,10 +3,10 @@ Object = {
     new = function(x,y)
         local obj = instance(Object)
 
+        obj.name = "Object"
         obj.x = x or 0
         obj.y = y or 0
         obj.direction = 0
-
         table.insert(Object.table,obj)
         return obj
     end;
