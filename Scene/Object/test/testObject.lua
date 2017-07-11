@@ -1,14 +1,13 @@
 test = {
   new = function()
     local obj = instance(test,Object,100,100)
-    obj.col = HC.circle(obj.x,obj.y,8)
+    obj.col = HC.rectangle(obj.x,obj.y,32,32)
     return obj
   end;
 
   update = function (self,dt)
-     self.x = love.mouse.getX()
-     self.y = love.mouse.getY()
-     self.col:moveTo(love.mouse.getPosition())
+     self.x,self.y = maincam:toWorld(love.mouse.getX(),love.mouse.getY())
+     self.col:moveTo(self.x,self.y)
   end;
 
   draw = function (self)
@@ -24,25 +23,45 @@ test2 = {
     local obj = instance(test2,Object,100,100)
     obj.pos = Vector.new(x,y);
     obj.vpos = Vector.new(0,0);
-    obj.col = HC.circle(obj.pos.x,obj.pos.y,3)
+    obj.col = HC.rectangle(obj.pos.x,obj.pos.y,16,16)
     return obj
   end;
 
   update = function (self,dt)
-     self.col:moveTo(self.pos.x,self.pos.y)
 
+      maincam:setPosition(self.pos.x,self.pos.y)
+
+      if love.keyboard.wasPressed("up") then
+        self.vpos = self.vpos + Vector.new(0.0,-4.2)
+      end
+      if love.keyboard.isDown("down") then
+        self.vpos = Vector.new(0.0,8.0)
+      end
+      if love.keyboard.isDown("left") then
+        self.vpos = self.vpos + Vector.new(-0.2,0.0)
+      end
+      if love.keyboard.isDown("right") then
+        self.vpos = self.vpos + Vector.new(0.2,0.0)
+      end
+
+      self.vpos = self.vpos * Vector.new(0.95,1) + Vector.new(0.0,0.1)
+      self.pos = self.pos + self.vpos
+
+     self.col:moveTo(self.pos.x,self.pos.y)
      for shape, delta in pairs(HC.collisions(self.col)) do
-      self.vpos = delta * Vector.new(2,2)
+      self.pos = self.pos + delta
+      if delta.x ~= 0 then self.vpos = self.vpos * Vector.new(0,1) end
+      if delta.y ~= 0 then self.vpos = self.vpos * Vector.new(1,0) end
      end
 
-     self.pos = self.pos + self.vpos
+
 
   end;
 
   draw = function (self)
     g.setColor(255,255,255)
     g.setColor(255,0,0)
-    --self.col:draw("fill")
+    self.col:draw("fill")
   end
 };
 

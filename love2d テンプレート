@@ -1,19 +1,11 @@
-・Love2d開発
-	-テンプレートの強化
 
-必須要素
+/Manager-Save,Load
 
-	DebuggerがObjectTableを一覧できるようにする
-	Camera
-	Manager-Save,Load
-
-
-やることリスト
-
-・Tiledの実装
+/Tiledの実装
 	・Tiled
 	・luaファイル作成
 	・Object情報をSceneで読み込み
-・SaveLoad実装
+	
+/SaveLoad実装
 	・保存する内容はゲームによる
 	・複数のセーブファイルはどうする？

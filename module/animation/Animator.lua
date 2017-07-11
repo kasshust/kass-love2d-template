@@ -36,7 +36,6 @@ Animator.new = function()
         self.pre_frame = c_frame
 
         return c_frame
-
     end
     obj.animation_finish = function(self)
         return self.finish

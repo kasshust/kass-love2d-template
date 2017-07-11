@@ -14,48 +14,52 @@ SceneManager = {
         self.c_scene:update(dt)
     end;
     draw = function(self)
+      maincam:draw(function(t,l,w,h)
         self.c_scene:draw()
         self.c_scene:drawGUI()
+      end)
+
     end;
 }
 
+---roomの親クラス
 Scene ={
     new = function()
         local obj = instance(Scene)
         obj.frame = 0
         obj.name = "dummy";
-        ---camera
-        obj.camTable = {}
-        obj.maincam = gamera.new(0,0,W,H)
-        table.insert(obj.camTable,obj.maincam)
-
+        ---status
+        obj.status = Enum:new{"NOONE","TRANSITION"};
+        obj.status_now = obj.status.NOONE
         --使ってない
-        obj.table = {}
+        --obj.table = {}
         return obj
     end;
 
     update = function(self,dt)
-
+      local switch={}
+      switch[self.status.NOONE]=function()
         for i,v in ipairs(StaticObjectTable) do
             v:update()
         end
         for i,v in ipairs(ObjectTable) do
             v:update()
         end
+      end
+      switch[self.status.TRANSITION]=function()
+
+      end
+        switch[self.status_now]()
         self.frame = self.frame + 1
     end;
 
     draw = function(self)
-      for j,c in ipairs(self.camTable) do
-        c:draw(function(l,t,w,h)
-          for i,v in ipairs(StaticObjectTable) do
-              v:draw()
-          end
-          for i,v in ipairs(ObjectTable) do
-              v:draw()
-          end
-        end)
-      end
+        for i,v in ipairs(StaticObjectTable) do
+            v:draw()
+        end
+        for i,v in ipairs(ObjectTable) do
+            v:draw()
+        end
     end;
 
     drawGUI = function(self)
@@ -73,14 +77,19 @@ Scene ={
 }
 
 ---以下はSceneManagerに命令を送る
-Scene.changeScene = function(scene)
+SceneManager.changeScene = function(scene)
     for i,v in ripairs(ObjectTable) do
         v:destroy()
     end
     SceneManager.c_scene = scene.new()
     local str = "ChangeScene! : " .. " -> " .. SceneManager.c_scene.name
+    debugger:print(str ..":" .. #ObjectTable)
 end;
 
-Scene.add = function(obj)
+add = function(obj)
   table.insert(ObjectTable,obj)
+end;
+
+addS = function(obj)
+  table.insert(StaticObjectTable,obj)
 end;

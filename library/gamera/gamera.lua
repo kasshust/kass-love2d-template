@@ -67,7 +67,6 @@ local function adjustScale(self)
   local rw,rh     = getVisibleArea(self, 1)      -- rotated frame: area around the window, rotated without scaling
   local sx,sy     = rw/ww, rh/wh                 -- vert/horiz scale: minimun scales that the window needs to occupy the world
   local rscale    = max(sx,sy)
-
   self.scale = max(self.scale, rscale)
 end
 
@@ -202,7 +201,3 @@ function gamera:toScreen(x,y)
 end
 
 return gamera
-
-
-
-

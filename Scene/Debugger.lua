@@ -76,16 +76,16 @@ Debugger ={
   draw = function(self)
     --window作成
     love.graphics.setScissor(self.x, self.y, self.width, self.height )
-    love.graphics.setColor(100, 100, 100, 100)
-    love.graphics.rectangle("fill", self.x, self.y, self.maxWidth, self.maxHeight)
+      love.graphics.setColor(100, 100, 100, 100)
+      love.graphics.rectangle("fill", self.x, self.y, self.maxWidth, self.maxHeight)
 
-        -- print messages
-    for i = 1,#self.text do
-        love.graphics.setColor(255,255,255, 255 - (i-1) * 6)
-        love.graphics.print(self.text[#self.text - (i-1)],self.x +10,self.y + i * 15)
-    end
+          -- print messages
+      for i = 1,#self.text do
+          love.graphics.setColor(255,255,255, 255 - (i-1) * 6)
+          love.graphics.print(self.text[#self.text - (i-1)],self.x +10,self.y + i * 15)
+      end
 
-    love.graphics.setColor(255,255,255,255)
+      love.graphics.setColor(255,255,255,255)
     love.graphics.setScissor()
 
     --windowリサイズボックス
@@ -97,7 +97,6 @@ Debugger ={
 
   print = function(self,str)
     self.text[#self.text+1] = str
-
     while #self.text > 30 do
       table.remove(self.text, 1)
     end
