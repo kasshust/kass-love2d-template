@@ -15,6 +15,9 @@ Debugger ={
       obj.resize_x = 0
       obj.resize_y = 0
 
+      obj.box = {_y = -15}
+      obj.move = tween.new(0.1, obj.box, {_y = 0}, tween.easing.inOutQuad)
+
       --console
       obj.text = {}
 
@@ -72,6 +75,8 @@ Debugger ={
     end
     switch[self.status_now]()
 
+    self.move:update(dt)
+
   end;
   draw = function(self)
     --window作成
@@ -82,7 +87,7 @@ Debugger ={
           -- print messages
       for i = 1,#self.text do
           love.graphics.setColor(255,255,255, 255 - (i-1) * 6)
-          love.graphics.print(self.text[#self.text - (i-1)],self.x +10,self.y + i * 15)
+          love.graphics.printf(self.text[#self.text - (i-1)],self.x +10,self.y + i * 15 + self.box._y,self.width-10)
       end
 
       love.graphics.setColor(255,255,255,255)
@@ -96,6 +101,7 @@ Debugger ={
   end;
 
   print = function(self,str)
+    self.move:reset()
     self.text[#self.text+1] = str
     while #self.text > 30 do
       table.remove(self.text, 1)

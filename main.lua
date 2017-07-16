@@ -1,7 +1,14 @@
+--シーン内で毎フレーム処理させるインスタンスはここにぶっこむ
+ObjectTable = {}
+SearchTable = {}
+StaticObjectTable = {}
+
 require_all("module")
 require_all("Scene")
+m64 = require("library/maid64/maid64")
 HC = require("library/HC")
-collide = HC.new(100)
+sti = require("library/sti")
+--collide = HC.new(100)
 tween = require("library/tween/tween")
 gamera = require("library/gamera/gamera")
 
@@ -36,22 +43,19 @@ function love.load()
 
     --フォント設定
     font = love.graphics.newFont( "fonts/SourceHanSerif-Medium.ttc" , 12 )
+    font:setFilter( "nearest", "nearest", 1 )
     love.graphics.setFont(font);
 
     table.insert(StaticObjectTable,manager)
 end
-
 function love.update(dt)
     scenemanager:update(dt)
     if DEBUG == true then debugger:update(dt) end
     love.keyboard.updateKeys()
     love.mouse.updateKeys()
-    --collectgarbage("collect")
 end
 function love.draw()
-
   scenemanager:draw()
-
   if DEBUG == true then debugger:draw() end
 end
 
@@ -59,7 +63,6 @@ function love.wheelmoved( dx, dy )
     wheel_x = wheel_x + dx*0.01
     wheel_y = wheel_y + dy*0.01
 end
-
 function love.resize(w, h)
   local scale = math.min(w / W ,h / H)
   camWindowScale = scale

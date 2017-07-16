@@ -4,4 +4,4 @@ function instance(class, super, ...)
     setmetatable(self, {__index = class})
     setmetatable(class, {__index = super})
     return self
-end
+end 

@@ -1,11 +1,3 @@
+-->textシステム
 
-/Manager-Save,Load
-
-/Tiledの実装
-	・Tiled
-	・luaファイル作成
-	・Object情報をSceneで読み込み
-	
-/SaveLoad実装
-	・保存する内容はゲームによる
-	・複数のセーブファイルはどうする？
+-->event管理システム

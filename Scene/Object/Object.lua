@@ -2,13 +2,12 @@ Object = {
     table = {};
     new = function(x,y)
         local obj = instance(Object)
-
+        setmetatable(obj, {__mode = "k"})
         obj.name = "Object"
         obj.x = x or 0
         obj.y = y or 0
-        obj.direction = 0
+        obj.depth = 0
         obj.col = nil
-        obj.hb = nil
         table.insert(Object.table,obj)
         return obj
     end;
@@ -24,12 +23,15 @@ Object = {
         removeFromTable(self,Object.table)
         if self.col ~= nil then HC.remove(self.col) end
         if self.hb ~= nil then collide.remove(self.hb) end
+        self = nil
+    end;
+
+    CW = function(self,other,f)
+      for i,v in ipairs(other.table) do
+        if v ~= self and self.col:collidesWith(v.col) then
+          f(v)
+        end
+      end
     end;
 }
-
---[[
- - 当たり判定検出の例-
-    obj.mouse = HC.circle(400,300,20)
-    self.mouse:moveTo(love.mouse.getPosition())
-    self.mouse:draw("fill")
-]]--
+table.insert(SearchTable,Object)

@@ -2,41 +2,64 @@ Manager = {
     new = function(x,y)
         local obj = instance(Manager,StaticObject)
         obj.frame = 0
+
+        ---各変数初期化
+        Manager.save_init()
+
         return obj
     end;
     update = function(self,dt)
-      if love.keyboard.wasPressed("w") then
-        Transition.transition(Room2)
-      end
-      if love.keyboard.wasPressed("q") then
+      if love.keyboard.wasPressed("1") then
         Transition.transition(Room1)
       end
-      if love.keyboard.wasPressed("t") then
+      if love.keyboard.wasPressed("2") then
+        Transition.transition(Room2)
+      end
+      if love.keyboard.wasPressed("3") then
         Transition.transition(Title)
       end
+      if love.mouse.wasPressed(1) then
+        add(testWindow.new(nil,love.mouse.getX(),love.mouse.getY(),300,80))
+      end
+
+      if love.keyboard.wasPressed("p") then
+        debugger:print("あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん亜有ア興味小運番アキャ")
+      end
+
+      if love.keyboard.wasPressed("a") then
+        debugger:print("あいうえおかきくけこ")
+      end
+
     end;
     draw = function(self)
     end;
     drawGUI = function(self)
-      local x,y = maincam:getPosition()
-      draw_status(x - W/2,y - H/2)
-      g.print("バルサミコ酢　こんにちは　こんばんは",x - W/2,y - H/2 + 100)
+      draw_status(g_x,g_y)
+      g.printf("バルサミコ酢　こんにちは　こんばんは あああああ",g_x ,g_y + 100,100)
     end;
 }
 
 --save,load
 Manager.save = function()
+  love.filesystem.write("save.lua",Tserial.pack(savedata))
+end;
+
+Manager.save_init = function()
+  savedata = {}
+  --savedataの構造
+  savedata[1] = {clear = 1}
+  savedata[2] = {clear = 2}
+  savedata[3] = {clear = 3}
+
+  love.filesystem.write("save.lua",Tserial.pack(savedata))
+  return savedata
+end;
+
+Manager.load = function()
+  savedata = {}
   if not love.filesystem.exists("save.lua") then
-      savedata = {}
-      for i = 1 , 20 do
-          table.insert(savedata,false)
-      end
-      love.filesystem.write("save.lua",Tserial.pack(savedata))
+      savedata = Manager.save_init()
   else
       savedata = Tserial.unpack(love.filesystem.read("save.lua"))
   end
-end;
-
-
-Manager.load = function()
 end;
