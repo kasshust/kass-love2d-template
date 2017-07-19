@@ -3,11 +3,17 @@ ObjectTable = {}
 SearchTable = {}
 StaticObjectTable = {}
 
+--ライブラリと自作クラス
 require_all("module")
-require_all("Scene")
+require_all("scene")
+require_all("class")
+
+--外部ライブラリの読み込み
 m64 = require("library/maid64/maid64")
 HC = require("library/HC")
 sti = require("library/sti")
+sfxr = require("library/sfxrlua/sfxr")
+soundmanager = require("library/soundmanager/soundmanager")
 --collide = HC.new(100)
 tween = require("library/tween/tween")
 gamera = require("library/gamera/gamera")
@@ -42,7 +48,7 @@ function love.load()
     manager = Manager.new()
 
     --フォント設定
-    font = love.graphics.newFont( "fonts/SourceHanSerif-Medium.ttc" , 12 )
+    font = love.graphics.newFont( "materials/fonts/SourceHanSerif-Medium.ttc" , 12 )
     font:setFilter( "nearest", "nearest", 1 )
     love.graphics.setFont(font);
 
@@ -50,6 +56,7 @@ function love.load()
 end
 function love.update(dt)
     scenemanager:update(dt)
+    soundmanager:update(dt)
     if DEBUG == true then debugger:update(dt) end
     love.keyboard.updateKeys()
     love.mouse.updateKeys()

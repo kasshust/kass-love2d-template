@@ -1,3 +1,5 @@
+
+--ファクトリ
 --逆巡回  良く分からん
 function ripairs(t)
     local function ripairs_it(t,i)

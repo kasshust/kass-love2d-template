@@ -1,0 +1,3 @@
+[submodule "loveframes"]
+	path = demo/loveframes
+	url = https://github.com/NikolaiResokav/LoveFrames

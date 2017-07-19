@@ -41,5 +41,4 @@ Animator = {
   animation_finish = function(self)
       return self.finish
   end;
-
 }
