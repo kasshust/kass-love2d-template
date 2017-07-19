@@ -76,6 +76,8 @@ Scene ={
 
 ---以下はSceneManagerに命令を送る
 SceneManager.changeScene = function(scene)
+
+    --各table初期化
     ObjectTable = nil
     ObjectTable = {}
     for i,v in ipairs(SearchTable)do
@@ -83,13 +85,16 @@ SceneManager.changeScene = function(scene)
         v.table = {}
     end
     HC.resetHash()
-    collectgarbage("collect")
+
+    --camstandのfocusをリセット focus対象のオブジェクトは破棄されないから残ってしまう
+    camStand:resetfocus()
 
     --シーン変更
     SceneManager.c_scene = nil
     SceneManager.c_scene = scene.new()
     local str = "ChangeScene! : " .. " -> " .. SceneManager.c_scene.name
     debugger:print(str ..":" .. #ObjectTable)
+    collectgarbage("collect")
 end;
 
 add = function(obj)

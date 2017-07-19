@@ -32,30 +32,35 @@ function love.load()
     ---Manager Object
 
     --メインのカメラ
-    --stageの大きさを設定
-    maincam = gamera.new(0,0,640,480)
-    --カメラwindowの大きさを設定
-    camWindowScale = 1
-    maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
+      --stageの大きさを設定 ->各ルームで上書きして
+      maincam = gamera.new(0,0,640,480)
+      --カメラwindowの大きさを設定
+      camWindowScale = 1
+      maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
+      --ゲーム内でcamを制御
+      camStand = CamStand.new(maincam)
+      addS(camStand)
 
     --デバッガ
     debugger = Debugger.new()
-
     --シーンのマネージャー
     scenemanager = SceneManager:new(Title.new())
-
     --マネージャー
     manager = Manager.new()
+    table.insert(StaticObjectTable,manager)
 
     --フォント設定
     font = love.graphics.newFont( "materials/fonts/SourceHanSerif-Medium.ttc" , 12 )
     font:setFilter( "nearest", "nearest", 1 )
     love.graphics.setFont(font);
 
-    table.insert(StaticObjectTable,manager)
+    --スプライトシートの読み込み
+    img_test = load_image("materials/images/test/sprite_test.png")
 end
 function love.update(dt)
     scenemanager:update(dt)
+
+    --インフラ系
     soundmanager:update(dt)
     if DEBUG == true then debugger:update(dt) end
     love.keyboard.updateKeys()

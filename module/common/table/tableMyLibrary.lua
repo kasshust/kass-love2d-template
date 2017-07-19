@@ -10,7 +10,8 @@ end
 function table.tostring(t)
 
   local ty = type(t)
-  if ty == "string" or ty == "number" then return t end
+  if ty == "string" or ty == "number" or ty == "boolean" then return tostring(t) end
+  print(ty)
 
   local string = "{"
 

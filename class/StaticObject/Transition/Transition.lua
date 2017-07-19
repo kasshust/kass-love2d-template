@@ -29,11 +29,13 @@ Transition = {
       local switch={}
       switch[self.status.IN]=function()
         local x,y = maincam:getPosition()
-        love.graphics.rectangle("fill", g_x, g_y+100,W*(self.frame)/self.time_out, 10)
+        local t = (self.frame)/self.time_out
+        love.graphics.rectangle("fill", g_x, g_y,W*t,H*t)
       end
       switch[self.status.OUT]=function()
         local x,y = maincam:getPosition()
-          love.graphics.rectangle("fill", g_x, g_y+100,W*(self.time_out-self.frame+self.time_in)/self.time_out, 10)
+        local t = (self.time_out-self.frame+self.time_in)/self.time_out
+          love.graphics.rectangle("fill", g_x, g_y,W*t,H*t)
       end
       switch[self.status_now]()
     end;

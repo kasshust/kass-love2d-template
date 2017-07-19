@@ -1,5 +1,4 @@
-library->外部ライブラリ
-module->自作
-
 -->event管理システム
---スプライト管理システム
+
+-->Animator
+-->camerastand

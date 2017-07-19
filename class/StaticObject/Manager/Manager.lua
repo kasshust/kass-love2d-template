@@ -19,12 +19,9 @@ Manager = {
         Transition.transition(Title)
       end
       if love.mouse.wasPressed(1) then
-        local text = {}
-        for i=0,8 do
-          table.insert(text,"くぁｓｗでｒｆｔｇｙｈじゅいこｌｐ；")
-        end
-        local obj = TextWindow.new(nil,text,love.mouse.getX(),love.mouse.getY(),290,130,5)
-        add(obj)
+        --local text = {"くぁｓｗでｒｆｔｇｙｈじゅいこｌｐ；","テストウィンドウでしうｙ","おりゃりゃりゃりゃりゃ！"}
+        --local obj = TextWindow.new(nil,text,love.mouse.getX(),love.mouse.getY(),120,50,5)
+        --add(obj)
       end
 
     end;
