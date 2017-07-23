@@ -1,34 +1,87 @@
+--シーン内で毎フレーム処理させるインスタンスはここにぶっこむ
+ObjectTable = {}
+SearchTable = {}
+StaticObjectTable = {}
+
+--ライブラリと自作クラス
 require_all("module")
-require_all("Scene")
-HC = require("library/HC")
-tween = require("library/tween/tween")
+require_all("scene")
+require_all("class")
+
+--外部ライブラリの読み込み
+  m64 = require("library/maid64/maid64")
+  --剛体用
+  HC = require("library/HC")
+  --その他
+  collider = HC.new(150)
+
+  sti = require("library/sti")
+  sfxr = require("library/sfxrlua/sfxr")
+  soundmanager = require("library/soundmanager/soundmanager")
+  tween = require("library/tween/tween")
+  gamera = require("library/gamera/gamera")
 
 function love.load()
-    ---Windowサイズの設定
-    W,H = 640,480
+    ---起動前の初期設定
+    --Windowサイズの設定 コレ基準
+    W,H = love.window.getMode( )
+    --wheelの初期値
+    wheel_x,wheel_y = 0,0
+    --デバッグ
+    DEBUG = true
+    --window初期設定
     love.window.setMode(W, H, {resizable=true, minwidth = W, minheight = H})
 
-    clearflag = {}
-    for i = 1 , 20 do
-        table.insert(clearflag,false)
-    end
+    ---Manager Object
 
-    if not love.filesystem.exists("save.lua") then
-        love.filesystem.write("save.lua",Tserial.pack(clearflag))
-    else
-        clearflag = nil
-        clearflag = {}
-        clearflag = Tserial.unpack(love.filesystem.read("save.lua"))
-    end
+    --メインのカメラ
+      --stageの大きさを設定 ->各ルームで上書きして
+      maincam = gamera.new(0,0,640,480)
+      --カメラwindowの大きさを設定
+      camWindowScale = 1
+      maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
+      --ゲーム内でcamを制御
+      camStand = CamStand.new(maincam)
+      addS(camStand)
 
-    scenemanager = SceneManager:new(Room1.new())
+    --デバッガ
+    debugger = Debugger.new()
+    --シーンのマネージャー
+    scenemanager = SceneManager:new(Title.new())
+    --マネージャー
+    manager = Manager.new()
+    table.insert(StaticObjectTable,manager)
+
+    --フォント設定
+    font = love.graphics.newFont( "materials/fonts/SourceHanSerif-Medium.ttc" , 12 )
+    font:setFilter( "nearest", "nearest", 1 )
+    love.graphics.setFont(font);
+
+    --スプライトシートの読み込み
+    img_test = load_image("materials/images/test/sprite_test.png")
 end
 function love.update(dt)
     scenemanager:update(dt)
-    --collectgarbage("collect")
+    --インフラ系
+    soundmanager:update(dt)
+    if DEBUG == true then debugger:update(dt) end
     love.keyboard.updateKeys()
+    love.mouse.updateKeys()
 end
 function love.draw()
-    scenemanager:draw()
-    draw_status()
+  local x,y = maincam:getPosition()
+  g_x,g_y = x-W/2,y-H/2
+  scenemanager:draw()
+  if DEBUG == true then debugger:draw() end
+end
+
+function love.wheelmoved( dx, dy )
+    wheel_x = wheel_x + dx*0.01
+    wheel_y = wheel_y + dy*0.01
+end
+function love.resize(w, h)
+  local scale = math.min(w / W ,h / H)
+  camWindowScale = scale
+  maincam:setWindow((w / 2) - (W*camWindowScale/2),(h / 2) - (H*camWindowScale/2),W*camWindowScale,H*camWindowScale)
+  maincam:setScale(camWindowScale)
 end

@@ -54,3 +54,11 @@ function love.graphics.print_c(text,x,y,r,sx,sy,ox,oy,kx,ky)
     local sy = sy or 1
     love.graphics.print(text,x-width/2*sx,y-height/2*sy,r,sx,sy,ox,oy,kx,ky)
 end
+
+---指定範囲をカットしてdraw
+function love.graphics.cut(_x,_y,_w,_h,f)
+  local x,y,w,h = love.graphics.getScissor()
+    love.graphics.intersectScissor(x + (_x)*camWindowScale,y + (_y)*camWindowScale, _w*camWindowScale, _h*camWindowScale )
+    f()
+  love.graphics.setScissor(x,y,w,h)
+end
