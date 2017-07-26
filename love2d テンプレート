@@ -1,4 +1,30 @@
--->Animator
--->camerastand
-
+おおよそ完成した。
 ---------要改善---------
+---------追加-----------
+MeRoom
+  -->event
+  ゲーム空間
+  ⇣↑
+  イベント空間
+  ⇣↑
+  ムービー空間
+
+-->AI
+知覚　->　状態遷移　-> 行動
+-->mecanim
+---------------
+パレット
+
+
+---------構造----------
+
+ObjectTable,StaticObjectTable,SearchTable
+          ↑↓
+        Scene[Room⇔Room⇔Room]
+           △
+        maincam <- camStand(effect)
+        soundmanager
+        debugger
+        input,output
+          ↑↓
+          入力

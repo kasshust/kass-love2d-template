@@ -3,20 +3,24 @@ Title = {
         local obj = instance(Title,OtherRoom)
             obj.frame = 0
             obj.name = "title"
-            for k,v in pairs(StaticObjectTable) do
-              print(k,v)
-            end
+            obj.s = Select.new(1,5)
         return obj
     end;
     u = function(self,dt)
+      self.s:check()
     end;
-    d = function()
+    d = function(self)
     end;
-    dg = function()
+    dg = function(self)
+
+      ---背景
       g.setColor(128,128,255)
       g.rectangle("fill",0,0,W,H)
       g.setColor(255,255,255)
+
+
       g.print("Title",g_x + W/2,g_y + H/2)
+      g.print(self.s.now,200,200)
       g.setColor(255,255,255)
     end;
 }
@@ -31,8 +35,6 @@ Room1 = {
             maincam:setWorld(0,0,obj.size.width,obj.size.height)
 
             obj.map = sti("materials/stages/test/test.lua", {})
-            obj.block = {}
-
             --[[
 
                           オブジェクト配置
@@ -63,7 +65,9 @@ Room1 = {
             local player = Player:new(100,100)
             camStand:setfocus(player)
 
-            --soundmanager:playMusic(love.audio.newSource("materials/sound/music/music_test.mp3", "stream"))
+            obj.m = love.audio.newSource("materials/sound/music/music_test.mp3", "stream")
+            obj.m:setVolume(0.03)
+            --soundmanager:playMusic(obj.m)
         return obj
     end;
 }

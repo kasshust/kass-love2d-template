@@ -207,7 +207,7 @@ TextWindow = {
   end;
   --windowのデザイン
   drawWindow = function(self)
-    g.setColor(128,128,128,128)
+    g.setColor(16,16,32,255)
     love.graphics.rectangle("fill", g_x + self.x  - self.w*self.tw.frame/2, g_y + self.y - self.h*self.tw.frame/2, self.w*self.tw.frame, self.h * self.tw.frame)
     g.setColor(256,256,256,256)
   end;

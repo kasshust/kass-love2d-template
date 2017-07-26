@@ -7,7 +7,6 @@ function load_image(_filename)
 end
 
 --- 分割したquadを返す
----
 function split_image(_split_x,_split_y,_image_x,_image_y,_gs,_ygs)
     local _gs = _gs
     local _ygs = _ygs or _gs
@@ -22,46 +21,103 @@ function split_image(_split_x,_split_y,_image_x,_image_y,_gs,_ygs)
 end
 
 Animator = {
-  new = function()
+  new = function(image,_xGS,_yGS,start,finish,speed,dafault)
     local obj = instance(Animator)
-      obj.pre_frame = 0
-      obj.a_frame = 0
-      obj.pre_start = 0
-      obj.pre_finish = 0
-      obj._finish = false
+      xGS = _xGS
+      yGS = _yGS or _xGS
+
+      obj.image = image
+
+      --imageのquadを作成
+      obj.quad = split_image(math.floor(image:getWidth()/xGS),math.floor(image:getHeight()/yGS),image:getDimensions(),image:getDimensions(),xGS,yGS)
+      --frame
+      obj.frame = 0
+      --quadNumを初期化
+      obj.quadNum = 1
+      --アニメーションスピード
+      obj.speed = speed or 60
+      --アニメーション状態のtable
+      obj.state = {}
+
+
+      --初期状態の設定
+      obj.nowstate = default or "default"
+      obj.state[obj.nowstate] = {}
+      obj.state[obj.nowstate]["start"] = start
+      obj.state[obj.nowstate]["finish"] = finish
+
+      --前回のstart,finish値
+      obj.pre = {}
+      obj.pre.start = start
+      obj.pre.finish = finish
+      obj.pre.num = obj.quadNum
+      ---終了判定
+      obj.finish = false
     return obj
   end;
-
-  animation = function(frame,start,finish,speed)
-      local animeframe
-      animeframe = math.floor(frame / speed % (finish - start + 1)) + start
-      return animeframe
+  add = function(self,newstate,start,finish)
+    self.state[newstate] = {}
+    self.state[newstate]["start"] = start
+    self.state[newstate]["finish"] = finish
   end;
+  --speed
+  setSpeed = function(self,sp)
+    self.speed = sp
+  end;
+  --現在のstateのstartにリセット
+  reset = function(self)
+    self.frame = 0
+    self.quadNum = self.state[self.nowstate]["start"]
+  end;
+  isfinish = function(self,state)
+    if state == nil then return self.finish,self.nowstate end
 
-  _animation = function(self,start,finish,speed)
-      ---前回とアニメーションの開始位置が違う場合、アニメーションフレームを初期化
-      if start == finish then end
+    if self.nowstate == state and self.finish == true then
+      return true
+    else return false
+    end
+  end;
+  --stateを変更し、初期化する
+  change = function(self,nextstate)
+    if self.nowstate ~= nextstate then self:reset() end
+    self.nowstate = nextstate
+    --frameを初期化
+    return true
+  end;
+  update = function(self,dt)
+    --終了判定
+    local start = self.state[self.nowstate]["start"]
+    local finish = self.state[self.nowstate]["finish"]
 
-      if not (self.pre_start == start and self.pre_finish == finish) then self.a_frame = 0  end
-      local c_frame = self.animation(self.a_frame,start,finish,speed)
-      self.pre_start = start
-      self.pre_finish = finish
+    self.frame = self.frame + 1;
+    self.quadNum = self:animation(self.frame,start,finish,60/self.speed)
 
-      -----フレーム更新
-      self.a_frame = self.a_frame + 1;
-
-      ------アニメーションの終わりを判定
-      if start <= c_frame and finish >= c_frame and c_frame < self.pre_frame then
-          self._finish = true
-      else
-          self._finish = false
+    --stateが変化していない場合、終了判定
+    self.finish = false
+    if start == self.pre.start and finish == self.pre.finish then
+      --現在のnumが前回のnumよりも小さい場合
+      if self.quadNum < self.pre.num then
+        self.finish = true
       end
+    end
 
-      self.pre_frame = c_frame
-
-      return c_frame
+    self.pre.start = start
+    self.pre.finish = finish
+    self.pre.num = self.quadNum
   end;
-  finish = function(self)
-      return self._finish
+  draw = function(self,x,y,_angle,_xscale,_yscale,_ox,_oy,_kx,_ky)
+    local angle = _angle or 0
+    local xscale = _xscale or 1
+    local yscale = _yscale or 1
+    local ox = _ox or 0
+    local oy = _oy or 0
+    local kx = _kx or 0
+    local ky = _ky or 0
+    love.graphics.draw(self.image,self.quad[self.quadNum],x,y,angle,xscale,yscale,ox,oy,kx,ky)
+  end;
+  animation = function(self,frame,start,finish,speed)
+      ---前回とアニメーションの開始位置が違う場合、アニメーションフレームを初期化
+      local num = math.floor(frame / speed % (finish - start + 1)) + start
+      return num
   end;
 }

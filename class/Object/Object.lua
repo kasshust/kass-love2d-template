@@ -22,11 +22,11 @@ Object = {
         obj.id = makeid(ObjectTable)
         ObjectTable[obj.id] = obj
         Object.table[obj.id] = obj
+        obj.class = class
 
         obj.col = nil
         obj.solid = nil
 
-        obj.class = class
         obj.name = "Object"
         obj.x = x or 0
         obj.y = y or 0

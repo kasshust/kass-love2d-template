@@ -58,7 +58,8 @@ end
 ---指定範囲をカットしてdraw
 function love.graphics.cut(_x,_y,_w,_h,f)
   local x,y,w,h = love.graphics.getScissor()
-    love.graphics.intersectScissor(x + (_x)*camWindowScale,y + (_y)*camWindowScale, _w*camWindowScale, _h*camWindowScale )
+    --maid64により不要
+    love.graphics.intersectScissor(_x,_y,_w, _h)
     f()
   love.graphics.setScissor(x,y,w,h)
 end

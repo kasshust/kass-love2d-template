@@ -9,7 +9,7 @@ require_all("scene")
 require_all("class")
 
 --外部ライブラリの読み込み
-  m64 = require("library/maid64/maid64")
+  maid64 = require("library/maid64/maid64")
   --剛体用
   HC = require("library/HC")
   --その他
@@ -32,6 +32,7 @@ function love.load()
     --window初期設定
     love.window.setMode(W, H, {resizable=true, minwidth = W, minheight = H})
 
+    maid64.setup(W,H)
     ---Manager Object
 
     --メインのカメラ
@@ -53,7 +54,7 @@ function love.load()
     table.insert(StaticObjectTable,manager)
 
     --フォント設定
-    font = love.graphics.newFont( "materials/fonts/SourceHanSerif-Medium.ttc" , 12 )
+    font = love.graphics.newFont( "materials/fonts/PixelMplus12-Regular.ttf" , 12 )
     font:setFilter( "nearest", "nearest", 1 )
     love.graphics.setFont(font);
 
@@ -62,26 +63,39 @@ function love.load()
 end
 function love.update(dt)
     scenemanager:update(dt)
-    --インフラ系
-    soundmanager:update(dt)
+
+    --デバッッガー
     if DEBUG == true then debugger:update(dt) end
+
+    --最小音声管理
+    soundmanager:update(dt)
+
+    --入力機器
     love.keyboard.updateKeys()
     love.mouse.updateKeys()
+    gamepad.updateKeys()
 end
 function love.draw()
+  --gui用座標の取得
   local x,y = maincam:getPosition()
   g_x,g_y = x-W/2,y-H/2
-  scenemanager:draw()
+  maid64.start()
+    scenemanager:draw()
+  maid64.finish()
   if DEBUG == true then debugger:draw() end
 end
 
 function love.wheelmoved( dx, dy )
     wheel_x = wheel_x + dx*0.01
     wheel_y = wheel_y + dy*0.01
+    --maincam:setScale(1+wheel_y)
 end
 function love.resize(w, h)
-  local scale = math.min(w / W ,h / H)
-  camWindowScale = scale
-  maincam:setWindow((w / 2) - (W*camWindowScale/2),(h / 2) - (H*camWindowScale/2),W*camWindowScale,H*camWindowScale)
-  maincam:setScale(camWindowScale)
+  maid64.resize(w,h)
+  --[[maid64により不要
+    local scale = math.min(w / W ,h / H)
+    camWindowScale = scale
+    maincam:setWindow((w / 2) - (W*camWindowScale/2),(h / 2) - (H*camWindowScale/2),W*camWindowScale,H*camWindowScale)
+    maincam:setScale(camWindowScale)
+  ]]
 end

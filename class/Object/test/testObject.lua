@@ -14,8 +14,7 @@ TouchWindow = {
   step = function(self,dt)
     if love.keyboard.wasPressed("return") then
     self:CW(Player,function(other)
-        TextWindow:new(nil,self.text,W/2,200,300,70,2)
-        --self:destroy()
+        TextWindow:new(nil,self.text,W/2,200,300,70,15)
       end)
     end
   end;
@@ -37,40 +36,50 @@ Player = {
   table = {};
   new = function(class,x,y)
     local obj = instance(Player,Object,class,100,100)
+    --継承時に探索用のため必要
     Player.table[obj.id] = obj
     obj.name = "Player"
     obj.pos = Vector.new(x,y);
     obj.vpos = Vector.new(0,0);
     obj.w,obj.h = 14,14
+    obj.islanding = false
+    obj.dir = 1
     obj.solid = HC.rectangle(obj.pos.x,obj.pos.y,obj.w,obj.h)
     obj.col = collider:rectangle(obj.pos.x,obj.pos.y,obj.w,obj.h)
-    obj.islanding = false
 
-    ---スプライト
-    obj.animator = Animator.new()
-    obj.quad = split_image(6,6,img_test:getDimensions(),img_test:getDimensions(),16)
+    obj.animator = Animator.new(img_test,16,16,1,1,1)
+    obj.animator:add("run",2,3)
+
     return obj
   end;
 
   step = function(self,dt)
+      self.animator:update(dt)
+
+      --ジャンプ
       if love.keyboard.wasPressed("return") then
         if self.islanding then self.vpos = Vector.new(self.vpos.x,-3.2) end
       end
+      --移動
       if love.keyboard.isDown("a") then
         self.vpos = self.vpos + Vector.new(-0.2,0.0)
+        self.animator:change("run")
+        self.animator:setSpeed(1)
+        self.dir = -1
       end
       if love.keyboard.isDown("d") then
         self.vpos = self.vpos + Vector.new(0.2,0.0)
+        self.animator:change("run")
+        self.animator:setSpeed(1)
+        self.dir = 1
       end
-
       self.vpos = self.vpos * Vector.new(0.90,1.00) + Vector.new(0.0,0.1)
 
       self.pos = self.pos + self.vpos
+
   end;
 
   collision = function(self)
-    self.solid:moveTo(self.pos.x,self.pos.y)
-    self.col:moveTo(self.pos.x,self.pos.y)
 
     --全探索
     --[[
@@ -81,10 +90,9 @@ Player = {
     end)
     ]]--
     --
-    --足元
 
+    self.solid:moveTo(self.pos.x,self.pos.y)
     --衝突検知
-    self.islanding = false
       for shape, delta in pairs(HC.collisions(self.solid)) do
         self.pos = self.pos + delta
         if delta.y < 0 then self.islanding = true end
@@ -92,14 +100,23 @@ Player = {
         if delta.y ~= 0 then self.vpos = self.vpos * Vector.new(1,0) end
       end
 
-    self.solid:moveTo(self.pos.x,self.pos.y)
-    self.col:moveTo(self.pos.x,self.pos.y)
+      ---着地判定
+      self.islanding = false
+      self.solid:moveTo(self.pos.x,self.pos.y + 2)
+      for shape, delta in pairs(HC.collisions(self.solid)) do
+        if delta.y ~= 0 then self.islanding = true end
+      end
+
+      self.col:moveTo(self.pos.x,self.pos.y)
+      self.solid:moveTo(self.pos.x,self.pos.y)
+
+
   end;
 
   draw = function(self)
-    love.graphics.draw(img_test,self.quad[self.animator:_animation(1,4,1)],self.pos.x-8, self.pos.y-8)
+    self.animator:draw(self.pos.x,self.pos.y,0,1*self.dir,1,8,9)
     g.setColor(255,0,0,128)
-    self.solid:draw("fill")
+    --self.solid:draw("fill")
     g.setColor(255,255,255,255)
   end
 };
@@ -133,7 +150,7 @@ MoveBlock = {
   table = {};
   new = function(class,x,y,w,h,vx,vy)
     local obj = instance(MoveBlock,Block,class,x,y,w,h)
-    Block.table[obj.id] = obj
+    MoveBlock.table[obj.id] = obj
     obj.name = "test3"
     obj.frame = 0
     obj.pos = Vector.new(x,y)
@@ -158,8 +175,10 @@ MoveBlock = {
     --乗ったものを動かす
     self.col:moveTo(self.pos.x,self.pos.y-self.h/2-1)
     self:CW(Player,function(other)
-      other.islanding = true
-      other.pos = other.pos + self.dpos
+      --other.islanding = true
+      if other.islanding == true then
+        other.pos = other.pos + self.dpos
+      end
     end)
 
     --プレイヤーを吐き出す
@@ -269,16 +288,18 @@ Slope = {
   end;
 
   collision = function(self,dt)
-
+    self.col:move(0,-3)
     self:CW(Player,function(other,dx,dy)
-      if dy >= 0 then
-        other.pos = other.pos - Vector.new(0,dy)
+      if dy >= 0 and other.vpos.y >= 0 then
+        debugger:print("aaaa")
         other.islanding = true
+        other.pos = other.pos - Vector.new(0,dy-2)
         other.vpos = other.vpos * Vector.new(1,0)
         other.solid:moveTo(other.pos.x,other.pos.y)
         other.col:moveTo(other.pos.x,other.pos.y)
       end
     end)
+    self.col:move(0,3)
   end;
 
   draw = function(self)
@@ -321,3 +342,35 @@ testEffect = {
       love.graphics.ellipse("fill", self.x, self.y, self.tw.w, self.tw.h)
     end;
 }
+
+Laser = {
+   table = {};
+   new = function(class,x,y)
+     local obj = instance(Laser,Object,class)
+     Laser.table[obj.id] = obj
+     obj.name = "Laser"
+     obj.pos = Vector.new(x,y)
+     obj.vec = Vector.new(x,y)
+     return obj
+   end;
+   update = function(self,dt)
+     for k,v in pairs(Player.table) do
+      local bool,t  = v.col:intersectsRay(self.pos.x,self.pos.y,0,1)
+      if bool then
+        self.vec = Vector.new(self.pos.x, self.pos.y) +  Vector.new(t,t) * Vector.new(0,1):normalize()
+        --debugger:print(v)
+      end
+     end
+   end;
+   collision = function(self)
+
+   end;
+   draw = function(self)
+     g.points(self.pos.x,self.pos.y)
+     g.line(self.pos.x,self.pos.y,self.vec.x,self.vec.y)
+   end;
+   destroy = function(self)
+     Objec.destroy(self)
+     Laser.table[obj.id] = nil
+   end;
+ }
