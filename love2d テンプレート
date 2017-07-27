@@ -1,4 +1,8 @@
 おおよそ完成した。
+
+-->eventシステム(イベントとゲーム空間)
+
+-->key config
 ---------要改善---------
 ---------追加-----------
 MeRoom
@@ -14,17 +18,15 @@ MeRoom
 -->mecanim
 ---------------
 パレット
-
-
----------構造----------
-
-ObjectTable,StaticObjectTable,SearchTable
+---------template構造----------
+ObjectTable(SearchTable)
           ↑↓
-        Scene[Room⇔Room⇔Room]
+  Scene[Room⇔Room⇔Room]<scenemanager
            △
+        manager
         maincam <- camStand(effect)
-        soundmanager
-        debugger
-        input,output
+     soundmanager
+       debugger
+      input,output
           ↑↓
           入力

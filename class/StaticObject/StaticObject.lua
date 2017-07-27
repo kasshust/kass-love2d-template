@@ -1,6 +1,7 @@
 StaticObject = {
   new = function(x,y)
       local obj = instance(StaticObject)
+      table.insert(StaticObjectTable,obj)
       return obj
   end;
   update = function(self,dt)

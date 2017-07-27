@@ -39,10 +39,6 @@ SceneManager = {
     end;
 }
 
-addS = function(obj)
-  table.insert(StaticObjectTable,obj)
-end;
-
 -----------------------roomの親クラス-------------------
 Scene ={
   new = function()
@@ -65,11 +61,16 @@ Scene ={
   end;
 
   objectUpdate = function(self,dt)
+    for i,v in ipairs(StaticObjectTable) do
+      v:update(dt)
+    end
+    --オブジェクトのupdate
     for i,v in pairs(ObjectTable) do
       v:update(dt)
     end
-    for i,v in ipairs(StaticObjectTable) do
-      v:update(dt)
+    --オブジェクトの削除判定
+    for i,v in pairs(ObjectTable) do
+      if v.kill == true then v:destroy() end
     end
   end;
   objectDraw = function(self)
@@ -123,7 +124,7 @@ MeRoom = {
     --タイル
     --if self.map ~= nil then self.map:draw() end
     --背景
-    
+
   end;
   drawGUI = function(self)
     self:objectDrawGUI()

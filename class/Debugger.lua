@@ -103,13 +103,19 @@ Debugger ={
     love.graphics.setColor(255,255,255,255)
   end;
 
-  print = function(self,str)
+  print = function(self,...)
     self.move:reset()
-    if type(str) ~= "nil" then
-      self.text[#self.text+1] = table.tostring(str)
-    else
-      self.text[#self.text+1] = "error:nil"
+    local n = {...}
+    local str = ""
+    for i,v in pairs(n) do
+      if type(str) ~= "nil" then
+        str = str .. "  " .. table.tostring(v)
+      else
+        str = str .. "  " .. "error:nil"
+      end
     end
+    self.text[#self.text+1] = str
+
     while #self.text > 20 do
       table.remove(self.text, 1)
     end

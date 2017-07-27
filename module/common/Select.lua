@@ -7,13 +7,13 @@ Select = {
     return obj
   end;
   check = function(self)
-    local up,down = love.keyboard.wasPressed("w"),love.keyboard.wasPressed("s")
+    local up,down = love.keyboard.wasPressed("s"),love.keyboard.wasPressed("w")
     if up then self.now = self.now + 1  end
     if down then self.now = self.now - 1  end
 
     if self.now > self.max then self.now = self.min end
     if self.now < self.min then self.now = self.max end
 
-    return self.now
+    return up or down ,self.now
   end;
 }

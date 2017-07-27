@@ -1,11 +1,13 @@
 Transition = {
+    c_transition = nil;
     new = function(room)
         local obj = instance(Transition,StaticObject)
         obj.frame = 0
-        obj.time_in,obj.time_out = 10,10
+        obj.time_in,obj.time_out = 5,5
         obj.toRoom = room
         obj.status = Enum:new{"IN","OUT"};
         obj.status_now = obj.status.IN
+        Transition.c_transition = obj
         return obj
     end;
     update = function(self,dt)
@@ -19,6 +21,7 @@ Transition = {
         switch[self.status.OUT]=function()
           if self.frame > self.time_in + self.time_out then
             self:destroy()
+            Transition.c_transition = nil
           end
         end
         switch[self.status_now]()
@@ -37,8 +40,9 @@ Transition = {
       end
       switch[self.status_now]()
     end;
+    transition = function(room)
+      if Transition.c_transition == nil then
+        Transition.new(room)
+      else debugger:print("すでにシーンの遷移中です") end
+    end;
 }
-
-Transition.transition = function(room)
-  addS(Transition.new(room))
-end

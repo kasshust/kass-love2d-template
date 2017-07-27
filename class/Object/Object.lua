@@ -14,24 +14,25 @@ function makeid(t)
 end
 
 Object = {
-    table = {};
+    --table = {};
     new = function(class,x,y)
         local obj = instance(Object)
 
         --id登録
         obj.id = makeid(ObjectTable)
         ObjectTable[obj.id] = obj
-        Object.table[obj.id] = obj
+        --Object.table[obj.id] = obj
         obj.class = class
 
         obj.col = nil
         obj.solid = nil
 
         obj.name = "Object"
-        obj.x = x or 0
-        obj.y = y or 0
-        obj.pos = Vector.new(obj.x,obj.y)
+        local _x,_y = x or 0 , y or 0
+        obj.pos = Vector.new(_x,_y)
         obj.depth = 0
+        obj.visible = true
+        obj.kill = false
 
         return obj
     end;
@@ -43,17 +44,13 @@ Object = {
     end;
     drawGUI = function(self)
     end;
+    --メモリから破棄する
     destroy = function(self)
+        --継承先でちゃんとオーバーライドできないと100％バグ
         debugger:print("削除id:" .. self.id)
-        --[[ 親クラス:destroy() を書いてね ]]
-        Object.table[self.id] = nil
         ObjectTable[self.id] = nil
-        if self.solid ~= nil then
-          HC.remove(self.solid)
-        end
-        if self.col ~= nil then
-           collider:remove(self.col)
-         end
+        if self.solid ~= nil then HC.remove(self.solid) end
+        if self.col ~= nil then collider:remove(self.col) end
         self = nil
     end;
 
@@ -80,7 +77,6 @@ Object = {
     end;
 }
 table.insert(SearchTable,Object)
-
 
 --[[
 コールバックを使用したコリジョン関数
