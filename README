@@ -1,2 +1,13 @@
 love2dのテンプレート
-Scene(Object,StaticObject)
+
+・class
+ゲーム内で用いるオブジェクトを記述
+
+・Scene
+ゲームシーンの構造を記述
+
+・library/module
+外部ライブラリや自作ライブラリ
+
+・materials
+素材
