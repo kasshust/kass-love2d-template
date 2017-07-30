@@ -12,6 +12,7 @@ Block = {
     obj.vpos = Vector.new(0,0);
     obj.h,obj.w = h,w;
     obj.solid = HC.rectangle(x,y,w,h)
+    obj.solid.tag = "block"
     return obj
   end;
 
@@ -41,6 +42,7 @@ MoveBlock = {
 
     obj.h,obj.w = h,w;
     obj.solid = HC.rectangle(x,y,w,h)
+    obj.solid.tag = "block"
     obj.col = collider:rectangle(obj.pos.x,obj.pos.y-obj.h-1,w,1)
     return obj
   end;
@@ -99,7 +101,6 @@ Floor = {
 
   collision = function(self,dt)
     self:CW(Char,function(other,dx,dy)
-      print(dx,dy)
       --other.pos = other.pos - Vector.new(dx,dy)
 
       --条件作る

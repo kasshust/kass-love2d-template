@@ -1,32 +1,21 @@
-おおよそ完成した。
-
--->eventシステム(イベントとゲーム空間)
-
--->key config
----------要改善---------
 ---------追加-----------
-MeRoom
-  -->event
-  ゲーム空間
-  ⇣↑
-  イベント空間
-  ⇣↑
-  ムービー空間
-
--->AI
-知覚　->　状態遷移　-> 行動
 -->mecanim
+-->key config
 ---------------
 パレット
 ---------template構造----------
-ObjectTable(SearchTable)
-          ↑↓
-  Scene[Room⇔Room⇔Room]<scenemanager
-           △
-        manager
-        maincam <- camStand(effect)
-     soundmanager
-       debugger
-      input,output
+
+
+[[
+    ObjectTable(SearchTable)
+              ↑↓
+    Scene[Room⇔Room⇔Room]<scenemanager
+                  △
+    manager/maincam <- camStand(effect)
+]]
+           ↑↓
+      eventmanager
+
+(soundmanager/debugger/input,output)
           ↑↓
           入力

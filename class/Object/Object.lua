@@ -78,6 +78,10 @@ Object = {
 }
 table.insert(SearchTable,Object)
 
+add = function(obj)
+  table.insert(ObjectTable,obj)
+end
+
 --[[
 コールバックを使用したコリジョン関数
 self:CW(Player,function(other)

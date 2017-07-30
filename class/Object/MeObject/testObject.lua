@@ -12,9 +12,9 @@ TouchWindow = {
   end;
 
   step = function(self,dt)
-    if love.keyboard.wasPressed("return") then
+    if love.keyboard.wasPressed("s") then
     self:CW(Char,function(other)
-        TextWindow:new(nil,self.text,W/2,200,300,70,15)
+        if other.operation == true then ObjectTextWindow:new(nil,self.text,W/2,200,300,70,15) end
       end)
     end
   end;
@@ -69,7 +69,6 @@ Laser = {
       local bool,t  = v.col:intersectsRay(self.pos.x,self.pos.y,0,1)
       if bool then
         self.vec = Vector.new(self.pos.x, self.pos.y) +  Vector.new(t,t) * Vector.new(0,1):normalize()
-        --debugger:print(v)
       end
      end
    end;
@@ -82,3 +81,5 @@ Laser = {
      Laser.table[obj.id] = nil
    end;
  }
+
+--引数にfunction

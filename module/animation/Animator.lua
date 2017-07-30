@@ -20,6 +20,11 @@ function split_image(_split_x,_split_y,_image_x,_image_y,_gs,_ygs)
     return quadList
 end
 
+--[[
+  Animator スプライトシートのアドレス,終了開始地点と名前を与えて制御
+  change後はisrenewとisfinishが呼ばれなくなる問題もある
+
+]]
 Animator = {
   new = function(image,_xGS,_yGS,start,finish,speed,dafault)
     local obj = instance(Animator)
@@ -51,8 +56,9 @@ Animator = {
       obj.pre.start = start
       obj.pre.finish = finish
       obj.pre.num = obj.quadNum
-      ---終了判定
-      obj.finish = false
+      ---終了判定・更新判定
+      obj.finish = {bool = false,state = nil}
+      obj.renew = {bool = false,state = nil,num = nil}
     return obj
   end;
   add = function(self,newstate,start,finish)
@@ -69,10 +75,20 @@ Animator = {
     self.frame = 0
     self.quadNum = self.state[self.nowstate]["start"]
   end;
+  --終了判定 1frameならfalse
   isfinish = function(self,state)
-    if state == nil then return self.finish,self.nowstate end
+    if state == nil then return self.finish.bool,self.finish.state end
 
-    if self.nowstate == state and self.finish == true then
+    if self.finish.state == state and self.finish.bool == true then
+      return true
+    else return false
+    end
+  end;
+  --更新判定 指定ナンバーである場合trueを返す 1frameならfalse
+  isrenew = function(self,num,state)
+    if state == nil then return self.renew.bool,self.renew.state end
+
+    if self.renew.state == state and self.renew.bool == true and self.renew.num == num then
       return true
     else return false
     end
@@ -86,20 +102,31 @@ Animator = {
   end;
   update = function(self,dt)
     --終了判定
-    local start = self.state[self.nowstate]["start"]
-    local finish = self.state[self.nowstate]["finish"]
+      local start = self.state[self.nowstate]["start"]
+      local finish = self.state[self.nowstate]["finish"]
 
-    self.frame = self.frame + 1;
-    self.quadNum = self:animation(self.frame,start,finish,60/self.speed)
+      --quadの更新
+      self.frame = self.frame + 1;
+      self.quadNum = self:animation(self.frame,start,finish,60/self.speed)
 
-    --stateが変化していない場合、終了判定
-    self.finish = false
-    if start == self.pre.start and finish == self.pre.finish then
-      --現在のnumが前回のnumよりも小さい場合
-      if self.quadNum < self.pre.num then
-        self.finish = true
+      --判定初期化
+      self.finish = {bool = false,state = nil}
+      self.renew = {bool = false,state = nil,num = nil}
+      --stateが変化していない
+      if start == self.pre.start and finish == self.pre.finish then
+
+        --現在のnumが前回のnumと異なる　->
+        if self.quadNum ~= self.pre.num then
+          self.renew.bool = true
+          self.renew.state = self.nowstate
+          self.renew.num = self.quadNum
+        end
+        --現在のnumが前回のnumよりも小さい -> animationの終了判定
+        if self.quadNum < self.pre.num then
+          self.finish.bool = true
+          self.finish.state = self.nowstate
+        end
       end
-    end
 
     self.pre.start = start
     self.pre.finish = finish

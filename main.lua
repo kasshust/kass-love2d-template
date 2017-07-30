@@ -35,23 +35,29 @@ function love.load()
 
   --------Manager Object------------------
 
-    --メインのカメラ
+    --!メインのカメラ
       --stageの大きさを設定 ->各ルームで上書きして
-      maincam = gamera.new(0,0,640,480)
-      --カメラwindowの大きさを設定
-      camWindowScale = 1
-      maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
-    --maincam制御
-      camStand = CamStand.new(maincam)
-    --デバッガ
+        maincam = gamera.new(0,0,640,480)
+        --カメラwindowの大きさを設定
+        camWindowScale = 1
+        maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
+      --maincam制御
+        camStand = CamStand.new(maincam)
+        addS(camStand)
+
+    --!デバッガ
       debugger = Debugger.new()
-    --シーンのマネージャー
+    --!シーンのマネージャー
       scenemanager = SceneManager:new(Title.new())
-    --マネージャー
+    --!汎用的マネージャー
       manager = Manager.new()
+      addS(manager)
+    --イベントマネージャー
+      eventmanager = EventManager.new()
+      addS(eventmanager)
 
   -------その他設定--------------------------------
-    --フォント設定
+    --標準フォント設定
     font = love.graphics.newFont( "materials/fonts/PixelMplus12-Regular.ttf" , 12 )
     font:setFilter( "nearest", "nearest", 1 )
     love.graphics.setFont(font);

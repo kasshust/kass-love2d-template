@@ -7,3 +7,13 @@ function point_direction(a,b)
 
     return math.atan2(dy,dx) + math.pi
 end
+
+function math.sign(x)
+   if x<0 then
+     return -1
+   elseif x>0 then
+     return 1
+   else
+     return 0
+   end
+end

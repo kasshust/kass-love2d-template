@@ -1,5 +1,5 @@
 --[[
-  Window class
+  Window class　ｊ仮想
   parentに親ウィンドウを設定でき、制御できる。初代シレンやドラクエのウィンドウ処理ができる
     f:処理
     drawWindow:フレームやウィンドウ自体のデザイン
@@ -7,13 +7,13 @@
 ]]--
 
 Window = {
-  table = {};
-  new = function(class,parent,x,y,w,h,depth)
-    local obj = instance(Window,Object,class)
+  new = function(parent,x,y,w,h,depth)
+    local obj = instance(Window)
     obj.x,obj.y = x,y
     obj.w,obj.h = w,h
     obj.parent = parent
     obj.visible = true
+    obj.kill = false
 
     if obj.parent ~= nil then obj.depth = obj.parent.depth - 1 else obj.depth = depth or 0 end
 
@@ -21,6 +21,8 @@ Window = {
     obj.time = {}
     obj.time._in = 0.3
     obj.time._out = 0.3
+
+    --開閉のアニメーション
     obj.tween1 = tween.new(obj.time._in, obj.tw, {frame = 1}, tween.easing.outBounce)
     obj.tween2 = tween.new(obj.time._out, obj.tw, {frame = 0}, tween.easing.outBounce)
 
@@ -29,7 +31,7 @@ Window = {
     obj.status_now = obj.status.IN
     return obj
   end;
-  step = function(self,dt)
+  update = function(self,dt)
     local switch = {}
     switch[self.status.IN] = function()
 
@@ -50,7 +52,7 @@ Window = {
 
       if finish then
         if self.f_close ~= nil then self:f_close() end
-        self:destroy()
+        self.kill = true
       end
     end
     switch[self.status_now]()
@@ -77,6 +79,7 @@ Window = {
   close = function(self)
     self.status_now = self.status.OUT
   end;
+  --window削除時に起きる関数
   f_close = function(self)
   end;
   activate = function(self)
@@ -101,15 +104,14 @@ Window = {
 }
 
 --[[
-  TextWindow class -> Window class
+  TextWindow class -> Window class　実態
   親、座標、サイズ、テキスト(content)、depthを指定してテキストウィンドウを作成
   textはtableで、入力に応じてスキップや文字送りが可能
 ]]--
 
 TextWindow = {
-  table = {};
-  new = function(class,parent,text,x,y,w,h,padding,depth)
-    local obj = instance(TextWindow,Window,class,parent,x,y,w,h,depth)
+  new = function(parent,text,x,y,w,h,padding,depth)
+    local obj = instance(TextWindow,Window,parent,x,y,w,h,depth)
     --テキストが空だとerror
     if #text == 0 then error("text must have string!") end
 
@@ -124,6 +126,7 @@ TextWindow = {
       table.insert(obj.text_byte,#v + prev)
       obj.text = obj.text .. v
     end
+    print(unpack(obj.text_byte))
     --表示用
     obj.str = ""
     obj.frame = 0

@@ -4,8 +4,8 @@ Debugger ={
       --window
       obj.x = 0
       obj.y = 0
-      obj.maxWidth = 300
-      obj.maxHeight = 300
+      obj.maxWidth = 600
+      obj.maxHeight = 600
       obj.minWidth = 100
       obj.minHeight = 100
       obj.width = 300
@@ -87,10 +87,10 @@ Debugger ={
           -- print messages
       for i = 1,#self.text do
           love.graphics.setColor(255,255,255, 255 - (i-1) * 6)
-          love.graphics.printf(self.text[#self.text - (i-1)],self.x +10,self.y + i * 15 + self.box._y,self.width-10)
+          love.graphics.print(self.text[#self.text - (i-1)],self.x +10,self.y + i * 15 + self.box._y)
       end
         --debug
-      draw_status(self.x+200,self.y+15)
+      draw_status(self.x + self.width-70,self.y+15)
 
       love.graphics.setColor(255,255,255,255)
     love.graphics.setScissor()

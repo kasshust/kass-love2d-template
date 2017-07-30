@@ -1,7 +1,8 @@
 StaticObject = {
-  new = function(x,y)
+  new = function()
       local obj = instance(StaticObject)
-      table.insert(StaticObjectTable,obj)
+      obj.name = "StaticObject"
+      obj.kill = false
       return obj
   end;
   update = function(self,dt)
@@ -12,5 +13,10 @@ StaticObject = {
   end;
   destroy = function(self)
     removeFromTable(self,StaticObjectTable)
+    debugger:print("Static削除:" .. self.name)
   end;
 }
+
+addS = function(obj)
+  table.insert(StaticObjectTable,obj)
+end

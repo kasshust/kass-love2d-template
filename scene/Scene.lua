@@ -17,6 +17,7 @@ SceneManager = {
       end)
     end;
     changeScene = function(scene)
+      if scene == nil then error("scene is nil! Please specify scene") end
       --各table初期化
       ObjectTable = nil
       ObjectTable = {}
@@ -28,7 +29,7 @@ SceneManager = {
       collider:resetHash()
 
       --camstandのfocusをリセット focus対象のオブジェクトは破棄されないから残ってしまう
-      camStand:resetfocus()
+      camStand:init()
 
       --シーン変更
       SceneManager.c_scene = nil
@@ -59,11 +60,16 @@ Scene ={
   drawGUI = function(self)
     --ここに各ルームの処理
   end;
-
-  objectUpdate = function(self,dt)
+  staticObjectUpdate = function(self,dt)
     for i,v in ipairs(StaticObjectTable) do
       v:update(dt)
     end
+    for i,v in pairs(StaticObjectTable) do
+      if v.kill == true then v:destroy() end
+    end
+  end;
+
+  objectUpdate = function(self,dt)
     --オブジェクトのupdate
     for i,v in pairs(ObjectTable) do
       v:update(dt)
@@ -89,7 +95,6 @@ Scene ={
 
     for i,v in pairs(t) do
       v:draw()
-      print(i)
     end
   end;
   objectDrawGUI = function(self)
@@ -107,11 +112,13 @@ MeRoom = {
     local obj = instance(MeRoom,Scene)
     obj.frame = 0
     obj.name = "メトロヴァニア"
+    obj.pause = false ---objectのupdateを停止する
     obj.bg = {} ----ばっぐぐらうんど　canvasを作成して  登録、drawで表示
     return obj
   end;
   update = function(self,dt)
-    self:objectUpdate(dt)
+    self:staticObjectUpdate(dt)
+    if not self.pause then self:objectUpdate(dt) end
     self.frame = self.frame + 1
   end;
   draw = function(self)
@@ -124,7 +131,6 @@ MeRoom = {
     --タイル
     --if self.map ~= nil then self.map:draw() end
     --背景
-
   end;
   drawGUI = function(self)
     self:objectDrawGUI()
@@ -140,6 +146,7 @@ OtherRoom = {
   end;
   update = function(self,dt)
     self:u(dt)
+    self:staticObjectUpdate(dt)
     self:objectUpdate(dt)
   end;
   draw = function(self)
@@ -151,6 +158,7 @@ OtherRoom = {
     self:objectDrawGUI()
   end;
 
+  --ルーム記述用
   u = function(self,dt)
   end;
   d = function(self)
