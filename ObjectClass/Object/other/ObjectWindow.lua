@@ -1,8 +1,8 @@
 --即席テキスト
 
 ObjectTextWindow = {
-  new = function(class,parent,text,x,y,w,h,padding,depth)
-    local obj = instance(ObjectTextWindow,Object,class)
+  new = function(parent,text,x,y,w,h,padding,depth)
+    local obj = instance(ObjectTextWindow,Object)
     obj.window = TextWindow.new(parent,text,x,y,w,h,padding,depth)
     return obj
   end;

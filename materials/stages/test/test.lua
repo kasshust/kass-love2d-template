@@ -8,7 +8,7 @@ return {
   height = 20,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 187,
+  nextobjectid = 194,
   properties = {},
   tilesets = {
     {
@@ -88,7 +88,7 @@ return {
     {
       type = "objectgroup",
       name = "block",
-      visible = false,
+      visible = true,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -379,6 +379,19 @@ return {
           rotation = 0,
           visible = true,
           properties = {}
+        },
+        {
+          id = 188,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 320,
+          y = 160,
+          width = 32,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     },
@@ -436,50 +449,14 @@ return {
     {
       type = "objectgroup",
       name = "slope",
-      visible = false,
+      visible = true,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
       properties = {},
       objects = {
         {
-          id = 85,
-          name = "",
-          type = "",
-          shape = "polygon",
-          x = 320,
-          y = 160,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          visible = true,
-          polygon = {
-            { x = 0, y = 0 },
-            { x = -32, y = 16 },
-            { x = 0, y = 16 }
-          },
-          properties = {}
-        },
-        {
-          id = 105,
-          name = "",
-          type = "",
-          shape = "polygon",
-          x = 320,
-          y = 160,
-          width = 0,
-          height = 0,
-          rotation = 0,
-          visible = true,
-          polygon = {
-            { x = 0, y = 0 },
-            { x = 32, y = -16 },
-            { x = 32, y = 0 }
-          },
-          properties = {}
-        },
-        {
-          id = 167,
+          id = 192,
           name = "",
           type = "",
           shape = "polygon",
@@ -491,26 +468,26 @@ return {
           visible = true,
           polygon = {
             { x = 0, y = 0 },
-            { x = 32, y = -16 },
-            { x = 32, y = 0 }
+            { x = 64, y = -32 },
+            { x = 64, y = 0 }
           },
           properties = {}
         },
         {
-          id = 178,
+          id = 193,
           name = "",
           type = "",
           shape = "polygon",
-          x = 224,
-          y = 288,
+          x = 288,
+          y = 176,
           width = 0,
           height = 0,
           rotation = 0,
           visible = true,
           polygon = {
             { x = 0, y = 0 },
-            { x = 32, y = -16 },
-            { x = 32, y = 0 }
+            { x = 64, y = -32 },
+            { x = 64, y = 0 }
           },
           properties = {}
         }

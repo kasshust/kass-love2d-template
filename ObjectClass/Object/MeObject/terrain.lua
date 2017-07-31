@@ -3,16 +3,15 @@
 ]]
 
 Block = {
-  table = {};
-  new = function(class,x,y,w,h)
-    local obj = instance(Block,Object,class,100,100)
-    Block.table[obj.id] = obj
+  new = function(x,y,w,h)
+    local obj = instance(Block,Object)
     obj.name = "test3"
+    obj.tag = {"block"}
     obj.pos = Vector.new(x,y);
     obj.vpos = Vector.new(0,0);
     obj.h,obj.w = h,w;
     obj.solid = HC.rectangle(x,y,w,h)
-    obj.solid.tag = "block"
+    obj.solid.other = obj
     return obj
   end;
 
@@ -25,14 +24,11 @@ Block = {
     --g.setColor(255,255,255,255)
   end
 };
-table.insert(SearchTable,Block)
 
 -- <-Block
 MoveBlock = {
-  table = {};
-  new = function(class,x,y,w,h,vx,vy)
-    local obj = instance(MoveBlock,Block,class,x,y,w,h)
-    MoveBlock.table[obj.id] = obj
+  new = function(x,y,w,h,vx,vy)
+    local obj = instance(MoveBlock,Block,x,y,w,h)
     obj.name = "test3"
     obj.frame = 0
     obj.pos = Vector.new(x,y)
@@ -42,8 +38,8 @@ MoveBlock = {
 
     obj.h,obj.w = h,w;
     obj.solid = HC.rectangle(x,y,w,h)
-    obj.solid.tag = "block"
-    obj.col = collider:rectangle(obj.pos.x,obj.pos.y-obj.h-1,w,1)
+    obj.solid.other = obj
+    obj.col = HC.rectangle(x,y,w,2)
     return obj
   end;
 
@@ -57,20 +53,21 @@ MoveBlock = {
   collision = function(self,dt)
     --乗ったものを動かす
     self.col:moveTo(self.pos.x,self.pos.y-self.h/2-1)
-    self:CW(Char,function(other,dx,dy)
+    self.solid:moveTo(self.pos.x,self.pos.y)
+    self:collideWith("char",self.col,function(other,delta)
       --other.islanding = true
       if other.islanding == true then
         other.pos = other.pos + self.dpos
       end
     end)
 
-    --プレイヤーを吐き出す
-    self.solid:moveTo(self.pos.x,self.pos.y)
-    self:SW(Char,function(other,dx,dy)
-      other.pos = other.pos - Vector.new(dx,dy)
+    self:collideWith("char",self.solid,function(other,delta)
+      other.pos = other.pos - delta
       other.solid:moveTo(other.pos.x,other.pos.y)
-      other.col:moveTo(other.pos.x,other.pos.y)
     end)
+    --プレイヤーを吐き出す
+
+
   end;
 
   draw = function(self)
@@ -81,18 +78,16 @@ MoveBlock = {
     g.setColor(255,255,255,255)
   end
 };
-table.insert(SearchTable,MoveBlock)
 
 Floor = {
-  table = {};
-  new = function(class,x,y,w,h)
-    local obj = instance(Floor,Object,class,100,100)
-    Floor.table[obj.id] = obj
+  new = function(x,y,w,h)
+    local obj = instance(Floor,Object)
     obj.name = "Floors"
     obj.pos = Vector.new(x,y);
     obj.vpos = Vector.new(0,0);
     obj.h,obj.w = h,w;
-    obj.col = collider:rectangle(x,y,w,h)
+    obj.solid = HC.rectangle(x,y,w,h)
+    obj.solid.other = obj
     return obj
   end;
 
@@ -100,6 +95,8 @@ Floor = {
   end;
 
   collision = function(self,dt)
+    --tag作ったほうがいいと思う
+    --[[
     self:CW(Char,function(other,dx,dy)
       --other.pos = other.pos - Vector.new(dx,dy)
 
@@ -114,21 +111,17 @@ Floor = {
       other.solid:moveTo(other.pos.x,other.pos.y)
       other.col:moveTo(other.pos.x,other.pos.y)
     end)
+    ]]
   end;
 
   draw = function(self)
-    g.setColor(255,0,255,128)
-    self.col:draw("fill")
-    g.setColor(255,255,255)
+    self.solid:draw("fill")
   end
 };
-table.insert(SearchTable,Floor)
 
 Slope = {
-  table = {};
-  new = function(class,...)
-    local obj = instance(Slope,Object,class)
-    Slope.table[obj.id] = obj
+  new = function(...)
+    local obj = instance(Slope,Object)
     obj.name = "test3"
     obj.pos = Vector.new(x,y);
     obj.vpos = Vector.new(0,0);
@@ -138,31 +131,23 @@ Slope = {
       table.insert(p,v.x)
       table.insert(p,v.y)
     end
-    obj.col = collider:polygon(p[1],p[2],p[3],p[4],p[5],p[6])
+    obj.solid = HC.polygon(p[1],p[2],p[3],p[4],p[5],p[6])
     return obj
   end;
-
-  step = function(self,dt)
-  end;
-
   collision = function(self,dt)
-    self.col:move(0,-3)
-    self:CW(Char,function(other,dx,dy)
-      if dy >= 0 and other.vpos.y >= 0 then
+    self.solid:move(0,-3)
+    self:collideWith("char",self.solid,function(other,delta)
+      if delta.y >= 0 and other.vpos.y >= 0 then
         other.islanding = true
-        other.pos = other.pos - Vector.new(0,dy-2)
+        other.pos = other.pos - Vector.new(0,delta.y-1)
         other.vpos = other.vpos * Vector.new(1,0)
         other.solid:moveTo(other.pos.x,other.pos.y)
-        other.col:moveTo(other.pos.x,other.pos.y)
       end
     end)
-    self.col:move(0,3)
+    self.solid:move(0,3)
   end;
 
   draw = function(self)
-    g.setColor(0,255,0,128)
-    self.col:draw("fill")
-    g.setColor(255,255,255,255)
+    self.solid:draw("fill")
   end
 };
-table.insert(SearchTable,Slope)

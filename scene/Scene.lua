@@ -21,13 +21,7 @@ SceneManager = {
       --各table初期化
       ObjectTable = nil
       ObjectTable = {}
-      for i,v in ipairs(SearchTable)do
-          v.table = nil
-          v.table = {}
-      end
       HC.resetHash()
-      collider:resetHash()
-
       --camstandのfocusをリセット focus対象のオブジェクトは破棄されないから残ってしまう
       camStand:init()
 
@@ -60,6 +54,8 @@ Scene ={
   drawGUI = function(self)
     --ここに各ルームの処理
   end;
+
+  --必要ならオーバーライドで書き換えて
   staticObjectUpdate = function(self,dt)
     for i,v in ipairs(StaticObjectTable) do
       v:update(dt)
@@ -68,14 +64,10 @@ Scene ={
       if v.kill == true then v:destroy() end
     end
   end;
-
   objectUpdate = function(self,dt)
     --オブジェクトのupdate
     for i,v in pairs(ObjectTable) do
       v:update(dt)
-    end
-    --オブジェクトの削除判定
-    for i,v in pairs(ObjectTable) do
       if v.kill == true then v:destroy() end
     end
   end;
@@ -83,25 +75,15 @@ Scene ={
     for i,v in ipairs(StaticObjectTable) do
       v:draw()
     end
-
-    local t = {}
     for i,v in pairs(ObjectTable) do
-       local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
-      if dis < 200 then table.insert(t,v) end
-    end
-
-    table.sort(t,function(a,b)
-		return (a.depth > b.depth)end )
-
-    for i,v in pairs(t) do
-      v:draw()
+       v:draw()
     end
   end;
   objectDrawGUI = function(self)
     for i,v in pairs(ObjectTable) do
       v:drawGUI()
     end
-    for i,v in ipairs(StaticObjectTable) do
+    for i,v in pairs(StaticObjectTable) do
       v:drawGUI()
     end
   end;
@@ -134,6 +116,37 @@ MeRoom = {
   end;
   drawGUI = function(self)
     self:objectDrawGUI()
+  end;
+
+  ---上書き
+
+  objectUpdate = function(self,dt)
+    --オブジェクトのupdate
+    for i,v in pairs(ObjectTable) do
+      local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
+      if dis < 400 or v.persist == true then
+        v:update(dt)
+      end
+      if v.kill == true then v:destroy() end
+    end
+  end;
+  objectDraw = function(self)
+    for i,v in ipairs(StaticObjectTable) do
+      v:draw()
+    end
+
+    local t = {}
+    for i,v in pairs(ObjectTable) do
+       local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
+      if dis < 300 or v.persist == true then table.insert(t,v) end
+    end
+
+    table.sort(t,function(a,b)
+    return (a.depth > b.depth)end )
+
+    for i,v in pairs(t) do
+      v:draw()
+    end
   end;
 }
 ------------------------ルームに処理を打ち込める-----------------------

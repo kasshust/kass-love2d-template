@@ -172,6 +172,16 @@ do
         return res
     end
 
+    -- arrayに指定の値があればtrueを返す そうでないならfalse
+    array.search = function(t,value)
+      for i,v in ipairs(t) do
+        if v == value then
+           return true
+        end
+      end
+      return false
+    end
+
     -- その配列の中からランダムに一つ抜き出して返す。
     -- table.removeを使っているので、抜いた分詰められる。
     -- 第二引数には関数を指定できる。指定できなければ、math.randomが使われる。

@@ -11,34 +11,19 @@ Manager = {
     end;
     update = function(self,dt)
 
-      --[[
-      if love.keyboard.wasPressed("x") then
-      end;
       if love.keyboard.wasPressed("c") then
-          eventmanager:add(E_CamMoveTo.new(100,100,1))
+          --eventmanager:add(E_CamMoveTo.new(100,100,1))
           --eventmanager:add(TestEvent.new())
-          eventmanager:add(E_CamMoveTo.new(200,200,0.2))
-          eventmanager:add(TestEvent.new())
-          eventmanager:add(E_CamMoveTo.new(300,200,1))
-          eventmanager:add(E_CamMoveFocusSeq.new(0.2))
+          --eventmanager:add(E_CamMoveTo.new(200,200,0.2))
+          --eventmanager:add(TestEvent.new())
+          --eventmanager:add(E_CamMoveTo.new(300,200,1))
+          --eventmanager:add(E_CamMoveFocusSeq.new(0.2))
           --eventmanager:add(TestEvent.new())
       end;
-      if love.keyboard.wasPressed("v") then
+      if love.mouse.wasPressed(1) then
+        Laser.new(g_x + maid64.mouse.getX(),g_y + maid64.mouse.getY())
+      end
 
-        eventmanager:add(CustomEvent.new(
-          function(obj)
-            for i,v in pairs(TestPlayer.table) do
-              obj.player = v
-              do break end;
-            end
-            obj.update = function(self,dt)
-              if self.player ~= nil then self.player.operation = false end
-              self.kill = true
-            end
-          end
-        ))
-      end;
-    ]]
 
     end;
     draw = function(self)

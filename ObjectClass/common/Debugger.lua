@@ -81,6 +81,8 @@ Debugger ={
   draw = function(self)
     --window作成
     love.graphics.setScissor(self.x, self.y, self.width, self.height )
+
+
       love.graphics.setColor(100, 100, 100, 100)
       love.graphics.rectangle("fill", self.x, self.y, self.maxWidth, self.maxHeight)
 
@@ -92,7 +94,17 @@ Debugger ={
         --debug
       draw_status(self.x + self.width-70,self.y+15)
 
+      --ObjectTableの要素数
+      local O = 0
+      for i,v in pairs(ObjectTable) do
+        O = O + 1
+      end
+      g.print("O : " .. O,self.x + self.width-70,self.y + 70)
+
+
       love.graphics.setColor(255,255,255,255)
+
+
     love.graphics.setScissor()
 
     --windowリサイズボックス

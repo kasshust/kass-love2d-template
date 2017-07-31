@@ -1,13 +1,29 @@
 love2dのテンプレート
 
-・class
-ゲーム内で用いるオブジェクトを記述
-
+・ObjectClass
+  ゲーム内で用いるオブジェクト
 ・Scene
-ゲームシーンの構造を記述
-
-・library/module
-外部ライブラリや自作ライブラリ
-
+  ゲームルームの構造
+・library
+  外部ライブラリや自作ライブラリ
 ・materials
-素材
+  素材
+
+[[
+    ObjectTable(SearchTable)
+              ↑↓
+    Scene[Room⇔Room⇔Room]<scenemanager
+                  △
+    manager/maincam <- camStand(effect)
+]]
+           ↑↓
+      eventmanager
+
+(soundmanager/debugger/input,output)
+          ↑↓
+          入力
+
+---------変更-----------
+---------追加-----------
+-->mecanim
+-->key config

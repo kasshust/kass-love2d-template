@@ -1,25 +1,21 @@
 --シーン内で毎フレーム処理させるインスタンスはここにぶっこむ
 ObjectTable = {}
-SearchTable = {}
 StaticObjectTable = {}
 
 --ライブラリと自作クラス
-require_all("module")
 require_all("scene")
-require_all("class")
+require_all("ObjectClass")
+require_all("library/own")
 
 --外部ライブラリの読み込み
-  maid64 = require("library/maid64/maid64")
-  --剛体用
-  HC = require("library/HC")
-  --その他
-  collider = HC.new(150)
-
-  sti = require("library/sti")
-  sfxr = require("library/sfxrlua/sfxr")
-  soundmanager = require("library/soundmanager/soundmanager")
-  tween = require("library/tween/tween")
-  gamera = require("library/gamera/gamera")
+  maid64 = require("library/external/maid64/maid64")
+  HC = require("library/external/HC")
+  HC.resetHash(64)
+  sti = require("library/external/sti")
+  sfxr = require("library/external/sfxrlua/sfxr")
+  soundmanager = require("library/external/soundmanager/soundmanager")
+  tween = require("library/external/tween/tween")
+  gamera = require("library/external/gamera/gamera")
 
 function love.load()
   -----------起動前の初期設定-------------------------
@@ -67,16 +63,13 @@ function love.load()
 end
 function love.update(dt)
   ----ゲームのupdate----
-
     scenemanager:update(dt)
-
   ----マネージャー-------
 
     --デバッガー
     if DEBUG == true then debugger:update(dt) end
     --最小音声管理
     soundmanager:update(dt)
-
     --入力機器
     love.keyboard.updateKeys()
     love.mouse.updateKeys()
@@ -86,21 +79,28 @@ function love.draw()
   --gui用座標の取得
   local x,y = maincam:getPosition()
   g_x,g_y = x-W/2,y-H/2
+
+  --ゲームのdraw
   maid64.start()
     scenemanager:draw()
   maid64.finish()
+
+  --デバッガー
   if DEBUG == true then debugger:draw() end
 end
 
 function love.resize(w, h)
   maid64.resize(w,h)
-  --[[maid64により不要
-  local scale = math.min(w / W ,h / H)
-  camWindowScale = scale
-  maincam:setWindow((w / 2) - (W*camWindowScale/2),(h / 2) - (H*camWindowScale/2),W*camWindowScale,H*camWindowScale)
-  maincam:setScale(camWindowScale)
-  ]]
 end
+
+------------------------------------------------------------------
+--[[maid64により不要
+local scale = math.min(w / W ,h / H)
+camWindowScale = scale
+maincam:setWindow((w / 2) - (W*camWindowScale/2),(h / 2) - (H*camWindowScale/2),W*camWindowScale,H*camWindowScale)
+maincam:setScale(camWindowScale)
+]]
+
 --[[
 function love.wheelmoved( dx, dy )
     wheel_x = wheel_x + dx*0.01
