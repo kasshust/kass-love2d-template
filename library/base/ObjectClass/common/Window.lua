@@ -200,7 +200,7 @@ TextWindow = {
   updateText = function(self)
     self.frame = self.frame + 1
     --効果音
-    if self.frame % 3 == 0 then soundmanager:play("materials/sound/se/se_test.wav") end
+    if self.frame % 3 == 0 then --[[se]]end
   end;
 
   -------------------------以下任意--------------------------

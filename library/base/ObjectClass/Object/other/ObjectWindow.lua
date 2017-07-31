@@ -1,5 +1,4 @@
 --即席テキスト
-
 ObjectTextWindow = {
   new = function(parent,text,x,y,w,h,padding,depth)
     local obj = instance(ObjectTextWindow,Object)

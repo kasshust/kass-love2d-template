@@ -123,7 +123,6 @@ Slope = {
   new = function(...)
     local obj = instance(Slope,Object)
     obj.name = "test3"
-    obj.pos = Vector.new(x,y);
     obj.vpos = Vector.new(0,0);
     obj.h,obj.w = h,w;
     local p = {}
@@ -132,6 +131,7 @@ Slope = {
       table.insert(p,v.y)
     end
     obj.solid = HC.polygon(p[1],p[2],p[3],p[4],p[5],p[6])
+    obj.pos = Vector.new(p[1],p[2]);
     return obj
   end;
   collision = function(self,dt)
@@ -146,8 +146,4 @@ Slope = {
     end)
     self.solid:move(0,3)
   end;
-
-  draw = function(self)
-    self.solid:draw("fill")
-  end
 };

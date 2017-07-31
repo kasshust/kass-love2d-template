@@ -23,7 +23,7 @@ TestPlayer = {
      --操作
      if self.operation == true then self:operate(dt) end;
      --効果音
-     if self.animator:isrenew(2,"run") == true then soundmanager:play("materials/sound/se/se_test.wav") end
+     if self.animator:isrenew(2,"run") == true then soundmanager:play("game/materials/sound/se/se_test.wav") end
 
      self.vpos = self.vpos * Vector.new(0.84,1.00) + Vector.new(0.0,0.1)
      self.pos = self.pos + self.vpos
@@ -35,12 +35,14 @@ TestPlayer = {
        --self.vpos = Vector.new(self.vpos.x,-3.2)
      end
      --移動
-     if love.keyboard.isDown("a") then
+
+     local d = love.keyboard.isDown
+     if d("a") then
        self.vpos = self.vpos + Vector.new(-0.4,0.0)
        self.animator:change("run")
        self.animator:setSpeed(5)
        self.dir.x = -1
-    elseif love.keyboard.isDown("d") then
+    elseif d("d") then
        self.vpos = self.vpos + Vector.new(0.4,0.0)
        self.animator:change("run")
        self.animator:setSpeed(5)
@@ -50,7 +52,11 @@ TestPlayer = {
       self.animator:setSpeed(1)
      end
 
-     if love.keyboard.wasPressed("q") then
+     if d("w") then self.dir.y = -1
+     elseif d("s") then self.dir.y = 1
+     else self.dir.y = 0  end
+
+     if d("q") then
        self.kill = true
      end
    end;
@@ -74,7 +80,7 @@ View = {
       --プレイヤーからの差のみ
       obj.destination = {x = 0,y = 0}
       obj.tween = tween.new(1,obj.destination, {x = obj.focus.dir.x * 40,y = 0}, tween.easing.inOutQubic)
-      obj.pre = {dir = obj.focus.dir.x}
+      obj.pre = {dir = {x = obj.focus.dir.x ,y = obj.focus.dir.x }}
       camStand:setfocus(obj)
       camStand:moveFocusSeq(0.5)
       camStand:setPos(obj.focus.pos.x,obj.focus.pos.y)
@@ -82,10 +88,11 @@ View = {
       return obj
     end;
     step = function(self,dt)
-      if self.focus.dir.x ~= self.pre.dir then
-        self.tween = tween.new(1,self.destination, {x = self.focus.dir.x * 40,y = 0}, tween.easing.inOutQubic)
+      if self.focus.dir.x ~= self.pre.dir.x or self.focus.dir.y ~= self.pre.dir.y then
+        self.tween = tween.new(1,self.destination, {x = self.focus.dir.x * 40,y = self.focus.dir.y * 40}, tween.easing.inOutQubic)
       end
-      self.pre.dir = self.focus.dir.x
+      self.pre.dir.x = self.focus.dir.x
+      self.pre.dir.y = self.focus.dir.y
       self.pos = self.focus.pos + Vector.new(self.destination.x,self.destination.y)
       self.tween:update(dt)
     end;

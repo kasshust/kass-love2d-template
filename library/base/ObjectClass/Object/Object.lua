@@ -2,7 +2,6 @@
   プラットフォーマー、トップダウンなど、アクションゲーム用
   Object class
   ゲーム内に存在するstaticでないすべてのインスタンスはこれを継承する。
-  CWはObject同士のコリジョンを検知し、任意の関数を設定し、呼ぶことができる。
   newのみでシーンに自動で追加される
 ]]--
 
@@ -23,13 +22,13 @@ Object = {
         obj.id = makeid(ObjectTable)
         ObjectTable[obj.id] = obj
 
-        obj.solid = nil
+        obj.solid = nil --shape保存用 obj.solid.other = objで他オブジェクトから操作可能に
 
         obj.name = "Object"
         local _x,_y = x or 0 , y or 0
         obj.pos = Vector.new(_x,_y)
         obj.depth = 0
-        obj.persist = false --条件を受け付けない
+        obj.persist = false --update draw条件を受け付けない
         obj.visible = true
         obj.active = true
         obj.kill = false
@@ -51,7 +50,6 @@ Object = {
 
     --メモリから破棄する
     destroy = function(self)
-      --継承先でちゃんとオーバーライドできないと100％バグ
       debugger:print("削除id:" .. self.id)
       ObjectTable[self.id] = nil
       if self.solid ~= nil then HC.remove(self.solid) end

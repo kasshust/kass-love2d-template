@@ -6,6 +6,8 @@ StaticObjectTable = {}
 require_all("scene")
 require_all("ObjectClass")
 require_all("library/own")
+require_all("library/base")
+require_all("game")
 
 --外部ライブラリの読み込み
   maid64 = require("library/external/maid64/maid64")
@@ -27,45 +29,35 @@ function love.load()
       --wheelの初期値
       wheel_x,wheel_y = 0,0
       --デバッグ
-      DEBUG = true
+      DEBUG = false
 
-  --------Manager Object------------------
+  --------kass Engine Manager-----------------
+  --1,汎用的マネージャー
+    manager = Manager.new()
+    addS(manager)
+  --2,イベントマネージャー
+    eventmanager = EventManager.new()
+    addS(eventmanager)
 
-    --!メインのカメラ
-      --stageの大きさを設定 ->各ルームで上書きして
-        maincam = gamera.new(0,0,640,480)
-        --カメラwindowの大きさを設定
-        camWindowScale = 1
-        maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
-      --maincam制御
+  --3メインのカメラ
+    --stageの大きさを設定 ->各ルームで上書きして
+      maincam = gamera.new(0,0,640,480)
+      --カメラwindowの大きさを設定
+      camWindowScale = 1
+      maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
+    --maincam制御
         camStand = CamStand.new(maincam)
         addS(camStand)
 
-    --!デバッガ
+  --4デバッガ
       debugger = Debugger.new()
-    --!シーンのマネージャー
+  --5シーンのマネージャー
       scenemanager = SceneManager:new(Title.new())
-    --!汎用的マネージャー
-      manager = Manager.new()
-      addS(manager)
-    --イベントマネージャー
-      eventmanager = EventManager.new()
-      addS(eventmanager)
-
-  -------その他設定--------------------------------
-    --標準フォント設定
-    font = love.graphics.newFont( "materials/fonts/PixelMplus12-Regular.ttf" , 12 )
-    font:setFilter( "nearest", "nearest", 1 )
-    love.graphics.setFont(font);
-
-    --スプライトシートの読み込み(ゲーム別)
-    img_test = load_image("materials/images/test/sprite_test.png")
 end
 function love.update(dt)
   ----ゲームのupdate----
     scenemanager:update(dt)
   ----マネージャー-------
-
     --デバッガー
     if DEBUG == true then debugger:update(dt) end
     --最小音声管理
@@ -82,7 +74,7 @@ function love.draw()
 
   --ゲームのdraw
   maid64.start()
-    scenemanager:draw()
+  scenemanager:draw()
   maid64.finish()
 
   --デバッガー
