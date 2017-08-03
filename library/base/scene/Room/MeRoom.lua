@@ -1,8 +1,8 @@
 ------------------------メトロヴァニア用-------------------
 --これを参考に継承して作ればええよ
 MeRoom = {
-  new = function()
-    local obj = instance(MeRoom,Scene)
+  new = function(property)
+    local obj = instance(MeRoom,Scene,property)
     obj.frame = 0
     obj.name = "メトロヴァニア"
     obj.pause = false ---objectのupdateを停止する
@@ -18,13 +18,15 @@ MeRoom = {
     --例
 
     --背景
+    if self.map.layers["bg"] ~= nil then
+      self.map.layers["bg"].x ,self.map.layers["bg"].y  = maincam.x/4,maincam.y/4
+      self.map.layers["bg"]:draw()
+    end
 
-    --タイル
-    if self.map ~= nil then self.map:draw() end
     --オブジェクト
     self:objectDraw();
     --タイル
-    --if self.map ~= nil then self.map:draw() end
+    if self.map ~= nil then self.map:draw() end
     --背景
   end;
   drawGUI = function(self)
@@ -34,9 +36,9 @@ MeRoom = {
     --オブジェクトのupdate
     for i,v in pairs(ObjectTable) do
       local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
-      if dis < 400 or v.persist == true then
+      --if dis < 400 or v.persist == true then
         v:update(dt)
-      end
+      --end
       if v.kill == true then v:destroy() end
     end
   end;

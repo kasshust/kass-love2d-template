@@ -157,7 +157,7 @@ TextWindow = {
       self:updateText()
 
       --skip
-      if love.keyboard.wasPressed("return") then
+      if controller.wasPressed("a") then
         self.frame = self.text_byte[self.num] / self.byte
         self.s_n = self.s.NOONE
       end
@@ -171,7 +171,7 @@ TextWindow = {
     end
     --受付
     switch[self.s.NOONE] = function()
-      if love.keyboard.wasPressed("return") then
+      if controller.wasPressed("a")  then
         if self.num < #self.text_byte then
           self.num = self.num + 1
           self.s_n = self.s.UPDATE

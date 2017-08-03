@@ -7,6 +7,8 @@ require_all("scene")
 require_all("ObjectClass")
 require_all("library/own")
 require_all("library/base")
+
+--ゲーム読み込み
 require_all("game")
 
 --外部ライブラリの読み込み
@@ -18,10 +20,12 @@ require_all("game")
   soundmanager = require("library/external/soundmanager/soundmanager")
   tween = require("library/external/tween/tween")
   gamera = require("library/external/gamera/gamera")
+  json = require("library/external/json/json")
 
 function love.load()
   -----------起動前の初期設定-------------------------
       --Windowサイズの設定 コレ基準
+      window_title = love.window.getTitle( )
       W,H = love.window.getMode( )
       love.window.setMode(W, H, {resizable=true, minwidth = W, minheight = H})
       --maid64設定
@@ -29,7 +33,7 @@ function love.load()
       --wheelの初期値
       wheel_x,wheel_y = 0,0
       --デバッグ
-      DEBUG = false
+      DEBUG = true
 
   --------kass Engine Manager-----------------
   --1,汎用的マネージャー
@@ -52,6 +56,7 @@ function love.load()
   --4デバッガ
       debugger = Debugger.new()
   --5シーンのマネージャー
+      --最初のシーンを指定
       scenemanager = SceneManager:new(Title.new())
 end
 function love.update(dt)
@@ -63,9 +68,7 @@ function love.update(dt)
     --最小音声管理
     soundmanager:update(dt)
     --入力機器
-    love.keyboard.updateKeys()
-    love.mouse.updateKeys()
-    gamepad.updateKeys()
+    controller.updateKeys()
 end
 function love.draw()
   --gui用座標の取得
@@ -78,6 +81,7 @@ function love.draw()
   maid64.finish()
 
   --デバッガー
+  love.window.setTitle(window_title .. " " ..tostring(love.timer.getFPS()))
   if DEBUG == true then debugger:draw() end
 end
 

@@ -139,7 +139,7 @@ Slope = {
     self:collideWith("char",self.solid,function(other,delta)
       if delta.y >= 0 and other.vpos.y >= 0 then
         other.islanding = true
-        other.pos = other.pos - Vector.new(0,delta.y-1)
+        other.pos = other.pos - Vector.new(0,delta.y-2)
         other.vpos = other.vpos * Vector.new(1,0)
         other.solid:moveTo(other.pos.x,other.pos.y)
       end

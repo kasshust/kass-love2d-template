@@ -4,6 +4,7 @@ SceneManager = {
     new = function(self,scene)
         local obj = instance(SceneManager)
         self.c_scene = scene
+        obj.frame = 0
         return obj
     end;
     update = function(self,dt)
@@ -11,12 +12,13 @@ SceneManager = {
         self.c_scene:update(dt)
     end;
     draw = function(self)
+      self.frame = self.frame + 1
       maincam:draw(function(t,l,w,h)
         self.c_scene:draw()
         self.c_scene:drawGUI()
       end)
     end;
-    changeScene = function(scene)
+    changeScene = function(scene,property)
       if scene == nil then error("scene is nil! Please specify scene") end
       --各table初期化
       ObjectTable = nil
@@ -24,10 +26,9 @@ SceneManager = {
       HC.resetHash()
       --camstandのfocusをリセット focus対象のオブジェクトは破棄されないから残ってしまう
       camStand:init()
-
       --シーン変更
       SceneManager.c_scene = nil
-      SceneManager.c_scene = scene.new()
+      SceneManager.c_scene = scene.new(property)
       local str = "ChangeScene! : " .. " -> " .. SceneManager.c_scene.name
       debugger:print(str ..":")
       collectgarbage("collect")
@@ -36,8 +37,10 @@ SceneManager = {
 
 -----------------------roomの親クラス-------------------
 Scene ={
-  new = function()
+  new = function(property)
     local obj = instance(Scene)
+    obj.property = property
+
     obj.frame = 0
     obj.name = "Scene";
     obj.size = {width = W,height = H}

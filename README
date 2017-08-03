@@ -1,6 +1,6 @@
-love2dのテンプレート
-
-
+Love2D framework 1.0 7/29
+・game
+  ゲームロジック・素材
 ・library
   外部ライブラリや自作ライブラリ
   ・base
@@ -10,24 +10,17 @@ love2dのテンプレート
   ・own
     自作(ほぼ)ライブラリ
 
-・materials
-  素材
-
-[[
-    ObjectTable(SearchTable)
-              ↑↓
-    Scene[Room⇔Room⇔Room]<scenemanager
-                  △
-    manager/maincam <- camStand(effect)
-]]
-           ↑↓
-      eventmanager
-
-(soundmanager/debugger/input,output)
-          ↑↓
-          入力
-
----------変更-----------
 ---------追加-----------
 -->mecanim
 -->key config
+-----------------------
+banka_room--30分ぐらいで終わる
+
+animator--bug
+start -> 操作stage ->  倉庫(武器) -> 怪物 -> NPC登場 -> stage・武器2 -> end
+
+ストーリー
+・勧善懲悪系
+・葛藤を抱えてるラスボス系
+・タブー系
+・意味深だけど実は意味無いよ系

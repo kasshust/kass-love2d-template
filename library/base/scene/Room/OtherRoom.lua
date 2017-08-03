@@ -1,7 +1,7 @@
 ------------------------ルームに処理を打ち込める-----------------------
 OtherRoom = {
   new = function()
-    local obj = instance(OtherRoom,Scene)
+    local obj = instance(OtherRoom,Scene,property)
     obj.frame = 0
     obj.name = "other"
     return obj

@@ -1,7 +1,6 @@
 --[[
   Me_Room用のキャラクター
 ]]
-
 Char = {
   new = function(x,y)
     local obj = instance(Char,Object,x,y)
@@ -59,4 +58,5 @@ Char = {
       g.setColor(255,255,255,255)
     end
   end;
+
 };

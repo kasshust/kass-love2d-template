@@ -101,7 +101,6 @@ Debugger ={
       end
       g.print("O : " .. O,self.x + self.width-70,self.y + 70)
 
-
       love.graphics.setColor(255,255,255,255)
 
 

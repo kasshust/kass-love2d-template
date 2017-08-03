@@ -95,7 +95,7 @@ Animator = {
   end;
   --stateを変更し、初期化する
   change = function(self,nextstate)
-    if self.nowstate ~= nextstate then self:reset() end
+    --if self.nowstate ~= nextstate then self:reset() end
     self.nowstate = nextstate
     --frameを初期化
     return true

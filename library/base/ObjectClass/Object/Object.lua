@@ -67,5 +67,18 @@ Object = {
           end
         end
       end
+    end;
+    checkPoint = function(self,tag,x,y)
+       local temp = HC.point(x,y)
+       for shape, delta in pairs(HC.collisions(temp)) do
+         if shape.other ~= nil then
+           if array.search(shape.other.tag,tag)then
+             HC.remove(temp)
+             return true
+           end
+         end
+       end
+       HC.remove(temp)
+       return false
     end
 }
