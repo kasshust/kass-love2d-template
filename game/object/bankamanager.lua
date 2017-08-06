@@ -3,7 +3,7 @@ Manager_banka = {
   new = function()
     local obj = instance(Manager_banka,GameManager)
     --生成用
-    obj.player = {num = 2,status = nil,dir = 1}
+    obj.player = {num = 1,status = nil,dir = 1}
 
     return obj
   end;
@@ -21,9 +21,6 @@ Manager_banka = {
       --Laser.new(g_x + maid64.mouse.getX(),g_y + maid64.mouse.getY())
       TestEnemy.new(g_x + maid64.mouse.getX(),g_y + maid64.mouse.getY())
       testEffect.new(g_x + maid64.mouse.getX(),g_y + maid64.mouse.getY())
-    end
-    if love.keyboard.wasPressed("k") then
-      trans(T_normal,Room1,{map = "game/materials/stages/test/test2.lua"})
     end
     if love.keyboard.wasPressed("r") then
       trans(T_normal,SceneManager.c_scene,SceneManager.c_scene.property)

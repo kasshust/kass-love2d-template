@@ -26,7 +26,7 @@ end
 
 ]]
 Animator = {
-  new = function(image,_xGS,_yGS,start,finish,speed,dafault)
+  new = function(image,_xGS,_yGS,start,finish,speed,dafault,ox,oy)
     local obj = instance(Animator)
       xGS = _xGS
       yGS = _yGS or _xGS
@@ -44,12 +44,13 @@ Animator = {
       --アニメーション状態のtable
       obj.state = {}
 
-
       --初期状態の設定
       obj.nowstate = default or "default"
       obj.state[obj.nowstate] = {}
-      obj.state[obj.nowstate]["start"] = start
-      obj.state[obj.nowstate]["finish"] = finish
+      obj.state[obj.nowstate]["start"] = start or 1
+      obj.state[obj.nowstate]["finish"] = finish or 1
+
+      obj.property = {}
 
       --前回のstart,finish値
       obj.pre = {}
@@ -61,7 +62,7 @@ Animator = {
       obj.renew = {bool = false,state = nil,num = nil}
     return obj
   end;
-  add = function(self,newstate,start,finish)
+  add = function(self,newstate,start,finish,ox,oy)
     self.state[newstate] = {}
     self.state[newstate]["start"] = start
     self.state[newstate]["finish"] = finish
@@ -69,6 +70,10 @@ Animator = {
   --speed
   setSpeed = function(self,sp)
     self.speed = sp
+  end;
+  --番号にプロパティをつける
+  setProperty = function(self,num,table)
+    self.property[num] = table
   end;
   --現在のstateのstartにリセット
   reset = function(self)
@@ -140,6 +145,17 @@ Animator = {
     local oy = _oy or 0
     local kx = _kx or 0
     local ky = _ky or 0
+
+    --property
+    if self.property[self.quadNum] ~= nil then
+      local p_ox = self.property[self.quadNum].ox or 0
+      local p_oy = self.property[self.quadNum].oy or 0
+      local p_angle = self.property[self.quadNum].angle or 0
+      ox = ox + p_ox
+      oy = oy + p_oy
+      angle = angle + p_angle
+    end
+
     love.graphics.draw(self.image,self.quad[self.quadNum],x,y,angle,xscale,yscale,ox,oy,kx,ky)
   end;
   animation = function(self,frame,start,finish,speed)

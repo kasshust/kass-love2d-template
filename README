@@ -14,11 +14,12 @@ Love2D framework 1.0 7/29
 -->mecanim
 -->key config
 -----------------------
-banka_room--30分ぐらいで終わる
-
-animator--bug
+animator--bugフレーム初期化について -> 都度initしよう
+eventテスト
 start -> 操作stage ->  倉庫(武器) -> 怪物 -> NPC登場 -> stage・武器2 -> end
 
+
+------------------次回
 ストーリー
 ・勧善懲悪系
 ・葛藤を抱えてるラスボス系

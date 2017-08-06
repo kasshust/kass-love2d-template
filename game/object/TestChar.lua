@@ -18,6 +18,8 @@ TestPlayer = {
      obj.animator:add("up",7,7)
      obj.animator:add("down",8,8)
      obj.animator:add("jump",9,9)
+     obj.animator:setProperty(3,{oy = 1})
+     obj.animator:setProperty(5,{oy = 1})
      return obj
    end;
    step = function(self,dt)
@@ -34,7 +36,7 @@ TestPlayer = {
 
      self.solid:moveTo(self.pos.x,self.pos.y)
      self:collideWith("block",self.solid,function(other,delta)
-       if delta.y > 0 and self.vpos.y < 0 then debugger:print(delta.y) soundmanager:play("game/materials/sound/se/se_walk.wav")  end
+       if delta.y > 0 and self.vpos.y < 0 then debugger:print(delta.y) soundmanager:play("game/materials/sound/se/se_head.wav")  end
      end)
    end;
    operate = function(self,dt)
@@ -52,12 +54,12 @@ TestPlayer = {
      if d("left") then
        self.vpos = self.vpos + Vector.new(-0.2,0.0)
        self.animator:change("run")
-       self.animator:setSpeed(8)
+       self.animator:setSpeed(10)
        self.dir.x = -1
     elseif d("right") then
        self.vpos = self.vpos + Vector.new(0.2,0.0)
        self.animator:change("run")
-       self.animator:setSpeed(8)
+       self.animator:setSpeed(10)
        self.dir.x = 1
     else
       self.animator:setSpeed(1)
@@ -75,9 +77,12 @@ TestPlayer = {
 
      if self.islanding == false then self.animator:change("jump") end
 
+     self.dis = 0
+     if controller.wasPressed("x") then testEffect2.new(self.pos.x + 15*self.dir.x,self.pos.y) end
+
    end;
    draw = function(self)
-     g.draw(weap_test,self.pos.x,self.pos.y,self.dir.y*self.dir.x*90*2*math.pi/360,self.dir.x,1,3,6)
+     g.draw(weap_test,self.pos.x,self.pos.y,self.dir.y*self.dir.x*90*2*math.pi/360 + self.dis,self.dir.x,1,3,6)
      self.animator:draw(self.pos.x,self.pos.y,0,1*self.dir.x,1,8,10)
      --self.solid:draw("fill")
    end;
@@ -143,7 +148,11 @@ TestEnemy = {
        local bool1 = self:checkPoint("block",self.pos.x + self.dir.x * 15,self.pos.y - 16)
        local bool2 = self:checkPoint("block",self.pos.x + self.dir.x * 15,self.pos.y - 32)
        local bool3 = self:checkPoint("block",self.pos.x + self.dir.x * 15,self.pos.y - 48)
-       if bool1 and bool2 and bool3 then self.dir.x = self.dir.x * - 1 else if self.islanding then self.vpos = Vector.new(self.vpos.x,-3.2) end end
+       if bool1 and bool2 and bool3 then self.dir.x = self.dir.x * - 1 else if self.islanding then
+         self.vpos = Vector.new(self.vpos.x,-3.2)
+         soundmanager:play("game/materials/sound/se/se_test_jump.wav")
+       end
+     end
      end)
 
      self.vpos = self.vpos * Vector.new(0.87,1.00) + Vector.new(0.0,0.1)
@@ -153,9 +162,6 @@ TestEnemy = {
      self.solid:draw("fill")
      self.col:draw("fill")
    end;
-
-   --test
-
  }
 
 Laser = {
