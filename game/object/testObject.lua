@@ -1,3 +1,4 @@
+--NPCのテスト
 TouchWindow = {
   new = function(text,x,y)
     local obj = instance(TouchWindow,Object,x,y)
@@ -24,10 +25,62 @@ TouchWindow = {
     self.solid:draw("fill")
   end;
   drawGUI = function(self)
-    if self.object ~= nil then debugger:print("aaa") self.object:drawGUI() end
+    if self.object ~= nil then self.object:drawGUI() end
   end
 };
+--ゲーム内のEventのテスト
+TouchEvent = {
+  new = function(text,x,y)
+    local obj = instance(TouchEvent,Object,x,y)
+    obj.pos = Vector.new(x,y)
+    obj.solid = HC.rectangle(obj.pos.x,obj.pos.y,16,16)
+    return obj
+  end;
 
+  step = function(self,dt)
+    --if controller.wasPressed("down") then
+      self:collideWith("player",self.solid,function(other,delta)
+          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) other.operation = false obj.kill = true end end))
+          eventmanager:add(E_CamMoveTo.new(other.pos.x + 32,other.pos.y,1))
+          eventmanager:add(TestEvent.new())
+          eventmanager:add(E_CamMoveTo.new(other.pos.x + 64,other.pos.y,1))
+          eventmanager:add(TestEvent.new())
+          eventmanager:add(E_CamMoveTo.new(other.pos.x + 32,other.pos.y+32,1))
+          eventmanager:add(E_CamMoveTo.new(other.pos.x,other.pos.y+32,1))
+          eventmanager:add(E_CamMoveFocusSeq.new(0.2))
+          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) other.operation = true obj.kill = true end end))
+          self.kill = true
+      end)
+    --end
+  end;
+  draw = function(self)
+    self.solid:draw("fill")
+  end;
+};
+--ドアのテスト
+TouchDoor = {
+  new = function(x,y,room,num)
+    local obj = instance(TouchDoor,Object,x,y)
+    obj.pos = Vector.new(x,y)
+    obj.solid = HC.rectangle(obj.pos.x,obj.pos.y,16,16)
+    obj.room = room
+    obj.num = num
+    return obj
+  end;
+  step = function(self)
+    if controller.wasPressed("down") then
+      self:collideWith("player",self.solid,function(other,delta)
+        manager.game.player.num = self.num
+        trans(T_normal,BankaRoom,BankaMap[self.room])
+      end)
+    end
+  end;
+  draw = function(self)
+    self.solid:draw("fill")
+  end;
+}
+
+--effectのテスト
 testEffect = {
     new = function(x,y)
       local obj = instance(testEffect,Object,x,y)

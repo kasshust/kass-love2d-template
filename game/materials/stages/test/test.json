@@ -7,7 +7,7 @@
          "name":"bg",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":60,
          "x":0,
          "y":0
@@ -603,14 +603,14 @@
                  "properties":
                     {
                      "num":"1",
-                     "room":"Room2"
+                     "room":"debug2"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":16,
                  "x":672,
-                 "y":352
+                 "y":448
                 }, 
                 {
                  "height":16,
@@ -618,7 +618,8 @@
                  "name":"2",
                  "properties":
                     {
-
+                     "num":"2",
+                     "room":"debug1"
                     },
                  "rotation":0,
                  "type":"",
@@ -633,8 +634,35 @@
          "width":30,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":40,
+         "name":"event",
+         "objects":[
+                {
+                 "height":16,
+                 "id":205,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":416,
+                 "y":320
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":60,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":205,
+ "nextobjectid":206,
  "orientation":"orthogonal",
  "properties":
     {

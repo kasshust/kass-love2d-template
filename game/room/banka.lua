@@ -1,18 +1,34 @@
---Bankaに使うルーム
---[[
-changeRoom("room",num) roomのナンバーにplayerをスポーン
-]]
 
+--map情報を記述
+BankaMap = {
+  debug1 = {map = "game/materials/stages/test/test.lua",name = "デバッグ1",music = "game/materials/sound//music/gunctrl_-_07_-_Dactylic_Hexameter.mp3"},
+  debug2 = {map = "game/materials/stages/test/test2.lua",name = "デバッグ2",music = "game/materials/sound//music/Nctrnm_-_Pull.mp3"},
+  debug3 = {map = "game/materials/stages/test/test3.lua",name = "デバッグ3",music = nil},
+}
+
+--Title
+Title = {}
+
+--ゲーム内ルーム
 BankaRoom = {
   new = function(property)
     local obj = instance(BankaRoom,Scene,property)
     obj.frame = 0
-    obj.name = "バンカ"
-    obj.pause = false ---objectのupdateを停止する
+
+    if property == nil then error("This bankaroom is invalid") end
+    obj.name = property["name"]
+
+    --BGM
+    if property["music"] ~= nil then
+      obj.m = love.audio.newSource(property["music"], "stream")
+      soundmanager:playMusic(obj.m)
+    end
+
+    obj.pause = false ---objectのupdateを停止する 使ってない
     obj.bg = {} ----ばっぐぐらうんど　canvasを作成して  登録、drawで表示
 
-    obj.frame = 0
-    obj.name = "stage1"
+
+    --------------マップ作成
     obj.map = sti(property.map, {})
     obj.size = {width = obj.map.width*16,height = obj.map.height*16}
     maincam:setWorld(0,0,obj.size.width,obj.size.height)
@@ -30,18 +46,20 @@ BankaRoom = {
           local text = split(o.properties["text"],":")
           TouchWindow.new(text,o.x,o.y)
         end)
+        obj:create(obj.map.layers.event,function(o)
+          TouchEvent.new(text,o.x,o.y)
+        end)
+
+        --propertyで判定する？
         obj:create(obj.map.layers.door,function(o)
-          if manager.game.player.num == tonumber(o.name) then
+          TouchDoor.new(o.x,o.y,o.properties["room"],o.properties["num"])
+          if manager.game.player.num == o.name then
             TestPlayer.new(o.x + 8,o.y + 8)
             debugger:print(o.x,o.y)
             return true
           end
         end)
 
-    obj.m = love.audio.newSource("game/materials/sound//music/gunctrl_-_07_-_Dactylic_Hexameter.mp3", "stream")
-    --obj.m = love.audio.newSource("game/materials/sound//music/Nctrnm_-_Pull.mp3", "stream")
-    obj.m:setVolume(0.3)
-    soundmanager:playMusic(obj.m)
 
     return obj
   end;
@@ -104,10 +122,11 @@ BankaRoom = {
   end;
 }
 
-
-Title = {
+-------------------------------------------------------------------------------------------------------------
+----PreRoom----　初期化用ルーム
+PreRoom = {
   new = function(property)
-    local obj = instance(Title,OtherRoom,property)
+    local obj = instance(PreRoom,OtherRoom,property)
     --このゲームのマネージャーを登録
     manager:apply(Manager_banka.new())
 
@@ -120,34 +139,27 @@ Title = {
     --スプライトシートの読み込み(ゲーム別)
     img_test = load_image("game/materials/images/test/sprite_test.png")
     weap_test = load_image("game/materials/images/test/weapon_test.png")
+    if(DEBUG) then trans(T_normal,DebugRoom,{})end
+    return obj
+  end;
+  u = function(self,dt)
+    --なんかムービーとかロゴとか
+  end;
+  dg = function(self)
+     g.print("なんかロゴとか",0,H/2)
+  end;
+}
 
+----debug
+DebugRoom = {
+  new = function(property)
+    local obj = instance(DebugRoom,OtherRoom,property)
     obj.frame = 0
     obj.name = "banka"
     obj.s = Select.new(1,5)
     obj.tw = {num = 1}
     obj.tween = tween.new(0.1,obj.tw, {num = obj.s.now}, tween.easing.outBounce)
     obj.picture = load_image("game/materials/images/test/sprite_test2.png")
-
-    --[[
-    t = {
-        a = 5,
-        b = "z",
-        c = {1, 2, 3},
-        d = {
-            e = true,
-            f = false
-        }
-    }
-    -- Use encode to generate a json string from a Lua table.
-    str = json.encode(t)
-    print(str)
-    -- Use decode to generate a Lua table from a JSON string.
-    im_back = json.decode(str)
-    print("whoa")
-    for k, v in pairs(im_back) do
-        print(k.." "..tostring(v))
-    end
-    ]]
     return obj
   end;
   u = function(self,dt)
@@ -162,13 +174,13 @@ Title = {
     if bool then
       local switch = {}
       switch[1] = function()
-        trans(T_normal,BankaRoom,{map = "game/materials/stages/test/test.lua"})
+        trans(T_normal,BankaRoom,BankaMap["debug1"])
       end
       switch[2] = function()
-        trans(Transition,BankaRoom,{map = "game/materials/stages/test/test2.lua"})
+        trans(T_normal,BankaRoom,BankaMap["debug2"])
       end
       switch[3] = function()
-        trans(Transition,BankaRoom,{map = "game/materials/stages/test/test3.lua"})
+        trans(T_normal,BankaRoom,BankaMap["debug3"])
       end
       switch[4] = function()
       end

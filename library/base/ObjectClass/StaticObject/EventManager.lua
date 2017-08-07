@@ -73,16 +73,3 @@ Event = {
   draw = function(self)end;
   drawGUI = function(self)end;
 };
-
-
---[[
-  CustomEvent　たぶんなんでもできる！
-]]
-CustomEvent = {
-  new = function(f)
-    local obj = instance(CustomEvent,Event)
-    obj.name = "custom event"
-    f(obj)
-    return obj
-  end;
-}

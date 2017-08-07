@@ -33,7 +33,7 @@ function love.load()
       --wheelの初期値
       wheel_x,wheel_y = 0,0
       --デバッグ
-      DEBUG = true
+      DEBUG = false
 
   --------kass Engine Manager-----------------
   --1,汎用的マネージャー
@@ -57,7 +57,7 @@ function love.load()
       debugger = Debugger.new()
   --5シーンのマネージャー
       --最初のシーンを指定
-      scenemanager = SceneManager:new(Title.new())
+      scenemanager = SceneManager:new(PreRoom.new())
 end
 function love.update(dt)
   ----ゲームのupdate----
