@@ -184,7 +184,10 @@ return {
           height = 16,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["num"] = "1",
+            ["room"] = "debug1"
+          }
         },
         {
           id = 3,
@@ -197,7 +200,10 @@ return {
           height = 16,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["num"] = "1",
+            ["room"] = "debug3"
+          }
         }
       }
     }

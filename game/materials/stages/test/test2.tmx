@@ -23,7 +23,17 @@
   <object id="16" x="272" y="320" width="16" height="32"/>
  </objectgroup>
  <objectgroup name="door">
-  <object id="2" name="1" x="224" y="336" width="16" height="16"/>
-  <object id="3" name="2" x="400" y="336" width="16" height="16"/>
+  <object id="2" name="1" x="224" y="336" width="16" height="16">
+   <properties>
+    <property name="num" value="1"/>
+    <property name="room" value="debug1"/>
+   </properties>
+  </object>
+  <object id="3" name="2" x="400" y="336" width="16" height="16">
+   <properties>
+    <property name="num" value="1"/>
+    <property name="room" value="debug3"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

@@ -126,7 +126,7 @@ TextWindow = {
       table.insert(obj.text_byte,#v + prev)
       obj.text = obj.text .. v
     end
-    print(unpack(obj.text_byte))
+    --print(unpack(obj.text_byte))
     --表示用
     obj.str = ""
     obj.frame = 0

@@ -75,6 +75,7 @@ TouchDoor = {
       end)
     end
   end;
+
   draw = function(self)
     self.solid:draw("fill")
   end;

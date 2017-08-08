@@ -2,24 +2,19 @@
 Manager_banka = {
   new = function()
     local obj = instance(Manager_banka,GameManager)
+
     --生成用
     obj.player = {num = "2",status = nil,dir = 1}
+    obj.test = nil
 
     return obj
   end;
   update = function(self,dt)
 
-    if love.mouse.wasPressed(1) then
-      --Laser.new(g_x + maid64.mouse.getX(),g_y + maid64.mouse.getY())
-      --TestEnemy.new(g_x + maid64.mouse.getX(),g_y + maid64.mouse.getY())
-      --testEffect.new(g_x + maid64.mouse.getX(),g_y + maid64.mouse.getY())
-    end
     if love.keyboard.wasPressed("r") then
       trans(T_normal,SceneManager.c_scene,SceneManager.c_scene.property)
     end
   end;
-
-
   draw = function()end;
   drawGUI = function()end;
 

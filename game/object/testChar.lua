@@ -1,11 +1,13 @@
 
 TestPlayer = {
+  c_player = nil,
    new = function(x,y)
      local obj = instance(TestPlayer,Char,x,y)
      table.insert(obj.tag,"player")
 
      --collision上書き
      --identity用col
+     obj.depth = -10
      obj.w,obj.h = 12,12
      obj.solid = HC.rectangle(obj.pos.x,obj.pos.y,obj.w,obj.h)
      obj.solid.other = obj
@@ -99,7 +101,10 @@ TestPlayer = {
    draw = function(self)
      --g.draw(weap_test,self.pos.x,self.pos.y,self.dir.y*self.dir.x*90*2*math.pi/360 + self.dis,self.dir.x,1,3,6)
      self.animator:draw(self.pos.x,self.pos.y,0,1*self.dir.x,1,8,10)
-     --self.solid:draw("fill")
+
+     g.setColor(255,0,0,128)
+     self.solid:draw("fill")
+     g.setColor(255,255,255,255)
    end;
    destroy = function(self)
      Char.destroy(self)

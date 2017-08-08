@@ -18,19 +18,28 @@ SceneManager = {
         self.c_scene:drawGUI()
       end)
     end;
-    changeScene = function(scene,property)
-      if scene == nil then error("scene is nil! Please specify scene") end
+    init = function(self)
       --各table初期化
       ObjectTable = nil
       ObjectTable = {}
+      --HC空間の初期化
       HC.resetHash()
-      --camstandのfocusをリセット focus対象のオブジェクトは破棄されないから残ってしまう
+      --camStandの初期化
       camStand:init()
+      --GC駆動
+    end;
+    changeScene = function(scene,property)
+      --例外
+      if scene == nil then error("scene is nil! Please specify scene") end
+      --シーン初期化
+      SceneManager.init()
       --シーン変更
       SceneManager.c_scene = nil
       SceneManager.c_scene = scene.new(property)
       local str = "ChangeScene! : " .. " -> " .. SceneManager.c_scene.name
       debugger:print(str ..":")
+
+      --コイツを呼ばないとメモリから削除されないから必須
       collectgarbage("collect")
     end;
 }
@@ -57,7 +66,6 @@ Scene ={
   drawGUI = function(self)
     --ここに各ルームの処理
   end;
-
   --必要ならオーバーライドで書き換えて
   staticObjectUpdate = function(self,dt)
     for i,v in ipairs(StaticObjectTable) do

@@ -84,7 +84,7 @@ return {
     {
       type = "objectgroup",
       name = "block",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -710,7 +710,10 @@ return {
           height = 29.9355,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["num"] = "1",
+            ["room"] = "debug1"
+          }
         },
         {
           id = 78,
@@ -723,7 +726,10 @@ return {
           height = 29.9355,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["num"] = "2",
+            ["room"] = "debug2"
+          }
         }
       }
     }

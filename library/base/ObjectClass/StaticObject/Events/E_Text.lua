@@ -3,7 +3,7 @@ TestEvent = {
   new = function()
     local obj = instance(TestEvent,Event)
     obj.name = "testEvent"
-    obj.window = TextWindow.new(nil,{"テストイベントです。テキストを表示します。","改行どうしようね。めんどくさいよ。どうしようどうしよう！","次で削除"},W/2,H/2,W-30,75,10,0)
+    obj.window = TextWindow.new(nil,{"テストイベントです。テキストを表示します。","改行どうしようね。めんどくさいよ。どうしようどうしよう！","次で削除"},W/2,H/4*3,W-30,65,10,0)
     return obj
   end;
   update = function(self,dt)

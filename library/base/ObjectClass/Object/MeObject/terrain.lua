@@ -19,9 +19,9 @@ Block = {
   end;
 
   draw = function(self)
-    --g.setColor(255,0,0,128)
-    --self.solid:draw("fill")
-    --g.setColor(255,255,255,255)
+    g.setColor(255,0,0,128)
+    self.solid:draw("fill")
+    g.setColor(255,255,255,255)
   end
 };
 

@@ -22,6 +22,9 @@ require_all("game")
   gamera = require("library/external/gamera/gamera")
   json = require("library/external/json/json")
 
+  -- グローバル変数　GC実行閾値初期化
+gc_threshold = 1000
+
 function love.load()
   -----------起動前の初期設定-------------------------
       --Windowサイズの設定 コレ基準
@@ -69,6 +72,15 @@ function love.update(dt)
     soundmanager:update(dt)
     --入力機器
     controller.updateKeys()
+
+    -- 以下はループ内などで実行
+    if collectgarbage("count") > gc_threshold then
+    	collectgarbage("step",2000)
+    	gc_threshold = collectgarbage("count") + 250
+    	print( "threshold set to "..gc_threshold)
+    else
+    	gc_threshold = gc_threshold - 1
+    end
 end
 function love.draw()
   --gui用座標の取得

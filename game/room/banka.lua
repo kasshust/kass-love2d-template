@@ -9,6 +9,9 @@ BankaMap = {
 --Title
 Title = {}
 
+
+--trans? manager.game.player = nil このゲーム用のtrans
+
 --ゲーム内ルーム
 BankaRoom = {
   new = function(property)
@@ -22,6 +25,8 @@ BankaRoom = {
     if property["music"] ~= nil then
       obj.m = love.audio.newSource(property["music"], "stream")
       soundmanager:playMusic(obj.m)
+    else
+      love.audio.stop()
     end
 
     obj.pause = false ---objectのupdateを停止する 使ってない
@@ -32,6 +37,7 @@ BankaRoom = {
     obj.map = sti(property.map, {})
     obj.size = {width = obj.map.width*16,height = obj.map.height*16}
     maincam:setWorld(0,0,obj.size.width,obj.size.height)
+
 
         obj:create(obj.map.layers.block,function(o)
           Block.new(o.x,o.y,o.width,o.height)
@@ -54,13 +60,25 @@ BankaRoom = {
         obj:create(obj.map.layers.door,function(o)
           TouchDoor.new(o.x,o.y,o.properties["room"],o.properties["num"])
           if manager.game.player.num == o.name then
-            TestPlayer.new(o.x + 8,o.y + 8)
-            debugger:print(o.x,o.y)
+            --managerのプレイヤーを上書き
+            manager.game.test = TestPlayer.new(o.x + 8,o.y + 8)
             return true
           end
         end)
 
-
+          local player = manager.game.test
+          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) player.operation = false obj.kill = true end end))
+          eventmanager:add(E_CamMoveTo.new(player.pos.x + 32,player.pos.y,1))
+          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) camStand:shake(10,3,3) player.vpos.x = 3 obj.kill = true end end))
+          eventmanager:add(TestEvent.new())
+          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) camStand:shake(10,3,3) player.vpos.y = -3 obj.kill = true end end))
+          eventmanager:add(E_CamMoveTo.new(player.pos.x + 64,player.pos.y,1))
+          eventmanager:add(TestEvent.new())
+          eventmanager:add(E_CamMoveTo.new(player.pos.x + 32,player.pos.y+32,1))
+          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) camStand:shake(10,3,3) player.dir.x = -1 obj.kill = true end end))
+          eventmanager:add(E_CamMoveTo.new(player.pos.x,player.pos.y+32,1))
+          eventmanager:add(E_CamMoveFocusSeq.new(0.2))
+          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) player.operation = true obj.kill = true end end))
     return obj
   end;
   update = function(self,dt)
