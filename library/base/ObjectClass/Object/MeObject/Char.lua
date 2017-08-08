@@ -38,8 +38,12 @@ Char = {
     self:collideWith("block",self.solid,function(other,delta)
       self.pos = self.pos + delta
       if delta.y < 0 then self.islanding = true  end
-      if delta.x ~= 0 and (math.abs(delta.x) > 0.01) then self.vpos = self.vpos * Vector.new(0,1) end
-      if delta.y ~= 0 and (math.abs(delta.y) > 0.01) then self.vpos = self.vpos * Vector.new(1,0) end
+
+      if delta.x ~= 0 and (math.abs(delta.x) > 0.01) then
+        self.vpos = self.vpos * Vector.new(0,1)
+      elseif delta.y ~= 0 and (math.abs(delta.y) > 0.01) then
+        self.vpos = self.vpos * Vector.new(1,0)
+      end
     end)
 
   end;

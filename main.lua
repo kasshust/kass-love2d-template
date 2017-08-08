@@ -33,7 +33,7 @@ function love.load()
       --wheelの初期値
       wheel_x,wheel_y = 0,0
       --デバッグ
-      DEBUG = false
+      DEBUG = true
 
   --------kass Engine Manager-----------------
   --1,汎用的マネージャー

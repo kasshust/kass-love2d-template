@@ -9,7 +9,7 @@ TestPlayer = {
      obj.w,obj.h = 12,12
      obj.solid = HC.rectangle(obj.pos.x,obj.pos.y,obj.w,obj.h)
      obj.solid.other = obj
-
+     obj.gravity = 0.08
      obj.operation = true
      obj.view = View.new(obj)
 
@@ -31,7 +31,13 @@ TestPlayer = {
      if self.animator:isrenew(3,"run") == true or self.animator:isrenew(5,"run") then soundmanager:play("game/materials/sound/se/se_walk.wav") end
 
 
-     self.vpos = self.vpos * Vector.new(0.84,1.00) + Vector.new(0.0,0.08)
+     if controller.isDown("a") and self.vpos.y < 0 then self.gravity = 0.12 * 0.7 else self.gravity = 0.12 end
+
+     local inertia = 1.00
+
+     if self.islanding == true then inertia = 0.93 end
+
+     self.vpos = self.vpos * Vector.new(inertia,1.00) + Vector.new(0.0,self.gravity)
      self.pos = self.pos + self.vpos
 
      self.solid:moveTo(self.pos.x,self.pos.y)
@@ -50,16 +56,25 @@ TestPlayer = {
 
      local d = controller.isDown
 
+
      self.animator:change("default")
      if d("left") then
-       self.vpos = self.vpos + Vector.new(-0.2,0.0)
+       local add = -0.07
+       if self.islanding == true then
+         add = -0.14
+       end
+       self.vpos = self.vpos + Vector.new(add,0.0)
        self.animator:change("run")
-       self.animator:setSpeed(10)
+       self.animator:setSpeed(12)
        self.dir.x = -1
     elseif d("right") then
-       self.vpos = self.vpos + Vector.new(0.2,0.0)
+      local add = 0.07
+      if self.islanding == true then
+        add = 0.14
+      end
+      self.vpos = self.vpos + Vector.new(add,0.0)
        self.animator:change("run")
-       self.animator:setSpeed(10)
+       self.animator:setSpeed(12)
        self.dir.x = 1
     else
       self.animator:setSpeed(1)
@@ -82,7 +97,7 @@ TestPlayer = {
 
    end;
    draw = function(self)
-     g.draw(weap_test,self.pos.x,self.pos.y,self.dir.y*self.dir.x*90*2*math.pi/360 + self.dis,self.dir.x,1,3,6)
+     --g.draw(weap_test,self.pos.x,self.pos.y,self.dir.y*self.dir.x*90*2*math.pi/360 + self.dis,self.dir.x,1,3,6)
      self.animator:draw(self.pos.x,self.pos.y,0,1*self.dir.x,1,8,10)
      --self.solid:draw("fill")
    end;
@@ -101,7 +116,7 @@ View = {
 
       --プレイヤーからの差のみ
       obj.destination = {x = 0,y = 0}
-      obj.tween = tween.new(1,obj.destination, {x = obj.focus.dir.x * 40,y = 0}, tween.easing.inOutQubic)
+      obj.tween = tween.new(1,obj.destination, {x = obj.focus.dir.x * 75,y = 0}, tween.easing.inOutQubic)
       obj.pre = {dir = {x = obj.focus.dir.x ,y = obj.focus.dir.x }}
       camStand:setfocus(obj)
       camStand:moveFocusSeq(0.5)
@@ -111,7 +126,7 @@ View = {
     end;
     step = function(self,dt)
       if self.focus.dir.x ~= self.pre.dir.x or self.focus.dir.y ~= self.pre.dir.y then
-        self.tween = tween.new(1,self.destination, {x = self.focus.dir.x * 40,y = self.focus.dir.y * 70}, tween.easing.inOutQubic)
+        self.tween = tween.new(1,self.destination, {x = self.focus.dir.x * 70,y = self.focus.dir.y * 70}, tween.easing.inOutQubic)
       end
       self.pre.dir.x = self.focus.dir.x
       self.pre.dir.y = self.focus.dir.y
