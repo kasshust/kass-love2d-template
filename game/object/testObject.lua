@@ -41,13 +41,6 @@ TouchEvent = {
     --if controller.wasPressed("down") then
       self:collideWith("player",self.solid,function(other,delta)
           eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) other.operation = false obj.kill = true end end))
-          eventmanager:add(E_CamMoveTo.new(other.pos.x + 32,other.pos.y,1))
-          eventmanager:add(TestEvent.new())
-          eventmanager:add(E_CamMoveTo.new(other.pos.x + 64,other.pos.y,1))
-          eventmanager:add(TestEvent.new())
-          eventmanager:add(E_CamMoveTo.new(other.pos.x + 32,other.pos.y+32,1))
-          eventmanager:add(E_CamMoveTo.new(other.pos.x,other.pos.y+32,1))
-          eventmanager:add(E_CamMoveFocusSeq.new(0.2))
           eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) other.operation = true obj.kill = true end end))
           self.kill = true
       end)

@@ -42,6 +42,8 @@ TestPlayer = {
      self.vpos = self.vpos * Vector.new(inertia,1.00) + Vector.new(0.0,self.gravity)
      self.pos = self.pos + self.vpos
 
+     --self.pos = Vector.new(g_x + maid64.mouse.getX() , g_y + maid64.mouse.getY())
+
      self.solid:moveTo(self.pos.x,self.pos.y)
      self:collideWith("block",self.solid,function(other,delta)
        if delta.y > 0 and self.vpos.y < 0 then debugger:print(delta.y) soundmanager:play("game/materials/sound/se/se_head.wav")  end
@@ -94,16 +96,11 @@ TestPlayer = {
 
      if self.islanding == false then self.animator:change("jump") end
 
-     self.dis = 0
-     if controller.wasPressed("x") then testEffect2.new(self.pos.x + 15*self.dir.x,self.pos.y) end
-
    end;
    draw = function(self)
-     --g.draw(weap_test,self.pos.x,self.pos.y,self.dir.y*self.dir.x*90*2*math.pi/360 + self.dis,self.dir.x,1,3,6)
      self.animator:draw(self.pos.x,self.pos.y,0,1*self.dir.x,1,8,10)
-
      g.setColor(255,0,0,128)
-     self.solid:draw("fill")
+     --self.solid:draw("fill")
      g.setColor(255,255,255,255)
    end;
    destroy = function(self)

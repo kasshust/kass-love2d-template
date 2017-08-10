@@ -1,16 +1,8 @@
-
---map情報を記述
-BankaMap = {
-  debug1 = {map = "game/materials/stages/test/test.lua",name = "デバッグ1",music = "game/materials/sound//music/gunctrl_-_07_-_Dactylic_Hexameter.mp3"},
-  debug2 = {map = "game/materials/stages/test/test2.lua",name = "デバッグ2",music = "game/materials/sound//music/Nctrnm_-_Pull.mp3"},
-  debug3 = {map = "game/materials/stages/test/test3.lua",name = "デバッグ3",music = nil},
-}
-
 --Title
 Title = {}
 
 
---trans? manager.game.player = nil このゲーム用のtrans
+--trans? manager.game.player = nil このゲーム用のtrans　キャラクター制御の可否
 
 --ゲーム内ルーム
 BankaRoom = {
@@ -38,7 +30,9 @@ BankaRoom = {
     obj.size = {width = obj.map.width*16,height = obj.map.height*16}
     maincam:setWorld(0,0,obj.size.width,obj.size.height)
 
+      local ev_property = {}
 
+        --地形読み込み
         obj:create(obj.map.layers.block,function(o)
           Block.new(o.x,o.y,o.width,o.height)
         end)
@@ -48,37 +42,27 @@ BankaRoom = {
         obj:create(obj.map.layers.slope,function(o)
           Slope.new(o.polygon)
         end)
-        obj:create(obj.map.layers.text,function(o)
-          local text = split(o.properties["text"],":")
-          TouchWindow.new(text,o.x,o.y)
-        end)
-        obj:create(obj.map.layers.event,function(o)
-          TouchEvent.new(text,o.x,o.y)
+        --char読み込み
+        obj:create(obj.map.layers.enemy,function(o)
+          BankaEnemy[o.name][o.properties["type"]].new(o.x,o.y)
         end)
 
-        --propertyで判定する？
+        --propertyで判定する？ property経由でプレイヤーを生成しない遷移も可能
         obj:create(obj.map.layers.door,function(o)
           TouchDoor.new(o.x,o.y,o.properties["room"],o.properties["num"])
           if manager.game.player.num == o.name then
             --managerのプレイヤーを上書き
-            manager.game.test = TestPlayer.new(o.x + 8,o.y + 8)
+            ev_property["player"] = {x = o.x + 8, y = o.y + 8}
             return true
           end
         end)
 
-          local player = manager.game.test
-          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) player.operation = false obj.kill = true end end))
-          eventmanager:add(E_CamMoveTo.new(player.pos.x + 32,player.pos.y,1))
-          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) camStand:shake(10,3,3) player.vpos.x = 3 obj.kill = true end end))
-          eventmanager:add(TestEvent.new())
-          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) camStand:shake(10,3,3) player.vpos.y = -3 obj.kill = true end end))
-          eventmanager:add(E_CamMoveTo.new(player.pos.x + 64,player.pos.y,1))
-          eventmanager:add(TestEvent.new())
-          eventmanager:add(E_CamMoveTo.new(player.pos.x + 32,player.pos.y+32,1))
-          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) camStand:shake(10,3,3) player.dir.x = -1 obj.kill = true end end))
-          eventmanager:add(E_CamMoveTo.new(player.pos.x,player.pos.y+32,1))
-          eventmanager:add(E_CamMoveFocusSeq.new(0.2))
-          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) player.operation = true obj.kill = true end end))
+
+        ---room開始----
+
+        --イベント読み込み
+        property["event"](ev_property)
+
     return obj
   end;
   update = function(self,dt)
@@ -156,7 +140,6 @@ PreRoom = {
 
     --スプライトシートの読み込み(ゲーム別)
     img_test = load_image("game/materials/images/test/sprite_test.png")
-    weap_test = load_image("game/materials/images/test/weapon_test.png")
     if(DEBUG) then trans(T_normal,DebugRoom,{})end
     return obj
   end;

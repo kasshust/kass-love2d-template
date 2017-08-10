@@ -41,3 +41,72 @@ Manager_banka = {
     end
   end;
 };
+
+
+---Tiledから読み込み
+-------------------------------------------------Event-------------------------s
+--room別イベント生成
+BankaEvent = {
+  ev_debug1 = function(p)
+    flag = not BankaFlag["debug"]["test1"]
+    if flag then
+      local player = nil
+      eventmanager:add(E_CamMoveTo.new(p.player.x,p.player.y,0.1))
+      eventmanager:add(E_CamMoveTo.new(42*16,28*16,3))
+      eventmanager:add(E_CamMoveTo.new(p.player.x,p.player.y,2))
+      eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) TestEnemy.new(p.player.x,p.player.y) obj.kill = true end end))
+      eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) camStand:shake(2,2,3) obj.kill = true end end))
+      eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) player =  TestPlayer.new(p.player.x,p.player.y) obj.kill = true end end))
+      eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) player.vpos = 5 obj.kill = true end end))
+      eventmanager:add(E_CamMoveFocusSeq.new(0.2))
+      BankaFlag["debug"]["test1"] = true
+    else
+      local player = TestPlayer.new(p.player.x,p.player.y)
+    end
+  end;
+  ev_debug2 = function(p)
+    TestPlayer.new(p.player.x,p.player.y)
+  end;
+  ev_debug3 = function(p)
+    eventmanager:add(TestEvent.new())
+    eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) camStand:shake(2,2,3) obj.kill = true end end))
+    eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) player =  TestPlayer.new(p.player.x,p.player.y) obj.kill = true end end))
+  end;
+}
+
+--map情報を記述
+BankaMap = {
+  debug1 = {map = "game/materials/stages/test/test.lua",name = "デバッグ1",music = "game/materials/sound//music/gunctrl_-_07_-_Dactylic_Hexameter.mp3",event = BankaEvent["ev_debug1"]},
+  debug2 = {map = "game/materials/stages/test/test2.lua",name = "デバッグ2",music = "game/materials/sound//music/Nctrnm_-_Pull.mp3",event = BankaEvent["ev_debug2"]},
+  debug3 = {map = "game/materials/stages/test/test3.lua",name = "デバッグ3",music = nil,event = BankaEvent["ev_debug3"]}
+}
+
+BankaEnemy = {
+  debug = {
+    test1 = TestEnemy
+  }
+}
+
+--ゲーム内のflag
+BankaFlag = {
+  debug = {
+    test1 = false
+  }
+}
+
+
+
+--[[
+  E_Select.new(e1,e2)
+  e1 = {
+
+  }
+  e2 = {
+
+  }
+]]
+
+--[[
+      EventChar(event) <- eventをもたせる
+      EventTouch(event) <- eventをもたせる
+]]
