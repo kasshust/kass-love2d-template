@@ -15,7 +15,7 @@ TestPlayer = {
      obj.operation = true
      obj.view = View.new(obj)
 
-     obj.animator = Animator.new(img_test,16,16,1,2,1)
+     obj.animator = Animator.new(sprite.test1,16,16,1,2,1)
      obj.animator:add("run",3,6)
      obj.animator:add("up",7,7)
      obj.animator:add("down",8,8)
@@ -35,14 +35,12 @@ TestPlayer = {
 
      if controller.isDown("a") and self.vpos.y < 0 then self.gravity = 0.12 * 0.7 else self.gravity = 0.12 end
 
-     local inertia = 1.00
+     local iter = 0.98
+     if self.islanding then iter = 0.90  end
+     self.vpos = self.vpos * Vector.new(iter,1.00)
 
-     if self.islanding == true then inertia = 0.93 end
-
-     self.vpos = self.vpos * Vector.new(inertia,1.00) + Vector.new(0.0,self.gravity)
+     self.vpos = self.vpos + Vector.new(0.0,self.gravity)
      self.pos = self.pos + self.vpos
-
-     --self.pos = Vector.new(g_x + maid64.mouse.getX() , g_y + maid64.mouse.getY())
 
      self.solid:moveTo(self.pos.x,self.pos.y)
      self:collideWith("block",self.solid,function(other,delta)
@@ -62,26 +60,29 @@ TestPlayer = {
 
 
      self.animator:change("default")
-     if d("left") then
-       local add = -0.07
-       if self.islanding == true then
-         add = -0.14
+
+     if self.islanding then
+       if d("left") then
+         self.vpos = self.vpos + Vector.new(-0.22,0.0)
+         self.animator:change("run")
+         self.animator:setSpeed(12)
+         self.dir.x = -1
+      elseif d("right") then
+         self.vpos = self.vpos + Vector.new(0.22,0.0)
+         self.animator:change("run")
+         self.animator:setSpeed(12)
+         self.dir.x = 1
+      else
+        self.animator:setSpeed(1)
        end
-       self.vpos = self.vpos + Vector.new(add,0.0)
-       self.animator:change("run")
-       self.animator:setSpeed(12)
-       self.dir.x = -1
-    elseif d("right") then
-      local add = 0.07
-      if self.islanding == true then
-        add = 0.14
-      end
-      self.vpos = self.vpos + Vector.new(add,0.0)
-       self.animator:change("run")
-       self.animator:setSpeed(12)
-       self.dir.x = 1
-    else
-      self.animator:setSpeed(1)
+     else
+       if d("left") then
+         self.vpos = self.vpos + Vector.new(-0.1,0.0)
+         self.dir.x = -1
+       elseif d("right") then
+        self.vpos = self.vpos + Vector.new(0.1,0.0)
+         self.dir.x = 1
+       end
      end
 
      if d("up") then
@@ -98,6 +99,7 @@ TestPlayer = {
 
    end;
    draw = function(self)
+
      self.animator:draw(self.pos.x,self.pos.y,0,1*self.dir.x,1,8,10)
      g.setColor(255,0,0,128)
      --self.solid:draw("fill")
@@ -180,6 +182,8 @@ TestEnemy = {
      self.col:draw("fill")
    end;
  }
+
+
 
 Laser = {
    new = function(x,y)

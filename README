@@ -1,4 +1,5 @@
 Love2D framework 1.0 7/29
+
 ・game
   ゲームロジック・素材
 ・library
@@ -9,9 +10,7 @@ Love2D framework 1.0 7/29
     外部ライブラリ
   ・own
     自作(ほぼ)ライブラリ
-
-sceneにルーム・マネージャーに専用のマネージャーをapplyして作成
-
+sceneにルームをmanagerに専用のマネージャーをapplyしてgameを作成
 ---------追加-----------
 -->mecanim
 -->key config

@@ -1,15 +1,3 @@
---[[
-  gameraを制御する
-
-  update object -> staticobject
-
-  (self.pos)
-    ↓
-  base
-  effect
-    ↓
-
-]]--
 CamStand = {
   new = function(cam)
     local obj = instance(CamStand,StaticObject)

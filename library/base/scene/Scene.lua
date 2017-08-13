@@ -52,6 +52,7 @@ Scene ={
 
     obj.frame = 0
     obj.name = "Scene";
+    obj.pause = false
     obj.size = {width = W,height = H}
     --maincam-worldをステージの大きさに合わせる(自動でバウンダリーが設定される)
     maincam:setWorld(0,0,obj.size.width,obj.size.height)

@@ -1,16 +1,16 @@
 --(例)遷移イベント
 E_Transition = {
-  new = function(room)
+  new = function(class,room,property)
     local obj = instance(E_Transition,Event)
-    obj.name = "testEvent2"
+    obj.name = "E_Transition"
     --トランジションを生成しておく
-    obj.transition = T_normal.new(room)
+    obj.transition = class.new(room,property)
     return obj
   end;
   init = function(self) debugger:print("---E:遷移イベントが発火しました") end;
   update = function(self,dt)
     self.transition:update(dt)
-    if self.transition.kill == true then self.kill = true debugger:print("破棄") end
+    if self.transition.kill == true then self.kill = true debugger:print("---E:遷移イベントが終了しました") end
   end;
   drawGUI = function(self)
     self.transition:drawGUI()

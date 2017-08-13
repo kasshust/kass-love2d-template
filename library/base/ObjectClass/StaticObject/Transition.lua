@@ -92,28 +92,40 @@ Transition = {
 --トランジション例 時間、演出を作る
 T_normal = {
   new = function(room,property)
-    local obj = instance(T_normal,Transition,room,property,1,1,nil,tween.easing.inSine)
-    obj.canvas = love.graphics.newCanvas(320 + 32, 240 + 32)
+    local obj = instance(T_normal,Transition,room,property,1,1,tween.easing.inSine,tween.easing.inSine)
     return obj
   end;
   drawIN = function(self)
     local t = self.tw.frame
-    g.setColor(255,255,255)
-
-    local canvas = g.getCanvas()
-
-    g.setCanvas(self.canvas)
-      g.setColor(0,0,0)
-      love.graphics.rectangle("fill",g_x - 30 + t*350,g_y,32,480)
-    g.setCanvas(canvas)
-
-    g.setColor(255,255,255)
-    love.graphics.draw(self.canvas,g_x,g_y)
+    g.setColor(8,8,24)
+    for j = 0,H/16 do
+      for i = 0,W/16 do
+        g.setColor(8,8,32)
+        if t < 0.5 then
+          if (i+j) % 2 == 0 then
+            local scale = math.clamp( ((W + H) * 16)/( i + j ) * t,0,16)
+             g.rectangle("fill",g_x + i*16,g_y + j*16,scale,16)
+          end
+        else
+          local scale = math.clamp( ((W + H) * 16)/( i + j ) * t,0,16)
+          if (i+j) % 2 == 0 then g.rectangle("fill",g_x + i*16,g_y + j*16,16,16) end
+          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*16,g_y + j*16,scale,16) end
+        end
+      end
+    end
   end;
   drawOUT = function(self)
     local t = self.tw.frame
-    g.setColor(0,0,0)
-    love.graphics.rectangle("fill", g_x + W*(1-t),g_y,W,H)
-    g.setColor(255,255,255)
+    g.setColor(8,8,32)
+    for j = 0,H/16 do
+      for i = 0,W/16 do
+        if t < 0.5 then
+          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*16,g_y + j*16,16*t*2,16) end
+        else
+          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*16,g_y + j*16,16,16) end
+          if (i+j) % 2 == 0 then g.rectangle("fill",g_x + (i+1)*16,g_y + j*16,-16*2*(t-0.5),16) end
+        end
+      end
+    end
   end;
 };

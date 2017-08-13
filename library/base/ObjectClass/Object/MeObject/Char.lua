@@ -38,19 +38,12 @@ Char = {
     self:collideWith("block",self.solid,function(other,delta)
       self.pos = self.pos + delta
       if delta.y < 0 then self.islanding = true  end
-
-      debugger:print(other.vpos.x,other.vpos.y)
-
       if  delta.x ~= 0 then
         if math.sign(delta.x) == -math.sign(self.vpos.x) then self.vpos = self.vpos * Vector.new(0,1) end
       elseif delta.y ~= 0 then
         if math.sign(delta.y) == -math.sign(self.vpos.y) then self.vpos = self.vpos * Vector.new(1,0) end
       end
-
-
-      --すみっこならvpos.xを保持
     end)
-
   end;
   checkLanding = function(self)
     self.islanding = false

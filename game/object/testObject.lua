@@ -148,3 +148,119 @@ testEffect2 = {
       self.solid:draw()
     end;
 }
+
+Wheel = {
+   new = function(x,y,r)
+     local obj = instance(Wheel,Object,x,y)
+     obj.name = "wheel"
+     obj.pos = Vector.new(x,y)
+     obj.animator = Animator.new(spr_test,16,16,1,1)
+     obj.frame = 0
+     obj.p_angle = 0
+     obj.angle = 0
+     obj.vangle = 0
+     obj.aangle = 0
+     obj.child = {}
+     obj.p = p
+     obj.r = r
+     obj.l = 2 * r * math.pi
+     return obj
+   end;
+   step = function(self)
+     self:rotate(60*2*math.pi/360)
+   end;
+   draw = function(self)
+     self.animator:draw(self.pos.x,self.pos.y,-(self.angle + self.p_angle),1*self.r/8,1*self.r/8,8,8)
+   end;
+   add = function(self)
+   end;
+   rotate = function(self,add)
+     self.angle = self.angle + add
+   end
+ }
+
+Plate = {
+   new = function(x,y,r)
+     local obj = instance(Plate,Object,x,y,r)
+     obj.pos = Vector.new(x,y)
+     obj.animator = Animator.new(spr_test,16,16)
+     obj.frame = 0
+     obj.p_angle = 0
+     obj.angle = 0
+     obj.vangle = 0
+     obj.aangle = 0
+     obj.child = {}
+     obj.p = p
+     obj.r = r
+     obj.l = 2 * r * math.pi
+     return obj
+   end;
+   step = function(self,dt)
+     for i,v in ipairs(self.child) do
+       v.obj.pos = Vector.new(self.pos.x + v.r*math.cos(v.angle+self.angle+self.p_angle),self.pos.y - v.r*math.sin(v.angle+self.angle+self.p_angle))
+       v.obj.p_angle = self.angle + self.p_angle
+     end
+   end;
+   draw = function(self)
+    g.circle("line",self.pos.x,self.pos.y,self.r)
+    g.line(self.pos.x,self.pos.y,self.pos.x + self.r * math.cos(self.angle + self.p_angle),self.pos.y - self.r * math.sin(self.angle + self.p_angle))
+   end;
+   add = function(self,obj,r,angle)
+     local t = {}
+     t.r = r
+     t.angle = angle
+     t.obj = obj
+     table.insert(self.child,t)
+   end;
+   rotate = function(self,add)
+     self.angle = self.angle + add
+   end
+ }
+
+Obj_unko = {
+   new = function(x,y)
+     local obj = instance(Obj_unko,Object,x,y)
+     obj.name = "Obj_unko"
+     obj.plate = Plate.new(maid64.mouse.getX() + g_x,maid64.mouse.getY() + g_y,48)
+     obj.plate2 = Plate.new(maid64.mouse.getX() + g_x,maid64.mouse.getY() + g_y,32)
+     obj.plate2:add(Wheel.new(0,0,8),32,0*2*math.pi/360)
+     obj.plate:add(Wheel.new(0,0,8),48,90*2*math.pi/360)
+     obj.plate:add(Wheel.new(0,0,8),48,180*2*math.pi/360)
+     obj.plate:add(obj.plate2,48,30*2*math.pi/360)
+     obj.va = 0
+     obj.va2 = 0
+   end;
+   step = function(self)
+     local ac = math.random(-1,1)
+     local ac2 = math.random(-1,1)
+
+
+     self.va = self.va + ac
+     self.va2 = self.va2 + ac2
+     self.va = self.va * 0.98
+     self.va2 = self.va2 * 0.98
+     self.plate2:rotate(self.va/360*2*math.pi)
+     self.plate:rotate(-self.va2/360*2*math.pi)
+   end;
+ }
+
+
+ Smoke = {
+    new = function(x,y)
+      local obj = instance(Smoke,Object,x,y)
+      obj.name = "Smoke"
+      obj.animator = Animator.new(sprite.test2,16,16,2+16*1,9+16*1,math.random(10,30))
+      obj.vpos = Vector.new(math.random(-6,6),math.random(-6,6))
+      obj.depth = -10000
+      return obj
+    end;
+    step = function(self,dt)
+      self.animator:update(dt)
+      self.vpos = self.vpos * 0.90
+      self.pos = self.pos + self.vpos
+      if self.animator:isfinish() then  self.kill = true end
+    end;
+    draw = function(self)
+      self.animator:draw(self.pos.x,self.pos.y,0,1,1,8,8)
+    end;
+  }

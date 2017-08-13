@@ -1,3 +1,36 @@
+-------------------------------------------------------------------------------------------------------------
+----PreRoom----　初期化用ルーム
+PreRoom = {
+  new = function(property)
+    local obj = instance(PreRoom,OtherRoom,property)
+    --このゲームのマネージャーを登録
+
+    -------初期設定--------------------------------
+    --標準フォント設定
+    font = love.graphics.newFont( "game/materials/fonts/PixelMplus12-Regular.ttf" , 12 )
+    font:setFilter( "nearest", "nearest", 1 )
+    love.graphics.setFont(font);
+
+    --スプライトシートの読み込み(ゲーム別)
+    sprite = {}
+    sprite.test1 = load_image("game/materials/images/test/sprite_test.png")
+    sprite.test2 = load_image("game/materials/images/test/spr_test.png")
+    sprite.test3 = load_image("game/materials/images/test/spr_test2.png")
+
+
+    --manager作成
+    manager:apply(Manager_banka.new())
+    if(DEBUG) then trans(T_normal,DebugRoom,{})end
+    return obj
+  end;
+  u = function(self,dt)
+    --なんかムービーとかロゴとか
+  end;
+  dg = function(self)
+    g.print("なんかロゴとか",0,H/2)
+  end;
+}
+
 --Title
 Title = {}
 
@@ -9,8 +42,9 @@ BankaRoom = {
   new = function(property)
     local obj = instance(BankaRoom,Scene,property)
     obj.frame = 0
-
     if property == nil then error("This bankaroom is invalid") end
+
+    --ルーム名
     obj.name = property["name"]
 
     --BGM
@@ -23,7 +57,6 @@ BankaRoom = {
 
     obj.pause = false ---objectのupdateを停止する 使ってない
     obj.bg = {} ----ばっぐぐらうんど　canvasを作成して  登録、drawで表示
-
 
     --------------マップ作成
     obj.map = sti(property.map, {})
@@ -47,8 +80,8 @@ BankaRoom = {
           BankaEnemy[o.name][o.properties["type"]].new(o.x,o.y)
         end)
 
-        --propertyで判定する？ property経由でプレイヤーを生成しない遷移も可能
-        obj:create(obj.map.layers.door,function(o)
+        -- property経由プレイヤー
+          obj:create(obj.map.layers.door,function(o)
           TouchDoor.new(o.x,o.y,o.properties["room"],o.properties["num"])
           if manager.game.player.num == o.name then
             --managerのプレイヤーを上書き
@@ -59,7 +92,6 @@ BankaRoom = {
 
 
         ---room開始----
-
         --イベント読み込み
         property["event"](ev_property)
 
@@ -68,7 +100,6 @@ BankaRoom = {
   update = function(self,dt)
     self:staticObjectUpdate(dt)
     if not self.pause then self:objectUpdate(dt) end
-    self.frame = self.frame + 1
   end;
   draw = function(self)
     --背景
@@ -124,32 +155,6 @@ BankaRoom = {
   end;
 }
 
--------------------------------------------------------------------------------------------------------------
-----PreRoom----　初期化用ルーム
-PreRoom = {
-  new = function(property)
-    local obj = instance(PreRoom,OtherRoom,property)
-    --このゲームのマネージャーを登録
-    manager:apply(Manager_banka.new())
-
-    -------初期設定--------------------------------
-    --標準フォント設定
-    font = love.graphics.newFont( "game/materials/fonts/PixelMplus12-Regular.ttf" , 12 )
-    font:setFilter( "nearest", "nearest", 1 )
-    love.graphics.setFont(font);
-
-    --スプライトシートの読み込み(ゲーム別)
-    img_test = load_image("game/materials/images/test/sprite_test.png")
-    if(DEBUG) then trans(T_normal,DebugRoom,{})end
-    return obj
-  end;
-  u = function(self,dt)
-    --なんかムービーとかロゴとか
-  end;
-  dg = function(self)
-     g.print("なんかロゴとか",0,H/2)
-  end;
-}
 
 ----debug
 DebugRoom = {

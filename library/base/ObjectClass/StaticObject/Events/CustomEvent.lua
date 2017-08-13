@@ -9,3 +9,17 @@ CustomEvent = {
     return obj
   end;
 }
+
+CustomEventInit = {
+  new = function(f)
+    local obj = instance(CustomEventInit,Event)
+    obj.name = "init event"
+    obj.f = f
+    return obj
+  end;
+  init = function(self)
+    debugger:print("---E:CustomEventInit:発火")
+    self:f()
+    self.kill = true
+  end;
+}
