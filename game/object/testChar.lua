@@ -181,21 +181,66 @@ TestEnemy = {
      self.solid:draw("fill")
      self.col:draw("fill")
    end;
- }
+}
 
+TestEnemy2 = {
+    new = function(x,y)
+      local obj = instance(TestEnemy2,Char,x,y)
+      obj.name = "TestEnemy"
+      table.insert(obj.tag,"enemy")
 
+      obj.solid = HC.rectangle(obj.pos.x,obj.pos.y,12,12)
+      obj.solid.other = obj
 
-Laser = {
-   new = function(x,y)
-     local obj = instance(Laser,MoveBlock,x,y,32,8,16,0)
-     obj.name = "Laser"
-     return obj
-   end;
-   step = function(self,dt)
-     MoveBlock.step(self)
-   end;
-   draw = function(self)
-     self.solid:draw()
-     g.points(self.pos.x,self.pos.y)
-   end;
- }
+      obj.animator = Animator.new(sprite.test2,16,16,1+16*2,4+16*2,6)
+      obj.animator:add("run",5+16*2,6+16*2)
+
+      obj.status = Enum:new{"default","run","jump"}
+      obj.status_now = obj.status.default
+
+      obj.alarm = Alarm.new(60)
+      return obj
+    end;
+    step = function(self,dt)
+      self.animator:update(dt)
+
+      if self.alarm:update(dt) then
+        self.status_now = math.random(0,self.status:len()-1)
+        self.dir.x = math.choose(-1,1)
+        self.alarm:set(120)
+      end
+
+      local switch = {}
+      switch[self.status.run] = function()
+        --run
+        self.vpos = self.vpos + Vector.new(0.2*self.dir.x,0.0)
+        self.animator:change("run")
+        self.animator:setSpeed("15")
+      end
+      switch[self.status.default] = function()
+        --default
+        self.animator:change("default")
+        self.animator:setSpeed("6")
+      end
+      switch[self.status.jump] = function()
+        --jump
+        if self.islanding then self.vpos = Vector.new(self.vpos.x,-1.2) end
+        self.animator:change("default")
+        self.animator:setSpeed("15")
+      end
+      switch[self.status_now]()
+
+      self:collideWith("shot",self.solid,function(other,delta)
+        other.pos = other.pos - delta
+        self.kill = true
+        soundmanager:play(ADDRESS.se .. "se_hit.wav")
+      end)
+
+      self.vpos = self.vpos * Vector.new(0.87,1.00) + Vector.new(0.0,0.1)
+      self.pos = self.pos + self.vpos
+    end;
+    draw = function(self)
+      --self.solid:draw("fill")
+      self.animator:draw(self.pos.x,self.pos.y,0,self.dir.x,1,8,10)
+    end;
+  }

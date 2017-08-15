@@ -28,6 +28,7 @@ function Enum:new(o)
 	return setmetatable(t, self)
 end
 
+
 function Enum:__index(k)
 	if _[self][k] == nil then
 		error('"' .. k .. '" is undefined enumerator.', 2)

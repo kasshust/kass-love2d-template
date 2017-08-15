@@ -3,11 +3,8 @@ ObjectTable = {}
 StaticObjectTable = {}
 
 --ライブラリと自作クラス
-require_all("scene")
-require_all("ObjectClass")
 require_all("library/own")
 require_all("library/base")
-
 --ゲーム読み込み
 require_all("game")
 
@@ -22,8 +19,9 @@ require_all("game")
   gamera = require("library/external/gamera/gamera")
   json = require("library/external/json/json")
 
-  -- グローバル変数　GC実行閾値初期化
+--GC実行閾値初期化
 gc_threshold = 1000
+
 
 function love.load()
   -----------起動前の初期設定-------------------------
@@ -35,6 +33,11 @@ function love.load()
       maid64.setup(W,H)
       --wheelの初期値
       wheel_x,wheel_y = 0,0
+
+      --gui,mouseの座標
+      g_x,g_y = 0,0
+      m_x,g_x = 0,0
+
       --デバッグ
       DEBUG = true
 
@@ -86,6 +89,7 @@ function love.draw()
   --gui用座標の取得
   local x,y = maincam:getPosition()
   g_x,g_y = x-W/2,y-H/2
+  m_x,m_y = g_x+maid64.mouse.getX(),g_y+maid64.mouse.getY()
 
   --ゲームのdraw
   maid64.start()

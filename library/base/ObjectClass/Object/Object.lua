@@ -17,7 +17,6 @@ end
 Object = {
     new = function(x,y)
         local obj = instance(Object)
-
         --id登録
         obj.id = makeid(ObjectTable)
         ObjectTable[obj.id] = obj

@@ -18,10 +18,6 @@ Char = {
     obj.dir = {x = 1,y= 0}
     return obj
   end;
-
-  step = function(self,dt)
-  end;
-
   --メトロヴァニア的な当たり判定
   collision = function(self)
     ---着地判定
@@ -33,17 +29,26 @@ Char = {
   end;
 
   checkCollisionWithSolid = function(self)
-    --blockと衝突
+
+    --vsp
+    self.solid:moveTo(self.pos.x,self.pos.y-self.vpos.y)
+    self:collideWith("block",self.solid,function(other,delta)
+        if  delta.x ~= 0 then if math.sign(delta.x) == -math.sign(self.vpos.x) then  self.vpos = self.vpos * Vector.new(0,1) end end
+    end)
+    --hsp
+    self.solid:moveTo(self.pos.x-self.vpos.x,self.pos.y)
+    self:collideWith("block",self.solid,function(other,delta)
+      if delta.y ~= 0 then if math.sign(delta.y) == -math.sign(self.vpos.y) then self.vpos = self.vpos * Vector.new(1,0) end end
+    end)
+
+    --col
     self.solid:moveTo(self.pos.x,self.pos.y)
     self:collideWith("block",self.solid,function(other,delta)
       self.pos = self.pos + delta
       if delta.y < 0 then self.islanding = true  end
-      if  delta.x ~= 0 then
-        if math.sign(delta.x) == -math.sign(self.vpos.x) then self.vpos = self.vpos * Vector.new(0,1) end
-      elseif delta.y ~= 0 then
-        if math.sign(delta.y) == -math.sign(self.vpos.y) then self.vpos = self.vpos * Vector.new(1,0) end
-      end
     end)
+
+
   end;
   checkLanding = function(self)
     self.islanding = false

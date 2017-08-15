@@ -1,6 +1,12 @@
 function math.clamp(x, min, max)
     return x < min and min or (x > max and max or x)
 end
+
+function math.choose(...)
+  local t = {...}
+  return t[math.random(#t)]
+end
+
 function point_direction(a,b)
     local dx = b[1] - a[1]
     local dy = b[2] - a[2]

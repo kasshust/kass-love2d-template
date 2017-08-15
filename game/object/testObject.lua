@@ -78,12 +78,11 @@ TouchDoor = {
 testEffect = {
     new = function(x,y)
       local obj = instance(testEffect,Object,x,y)
-      obj.tw = {w = 8,h = 8,color = 230}
+      obj.tw = {w = 16,h = 16,color = 230}
       obj.queue = Queue.new()
       obj.queue:enqueue(tween.new(1/5, obj.tw, {w = 0,h = 0,color = 230}, tween.easing.outBounce))
       obj.x = x or 0
       obj.y = y or 0
-      soundmanager:play("game/materials/sound/se/se_explight.wav")
       return obj
     end;
     update = function(self,dt)
@@ -101,51 +100,6 @@ testEffect = {
       --g.setColor(math.random(230,255),self.tw.color,math.random(230,255))
       love.graphics.ellipse("fill", self.x, self.y, self.tw.w, self.tw.h)
       g.setColor(255,255,255)
-    end;
-}
-
-testEffect2 = {
-    new = function(x,y)
-      local obj = instance(testEffect2,Object,x,y)
-      obj.tw = {w = 8,h = 4,color = 230,dis = 0}
-      obj.queue = Queue.new()
-      obj.queue:enqueue(tween.new(1/3, obj.tw, {w = 0,h = 0,color = 230,dis = 8}, tween.easing.outBounce))
-      --obj.queue:enqueue(tween.new(1/3, obj.tw, {w = 0,h = 0,color = 126}, tween.easing.outBounce))
-      soundmanager:play("game/materials/sound/se/se_shot.wav")
-      obj.x = x or 0
-      obj.y = y or 0
-      obj.solid = HC.circle(x,y,4)
-      return obj
-    end;
-    update = function(self,dt)
-      local finish = self.queue:top():update(dt)
-      if finish then
-        self.queue:dequeue()
-      end
-      if self.queue:isEmpty() then
-        self.kill = true
-      end
-
-      self.solid:moveTo(self.x+16*self.tw.dis,self.y)
-      self:collideWith("block",self.solid,function(other,delta)
-        testEffect.new(self.x+16*self.tw.dis + delta.x,self.y)
-        self.kill = true
-      end)
-      self:collideWith("enemy",self.solid,function(other,delta)
-        testEffect.new(self.x+16*self.tw.dis + delta.x,self.y)
-        self.kill = true
-        other.kill = true
-      end)
-    end;
-    draw = function(self)
-      --g.setColor(self.tw.color,math.random(230,255),self.tw.color)
-      --g.setColor(math.random(230,255),self.tw.color,math.random(230,255))
-      g.setColor(255,255,self.tw.color,128)
-      love.graphics.ellipse("fill", self.x+15*self.tw.dis, self.y, self.tw.w, self.tw.h)
-      g.setColor(255,255,self.tw.color)
-      love.graphics.ellipse("fill", self.x+16*self.tw.dis, self.y, self.tw.w, self.tw.h)
-      g.setColor(255,255,255)
-      self.solid:draw()
     end;
 }
 
@@ -242,14 +196,14 @@ Obj_unko = {
      self.plate2:rotate(self.va/360*2*math.pi)
      self.plate:rotate(-self.va2/360*2*math.pi)
    end;
- }
+}
 
 
- Smoke = {
+Smoke = {
     new = function(x,y)
       local obj = instance(Smoke,Object,x,y)
       obj.name = "Smoke"
-      obj.animator = Animator.new(sprite.test2,16,16,2+16*1,9+16*1,math.random(10,30))
+      obj.animator = Animator.new(sprite.test2,16,16,2+16*0,9+16*0,math.random(10,30))
       obj.vpos = Vector.new(math.random(-6,6),math.random(-6,6))
       obj.depth = -10000
       return obj
@@ -262,5 +216,60 @@ Obj_unko = {
     end;
     draw = function(self)
       self.animator:draw(self.pos.x,self.pos.y,0,1,1,8,8)
+    end;
+}
+
+TestShot = {
+   new = function(x,y,vsp,hsp)
+     local obj = instance(TestShot,Object,x,y)
+     obj.name = "TestShot"
+     obj.tag = {"shot"}
+     obj.vpos = Vector.new(vsp or 0,hsp or 0)
+     obj.solid = HC.rectangle(x,y,6,4)
+     obj.solid.other = obj
+     obj.frame = 0
+     return obj
+   end;
+   step = function(self,dt)
+     self.pos = self.pos + self.vpos
+     self.vpos = self.vpos * 0.99
+     self.frame = self.frame + 1
+
+     self.solid:moveTo(self.pos.x,self.pos.y)
+
+     if self.frame > 10 then self.kill = true testEffect.new(self.pos.x,self.pos.y) end
+
+     self:collideWith("block",self.solid,function(other,delta)
+       self.pos = self.pos + delta
+       testEffect.new(self.pos.x,self.pos.y)
+       self.kill = true
+       soundmanager:play(ADDRESS.se .. "se_hit.wav")
+     end)
+   end;
+   collision = function(self)
+   end;
+   draw = function(self)
+     local xscale,yscale = math.abs(self.vpos.x/2) + 3 , math.abs(self.vpos.y/2) + 3
+     g.setColor(ASE.DARKGRAY)
+     g.ellipse("fill",self.pos.x - self.vpos.x,self.pos.y - self.vpos.y,xscale,yscale)
+     g.setColor(ASE.LIGHTCYAN)
+     g.ellipse("fill",self.pos.x - self.vpos.x/2,self.pos.y - self.vpos.y/2,xscale,yscale)
+     g.setColor(ASE.WHITE)
+     g.ellipse("fill",self.pos.x,self.pos.y,xscale,yscale)
+   end;
+ }
+
+ Laser = {
+    new = function(x,y)
+      local obj = instance(Laser,MoveBlock,x,y,32,8,16,0)
+      obj.name = "Laser"
+      return obj
+    end;
+    step = function(self,dt)
+      MoveBlock.step(self)
+    end;
+    draw = function(self)
+      self.solid:draw()
+      g.points(self.pos.x,self.pos.y)
     end;
   }

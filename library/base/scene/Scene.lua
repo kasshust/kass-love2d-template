@@ -4,7 +4,6 @@ SceneManager = {
     new = function(self,scene)
         local obj = instance(SceneManager)
         self.c_scene = scene
-        obj.frame = 0
         return obj
     end;
     update = function(self,dt)
@@ -12,7 +11,6 @@ SceneManager = {
         self.c_scene:update(dt)
     end;
     draw = function(self)
-      self.frame = self.frame + 1
       maincam:draw(function(t,l,w,h)
         self.c_scene:draw()
         self.c_scene:drawGUI()
