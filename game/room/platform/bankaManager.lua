@@ -15,6 +15,9 @@ Manager_banka = {
     if love.mouse.wasPressed(2) then
        TestEnemy2.new(math.floor(m_x/16)*16,math.floor(m_y/16)*16)
     end
+    if love.keyboard.wasPressed("t") then
+       trans(T_normal,DebugRoom,nil)
+    end
   end;
   drawGUI = function(self)
     g.setColor(255,128,128,128)

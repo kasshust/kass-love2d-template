@@ -33,20 +33,22 @@ CamStand = {
         local distance = destination - self.pos
 
         ---暫定ゲイン
-        local gain = 1/5
-        local apos = distance*gain*self.speed
+        local pgain = 1/10
+        local dgain = 1/10
+        
+        local apos = distance*pgain*self.speed+distance*self.vpos*dgain
 
         ---加速度加算
         local vpos = self.vpos + apos
 
         --規定スピードを超える場合distance基準に
-        if vpos:len() > self.maxspeed*gain then
+        if vpos:len() > self.maxspeed*pgain then
           self.vpos = distance/10*self.speed
         else
           self.vpos = vpos
         end
 
-        if self.vpos:len() < 0.01 then
+        if self.vpos:len() < 0.1 then
           self.vpos = self.vpos * 0
           self.pos = destination
         end

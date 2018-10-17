@@ -1,34 +1,3 @@
---PreRoom--　初期化用ルーム
-PreRoom = {
-  new = function(property)
-    local obj = instance(PreRoom,OtherRoom,property)
-    --このゲームのマネージャーを登録
-
-    -------初期設定--------------------------------
-    --標準フォント設定
-    font = love.graphics.newFont( "game/materials/fonts/PixelMplus12-Regular.ttf" , 12 )
-    font:setFilter( "nearest", "nearest", 1 )
-    love.graphics.setFont(font);
-
-    --スプライトシートの読み込み(ゲーム別)
-    sprite = {}
-    sprite.test1 = load_image("game/materials/images/test/sprite_test.png")
-    sprite.test2 = load_image("game/materials/images/test/spr_test.png")
-    sprite.test3 = load_image("game/materials/images/test/spr_test2.png")
-
-    --manager作成
-    manager:apply(Manager_banka.new())
-    if(DEBUG) then trans(T_normal,DebugRoom,{})end
-    return obj
-  end;
-  u = function(self,dt)
-    --なんかムービーとかロゴとか
-  end;
-  dg = function(self)
-    g.print("なんかロゴとか",0,H/2)
-  end;
-}
-
 --Title--
 Title = {}
 
@@ -158,7 +127,7 @@ BankaRoom = {
 
     end
 
-    obj.rectanges = {}
+    --bj.rectanges = {}
 
     for y = 1,obj.map.height do
       for x = 1,obj.map.width do
@@ -166,7 +135,7 @@ BankaRoom = {
         if search[y][x] == 0 then
           w,h = makeRect(x,y)
           if w ~= 0 and h ~= 0 then
-            table.insert(obj.rectanges,{x,y,w,h})
+            --table.insert(obj.rectanges,{x,y,w,h})
             Block.new(x*16-16,y*16-16,w*16,h*16)
           end
         end
@@ -272,51 +241,54 @@ BankaRoom = {
         end
       end
     end;
-  }
+}
+
 
   --Debug Room--
-  DebugRoom = {
-    new = function(property)
-      local obj = instance(DebugRoom,OtherRoom,property)
-      obj.frame = 0
-      obj.name = "banka"
-      obj.s = Select.new(1,5)
-      obj.tw = {num = 1}
-      obj.tween = tween.new(0.1,obj.tw, {num = obj.s.now}, tween.easing.outBounce)
-      obj.picture = load_image("game/materials/images/test/sprite_test2.png")
-      return obj
-    end;
-    u = function(self,dt)
-      local bool2 = self.s:check()
-      if bool2 then
-        self.tween = tween.new(0.1,self.tw, {num = self.s.now}, tween.easing.outBounce)
-        soundmanager:play("game/materials/sound/se/se_test.wav")
+DebugRoom = {
+  new = function(property)
+    local obj = instance(DebugRoom,OtherRoom,property)
+    obj.frame = 0
+    obj.name = "banka"
+    obj.s = Select.new(1,5)
+    obj.tw = {num = 1}
+    obj.tween = tween.new(0.1,obj.tw, {num = obj.s.now}, tween.easing.outBounce)
+    obj.picture = load_image("game/materials/images/test/sprite_test2.png")
+    return obj
+  end;
+  u = function(self,dt)
+    local bool2 = self.s:check()
+    if bool2 then
+      self.tween = tween.new(0.1,self.tw, {num = self.s.now}, tween.easing.outBounce)
+      soundmanager:play("game/materials/sound/se/se_test.wav")
+    end
+
+    local bool = controller.wasPressed("a")
+
+    if bool then
+      local switch = {}
+      switch[1] = function()
+        trans(T_normal,BankaRoom,BankaMap["debug1"])
       end
-
-      local bool = controller.wasPressed("a")
-
-      if bool then
-        local switch = {}
-        switch[1] = function()
-          trans(T_normal,BankaRoom,BankaMap["debug1"])
-        end
-        switch[2] = function()
-          trans(T_normal,BankaRoom,BankaMap["debug2"])
-        end
-        switch[3] = function()
-          trans(T_normal,BankaRoom,BankaMap["debug3"])
-        end
-        switch[4] = function()
-          trans(T_normal,BankaRoom,BankaMap["debug4"])
-        end
-        switch[5] = function()
-        end
+      switch[2] = function()
+        trans(T_normal,BankaRoom,BankaMap["S1"])
+      end
+      switch[3] = function()
+        trans(T_normal,BankaRoom,BankaMap["S2"])
+      end
+      switch[4] = function()
+        trans(T_normal,BankaRoom,BankaMap["S3"])
+      end
+      switch[5] = function()
+        trans(T_normal,BankaRoom,BankaMap["Sboss"])
+      end
         switch[self.s.now]()
       end
       self.tween:update(dt)
     end;
-    d = function(self)
-    end;
+    
+  d = function(self)
+  end;
     dg = function(self)
       ---背景
       g.setColor(32,32,48)
@@ -330,7 +302,7 @@ BankaRoom = {
 
       ---text
       local text = {"Metorovania1","Metorovania2","c","d","e"}
-      local explain = {"debug1へ","debug2へ","debug3へ","debug4へ","梨"}
+    local explain = {"","","","",""}
 
       local x,y,dif = 100,120,18
       local wi_x,wi_y = x-30,y-16
@@ -345,6 +317,5 @@ BankaRoom = {
           end
           g.print("→",x-20,y)
         end)
-
-    end;
-  }
+  end;
+}

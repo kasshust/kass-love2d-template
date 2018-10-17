@@ -60,7 +60,7 @@ Object = {
         --相手がnilの場合は無視
         if shape.other ~= nil then
           local type = type(shape.other.tag)
-          if type ~= "table" then do break end; end
+          if type ~= "table" then error("tag must be table!") do break end; end
           if array.search(shape.other.tag,tag) then
             f(shape.other,delta)
           end

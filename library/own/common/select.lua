@@ -1,7 +1,7 @@
 Select = {
   new = function(min,max)
     local obj = instance(Select)
-    obj.min = min or 1
+    obj.min = min or 1  --ここいるか？
     obj.max = max or 1
     obj.now = 1
     return obj

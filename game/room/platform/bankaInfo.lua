@@ -49,7 +49,11 @@ BankaMap = {
   debug1 = {map = "game/materials/stages/test/test.lua",name = "デバッグ1",music = "game/materials/sound/music/gunctrl_-_07_-_Dactylic_Hexameter.mp3",event = BankaEvent["ev_debug1"]},
   debug2 = {map = "game/materials/stages/test/test2.lua",name = "デバッグ2",music = "game/materials/sound/music/Nctrnm_-_Pull.mp3",event = BankaEvent["ev_debug2"]},
   debug3 = {map = "game/materials/stages/test/test3.lua",name = "デバッグ3",music = nil,event = BankaEvent["ev_debug3"]},
-  debug4 = {map = "game/materials/stages/test2/test4.lua",name = "デバッグ4",music = nil,event = BankaEvent["ev_standard"]}
+  debug4 = {map = "game/materials/stages/test2/test4.lua",name = "デバッグ4",music = nil,event = BankaEvent["ev_standard"]},
+  S1 = {map = "game/materials/stages/S/S1.lua",name = "S1",music = "game/materials/sound/music/gunctrl_-_07_-_Dactylic_Hexameter.mp3",event = BankaEvent["ev_standard"]},
+  S2 = {map = "game/materials/stages/S/S2.lua",name = "S2",music = "game/materials/sound/music/gunctrl_-_07_-_Dactylic_Hexameter.mp3",event = BankaEvent["ev_standard"]},
+  S3 = {map = "game/materials/stages/S/S3.lua",name = "S3",music = "game/materials/sound/music/gunctrl_-_07_-_Dactylic_Hexameter.mp3",event = BankaEvent["ev_standard"]},
+  Sboss = {map = "game/materials/stages/S/Sboss.lua",name = "Sboss",music = "game/materials/sound/music/gunctrl_-_07_-_Dactylic_Hexameter.mp3",event = BankaEvent["ev_standard"]},
 }
 --enemy情報
 BankaEnemy = {

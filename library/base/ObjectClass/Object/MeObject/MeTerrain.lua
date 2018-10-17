@@ -2,6 +2,7 @@
   Me_Room用の地形オブジェクト
 ]]
 
+-- 四角形
 Block = {
   new = function(x,y,w,h)
     local obj = instance(Block,Object)
@@ -19,9 +20,9 @@ Block = {
   end;
 
   draw = function(self)
-    --g.setColor(255,0,0,128)
-    --self.solid:draw("fill")
-    --g.setColor(255,255,255,255)
+    g.setColor(255,0,0,128)
+    self.solid:draw("fill")
+    g.setColor(255,255,255,255)
   end
 };
 
@@ -135,15 +136,14 @@ Slope = {
     return obj
   end;
   collision = function(self,dt)
-    self.solid:move(0,-3)
+    
     self:collideWith("char",self.solid,function(other,delta)
       if delta.y >= 0 and other.vpos.y >= 0 then
         other.islanding = true
-        other.pos = other.pos - Vector.new(0,delta.y-2)
+        other.pos = other.pos - Vector.new(0,delta.y)
         other.vpos = other.vpos * Vector.new(1,0)
         other.solid:moveTo(other.pos.x,other.pos.y)
       end
     end)
-    self.solid:move(0,3)
   end;
 };

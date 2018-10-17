@@ -83,12 +83,14 @@ end
 
 function Vector:normalize()
     local len = self:len()
+    --if(self:len()==0) then error("This Vector is (0.0,0.0) Division by 0 is impossible") end
     self.x = self.x / len
     self.y = self.y / len
     return self
 end
 
 function Vector:normalized()
+    --if(self:len()==0) then error("This Vector is (0.0,0.0) Division by 0 is impossible") end
     return self / self:len()
 end
 
@@ -114,6 +116,10 @@ end
 
 function Vector:cross(other)
     return self.x * other.y - self.y * other.x
+end
+
+function Vector:inner(other)
+    return self.x * other.x + self.y * other.y
 end
 
 setmetatable(Vector, { __call = function(_, ...) return Vector.new(...) end })

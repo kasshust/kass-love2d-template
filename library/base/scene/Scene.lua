@@ -13,6 +13,8 @@ SceneManager = {
     draw = function(self)
       maincam:draw(function(t,l,w,h)
         self.c_scene:draw()
+      end)
+      maincam:drawGUI(function(t,l,w,h)
         self.c_scene:drawGUI()
       end)
     end;

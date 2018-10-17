@@ -30,15 +30,25 @@ Char = {
 
   checkCollisionWithSolid = function(self)
 
-    --vsp
-    self.solid:moveTo(self.pos.x,self.pos.y-self.vpos.y)
-    self:collideWith("block",self.solid,function(other,delta)
-        if  delta.x ~= 0 then if math.sign(delta.x) == -math.sign(self.vpos.x) then  self.vpos = self.vpos * Vector.new(0,1) end end
-    end)
     --hsp
     self.solid:moveTo(self.pos.x-self.vpos.x,self.pos.y)
     self:collideWith("block",self.solid,function(other,delta)
       if delta.y ~= 0 then if math.sign(delta.y) == -math.sign(self.vpos.y) then self.vpos = self.vpos * Vector.new(1,0) end end
+    end)
+    
+    --vsp
+    self.solid:moveTo(self.pos.x,self.pos.y-self.vpos.y)
+    self:collideWith("block",self.solid,function(other,delta)
+      if  delta.x ~= 0 then
+        if math.sign(delta.x) == -math.sign(self.vpos.x) then
+          local x1,y1,x2,y2 = self.solid:bbox()
+          local dis1,dis2 = y2 - other.pos.y , other.pos.y + other.h - y1
+            if dis1 > 2 and dis2 > 2 then
+              self.vpos = self.vpos * Vector.new(0,1)
+            else  debugger:print("下" .. tostring(dis1),"上" .. tostring(dis2))
+            end
+        end
+      end
     end)
 
     --col
@@ -50,6 +60,7 @@ Char = {
 
 
   end;
+  
   checkLanding = function(self)
     self.islanding = false
     self.solid:moveTo(self.pos.x,self.pos.y + 2)

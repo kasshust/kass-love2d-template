@@ -12,6 +12,8 @@ require_all("game")
   maid64 = require("library/external/maid64/maid64")
   HC = require("library/external/HC")
   HC.resetHash(64)
+  --shapes = require 'library/external/HC.shapes'
+  polygon = require 'library/external/HC.polygon'
   sti = require("library/external/sti")
   sfxr = require("library/external/sfxrlua/sfxr")
   soundmanager = require("library/external/soundmanager/soundmanager")
@@ -65,6 +67,7 @@ function love.load()
       --最初のシーンを指定
       scenemanager = SceneManager:new(PreRoom.new())
 end
+
 function love.update(dt)
   ----ゲームのupdate----
     scenemanager:update(dt)
@@ -85,6 +88,7 @@ function love.update(dt)
     	gc_threshold = gc_threshold - 1
     end
 end
+
 function love.draw()
   --gui用座標の取得
   local x,y = maincam:getPosition()
@@ -92,6 +96,7 @@ function love.draw()
   m_x,m_y = g_x+maid64.mouse.getX(),g_y+maid64.mouse.getY()
 
   --ゲームのdraw
+  love.graphics.setShader(OLD_CRT)
   maid64.start()
   scenemanager:draw()
   maid64.finish()
@@ -104,19 +109,3 @@ end
 function love.resize(w, h)
   maid64.resize(w,h)
 end
-
-------------------------------------------------------------------
---[[maid64により不要
-local scale = math.min(w / W ,h / H)
-camWindowScale = scale
-maincam:setWindow((w / 2) - (W*camWindowScale/2),(h / 2) - (H*camWindowScale/2),W*camWindowScale,H*camWindowScale)
-maincam:setScale(camWindowScale)
-]]
-
---[[
-function love.wheelmoved( dx, dy )
-    wheel_x = wheel_x + dx*0.01
-    wheel_y = wheel_y + dy*0.01
-    --maincam:setScale(1+wheel_y)
-end
-]]

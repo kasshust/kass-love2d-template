@@ -13,7 +13,7 @@ TestPlayer = {
      obj.solid.other = obj
      obj.gravity = 0.08
      obj.operation = true
-     obj.view = View.new(obj)
+     obj.view = TestView.new(obj)
 
      obj.animator = Animator.new(sprite.test1,16,16,1,2,1)
      obj.animator:add("run",3,6)
@@ -101,20 +101,21 @@ TestPlayer = {
    draw = function(self)
 
      self.animator:draw(self.pos.x,self.pos.y,0,1*self.dir.x,1,8,10)
-     g.setColor(255,0,0,128)
+     --g.setColor(255,0,0,128)
      --self.solid:draw("fill")
-     g.setColor(255,255,255,255)
+     --g.setColor(255,255,255,255)
    end;
    destroy = function(self)
      Char.destroy(self)
      self.view.kill = true
      self.view:destroy()
    end;
- }
-View = {
+}
+
+TestView = {
     new = function(focus)
-      local obj = instance(View,Object)
-      obj.name = "View"
+      local obj = instance(TestView,Object)
+      obj.name = "TestView"
       obj.focus = focus
       obj.pos = obj.focus.pos
 

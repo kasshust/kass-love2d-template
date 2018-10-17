@@ -2,6 +2,7 @@
 
   a b x y r1 l1 r2 l2 start select right left up down
   ↓コンバート
+  キーボード　ゲームパッド　マウス
 
 ]]
 

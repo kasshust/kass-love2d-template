@@ -239,7 +239,7 @@ TestShot = {
 
      if self.frame > 10 then self.kill = true testEffect.new(self.pos.x,self.pos.y) end
 
-     self:collideWith("block",self.solid,function(other,delta)
+     self:collideWith("top_collision",self.solid,function(other,delta)
        self.pos = self.pos + delta
        testEffect.new(self.pos.x,self.pos.y)
        self.kill = true
