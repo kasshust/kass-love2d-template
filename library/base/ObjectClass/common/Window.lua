@@ -126,7 +126,7 @@ TextWindow = {
       table.insert(obj.text_byte,#v + prev)
       obj.text = obj.text .. v
     end
-    --print(unpack(obj.text_byte))
+    print(unpack(obj.text_byte))
     --表示用
     obj.str = ""
     obj.frame = 0
@@ -145,6 +145,8 @@ TextWindow = {
     obj.maxlow = math.floor(obj.c_h/font:getHeight())
     obj.excesslow = obj.low - obj.maxlow > 0 and obj.low - obj.maxlow or 0
     obj.tween = tween.new(0.1, obj.lt, {low = obj.excesslow }, tween.easing.outSin)
+
+    obj.flashsq = false
 
     return obj
   end;
@@ -200,7 +202,8 @@ TextWindow = {
   updateText = function(self)
     self.frame = self.frame + 1
     --効果音
-    if self.frame % 3 == 0 then --[[se]]end
+    
+    if self.frame % 3 == 0 then soundmanager:play("game/materials/sound/se/se_shot.wav") end
   end;
 
   -------------------------以下任意--------------------------
@@ -210,15 +213,24 @@ TextWindow = {
   end;
   --windowのデザイン
   drawWindow = function(self)
-    g.setColor(16,16,32,255)
+    g.setColor(128/255,128/255,128/255,128/255)
     love.graphics.rectangle("fill", g_x + self.x  - self.w*self.tw.frame/2, g_y + self.y - self.h*self.tw.frame/2, self.w*self.tw.frame, self.h * self.tw.frame)
-    g.setColor(256,256,256,256)
+    g.setColor(256/255,256/255,256/255,256/255)
   end;
   --windowの内容
   drawContent = function(self)
+    if self.frame % 3 == 0 then self.flashsq = not self.flashsq end
+
+    if self.flashsq then
     g.cut(self.x - self.w/2 + self.padding,self.y-self.h/2 + self.padding,self.w - self.padding*2,self.h - self.padding*2,function()
-      g.printf(self.str,g_x + self.c_x - self.w*self.tw.frame/2,g_y + self.c_y - self.h*self.tw.frame/2 - self.lt.low * font:getHeight(),self.c_w)
+      g.printf(self.str .. "■",g_x + self.c_x - self.w*self.tw.frame/2,g_y + self.c_y - self.h*self.tw.frame/2 - self.lt.low * font:getHeight(),self.c_w)
     end)
+    else
+      g.cut(self.x - self.w/2 + self.padding,self.y-self.h/2 + self.padding,self.w - self.padding*2,self.h - self.padding*2,function()
+        g.printf(self.str .. "□",g_x + self.c_x - self.w*self.tw.frame/2,g_y + self.c_y - self.h*self.tw.frame/2 - self.lt.low * font:getHeight(),self.c_w)
+      end)
+    end
+
     g.print(self.status_now,g_x + self.x- self.w*self.tw.frame/2,g_y + self.y - self.h*self.tw.frame/2 - 15)
   end;
 }

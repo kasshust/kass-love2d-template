@@ -7,7 +7,7 @@
 
 --Objectに固有のidを与える
 function makeid(t)
-  local id = math.random(1,999999)
+  local id = math.random(1,99999999)
   if t[id] == nil then
     return id
   else return makeid(t)

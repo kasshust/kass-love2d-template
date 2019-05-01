@@ -38,9 +38,6 @@ SceneManager = {
       SceneManager.c_scene = scene.new(property)
       local str = "ChangeScene! : " .. " -> " .. SceneManager.c_scene.name
       debugger:print(str ..":")
-
-      --コイツを呼ばないとメモリから削除されないから必須
-      collectgarbage("collect")
     end;
 }
 

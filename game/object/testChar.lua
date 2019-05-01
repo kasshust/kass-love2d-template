@@ -32,7 +32,6 @@ TestPlayer = {
      --効果音
      if self.animator:isrenew(3,"run") == true or self.animator:isrenew(5,"run") then soundmanager:play("game/materials/sound/se/se_walk.wav") end
 
-
      if controller.isDown("a") and self.vpos.y < 0 then self.gravity = 0.12 * 0.7 else self.gravity = 0.12 end
 
      local iter = 0.98
@@ -120,11 +119,11 @@ TestView = {
       obj.pos = obj.focus.pos
 
       --プレイヤーからの差のみ
-      obj.destination = {x = 0,y = 0}
+      obj.destination = {x = 0,y = 0} --移動量
       obj.tween = tween.new(1,obj.destination, {x = obj.focus.dir.x * 75,y = 0}, tween.easing.inOutQubic)
       obj.pre = {dir = {x = obj.focus.dir.x ,y = obj.focus.dir.x }}
       camStand:setfocus(obj)
-      camStand:moveFocusSeq(0.5)
+      camStand:moveFocusSeq(0.7)
       camStand:setPos(obj.focus.pos.x,obj.focus.pos.y)
 
       return obj
@@ -133,6 +132,11 @@ TestView = {
       if self.focus.dir.x ~= self.pre.dir.x or self.focus.dir.y ~= self.pre.dir.y then
         self.tween = tween.new(1,self.destination, {x = self.focus.dir.x * 70,y = self.focus.dir.y * 70}, tween.easing.inOutQubic)
       end
+
+      --print(self.destination.x)
+
+      --camStand:setPos(self.focus.pos.x,self.focus.pos.y)
+
       self.pre.dir.x = self.focus.dir.x
       self.pre.dir.y = self.focus.dir.y
       self.pos = self.focus.pos + Vector.new(self.destination.x,self.destination.y)
@@ -140,7 +144,7 @@ TestView = {
     end;
     draw = function(self)
       g.setColor(255,0,0)
-      --g.points(self.pos.x,self.pos.y)
+      g.points(self.pos.x,self.pos.y)
       g.setColor(255,255,255)
     end;
 }

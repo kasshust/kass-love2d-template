@@ -25,7 +25,7 @@ CamStand = {
     switch[self.status.NOONE] = function()
       --何もしない
     end
-    --focusの座標にゆっくり近づく
+    --focusの座標にゆっくり近づく  バグ！修正必須
     switch[self.status.FOCUS_SEQ] = function()
       if self.focus ~= nil then
         if self.focus.pos == nil then error("obj must have pos") end
@@ -33,7 +33,7 @@ CamStand = {
         local distance = destination - self.pos
 
         ---暫定ゲイン
-        local pgain = 1/10
+        local pgain = 1/3
         local dgain = 1/10
         
         local apos = distance*pgain*self.speed+distance*self.vpos*dgain
@@ -62,7 +62,7 @@ CamStand = {
       if self.focus ~= nil then
         if self.focus.pos == nil then error("obj must have pos") end
         self.pos = Vector.new(self.focus.pos.x,self.focus.pos.y)
-        if self.focus.kill ==true then self.focus = nil end
+        if self.focus.kill == true then self.focus = nil end
       end
     end
     --指定座標にtweenする。
@@ -81,6 +81,14 @@ CamStand = {
     end
 
   end;
+
+  draw = function(self)
+    love.graphics.setColor(0,0,1,1)
+    g.points(self.pos.x,self.pos.y)
+    love.graphics.setColor(1,1,1,1)
+  
+  end;
+
   drawGUI = function(self)
     for k,v in pairs(self.effect) do
       v:drawGUI()

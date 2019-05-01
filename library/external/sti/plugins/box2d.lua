@@ -1,21 +1,21 @@
 --- Box2D plugin for STI
 -- @module box2d
 -- @author Landon Manning
--- @copyright 2016
+-- @copyright 2019
 -- @license MIT/X11
 
-local path  = ...
-local utils = require(path .. "utils")
+local love  = _G.love
+local utils = require((...):gsub('plugins.box2d', 'utils'))
+local lg    = require((...):gsub('plugins.box2d', 'graphics'))
 
 return {
 	box2d_LICENSE     = "MIT/X11",
 	box2d_URL         = "https://github.com/karai17/Simple-Tiled-Implementation",
-	box2d_VERSION     = "2.3.2.3",
+	box2d_VERSION     = "2.3.2.7",
 	box2d_DESCRIPTION = "Box2D hooks for STI.",
 
 	--- Initialize Box2D physics world.
 	-- @param world The Box2D world to add objects to.
-	-- @return nil
 	box2d_init = function(map, world)
 		assert(love.physics, "To use the Box2D plugin, please enable the love.physics module.")
 
@@ -37,16 +37,28 @@ return {
 				shape = love.physics.newPolygonShape(unpack(vertices))
 			end
 
-			local fixture = love.physics.newFixture(body, shape)
+			local currentBody = body
 
+			if userdata.properties.dynamic == true then
+				currentBody = love.physics.newBody(world, map.offsetx, map.offsety, 'dynamic')
+			end
+
+			local fixture = love.physics.newFixture(currentBody, shape)
 			fixture:setUserData(userdata)
 
-			if userdata.properties.sensor == true then
-				fixture:setSensor(true)
-			end
+			-- Set some custom properties from userdata (or use default set by box2d)
+			fixture:setFriction(userdata.properties.friction       or 0.2)
+			fixture:setRestitution(userdata.properties.restitution or 0.0)
+			fixture:setSensor(userdata.properties.sensor           or false)
+			fixture:setFilterData(
+				userdata.properties.categories or 1,
+				userdata.properties.mask       or 65535,
+				userdata.properties.group      or 0
+			)
 
 			local obj = {
 				object  = object,
+				body    = currentBody,
 				shape   = shape,
 				fixture = fixture,
 			}
@@ -67,8 +79,8 @@ return {
 		local function calculateObjectPosition(object, tile)
 			local o = {
 				shape   = object.shape,
-				x       = object.dx or object.x,
-				y       = object.dy or object.y,
+				x       = (object.dx or object.x) + map.offsetx,
+				y       = (object.dy or object.y) + map.offsety,
 				w       = object.width,
 				h       = object.height,
 				polygon = object.polygon or object.polyline or object.ellipse or object.rectangle
@@ -88,21 +100,21 @@ return {
 				if object.gid then
 					local tileset = map.tilesets[map.tiles[object.gid].tileset]
 					local lid     = object.gid - tileset.firstgid
-					local tile    = {}
+					local t       = {}
 
 					-- This fixes a height issue
 					 o.y = o.y + map.tiles[object.gid].offset.y
-					 oy  = tileset.tileheight
+					 oy  = o.h
 
-					for _, t in ipairs(tileset.tiles) do
-						if t.id == lid then
-							tile = t
+					for _, tt in ipairs(tileset.tiles) do
+						if tt.id == lid then
+							t = tt
 							break
 						end
 					end
 
-					if tile.objectGroup then
-						for _, obj in ipairs(tile.objectGroup.objects) do
+					if t.objectGroup then
+						for _, obj in ipairs(t.objectGroup.objects) do
 							-- Every object in the tile
 							calculateObjectPosition(obj, object)
 						end
@@ -138,6 +150,17 @@ return {
 					addObjectToWorld(o.shape, triangle, userdata, tile or object)
 				end
 			elseif o.shape == "polygon" then
+				-- Recalculate collision polygons inside tiles
+				if tile then
+					local cos = math.cos(math.rad(o.r))
+					local sin = math.sin(math.rad(o.r))
+					for _, vertex in ipairs(o.polygon) do
+						vertex.x = vertex.x + o.x
+						vertex.y = vertex.y + o.y
+						vertex.x, vertex.y = utils.rotate_vertex(map, vertex, o.x, o.y, cos, sin)
+					end
+				end
+
 				local vertices  = getPolygonVertices(o)
 				local triangles = love.math.triangulate(vertices)
 
@@ -151,33 +174,32 @@ return {
 		end
 
 		for _, tile in pairs(map.tiles) do
-			local tileset = map.tilesets[tile.tileset]
-
-			-- Every object in every instance of a tile
-			if tile.objectGroup then
-				if map.tileInstances[tile.gid] then
-					for _, instance in ipairs(map.tileInstances[tile.gid]) do
+			if map.tileInstances[tile.gid] then
+				for _, instance in ipairs(map.tileInstances[tile.gid]) do
+					-- Every object in every instance of a tile
+					if tile.objectGroup then
 						for _, object in ipairs(tile.objectGroup.objects) do
-							object.dx = object.x + instance.x
-							object.dy = object.y + instance.y
-							calculateObjectPosition(object, instance)
+							if object.properties.collidable == true then
+								object.dx = instance.x + object.x
+								object.dy = instance.y + object.y
+								calculateObjectPosition(object, instance)
+							end
 						end
 					end
-				end
 
-			-- Every instance of a tile
-			elseif tile.properties and tile.properties.collidable == true and map.tileInstances[tile.gid] then
-				for _, instance in ipairs(map.tileInstances[tile.gid]) do
-					local object = {
-						shape      = "rectangle",
-						x          = instance.x,
-						y          = instance.y,
-						width      = tileset.tilewidth,
-						height     = tileset.tileheight,
-						properties = tile.properties
-					}
+					-- Every instance of a tile
+					if tile.properties.collidable == true then
+						local object = {
+							shape      = "rectangle",
+							x          = instance.x,
+							y          = instance.y,
+							width      = map.tilewidth,
+							height     = map.tileheight,
+							properties = tile.properties
+						}
 
-					calculateObjectPosition(object, instance)
+						calculateObjectPosition(object, instance)
+					end
 				end
 			end
 		end
@@ -238,7 +260,6 @@ return {
 
 	--- Remove Box2D fixtures and shapes from world.
 	-- @param index The index or name of the layer being removed
-	-- @return nil
 	box2d_removeLayer = function(map, index)
 		local layer = assert(map.layers[index], "Layer not found: " .. index)
 		local collision = map.box2d_collision
@@ -255,12 +276,19 @@ return {
 	end,
 
 	--- Draw Box2D physics world.
-	-- @return nil
-	box2d_draw = function(map)
+	-- @param tx Translate on X
+	-- @param ty Translate on Y
+	-- @param sx Scale on X
+	-- @param sy Scale on Y
+	box2d_draw = function(map, tx, ty, sx, sy)
 		local collision = map.box2d_collision
 
+		lg.push()
+		lg.scale(sx or 1, sy or sx or 1)
+		lg.translate(math.floor(tx or 0), math.floor(ty or 0))
+
 		for _, obj in ipairs(collision) do
-			local points = {collision.body:getWorldPoints(obj.shape:getPoints())}
+			local points = {obj.body:getWorldPoints(obj.shape:getPoints())}
 			local shape_type = obj.shape:getType()
 
 			if shape_type == "edge" or shape_type == "chain" then
@@ -271,10 +299,18 @@ return {
 				error("sti box2d plugin does not support "..shape_type.." shapes")
 			end
 		end
-	end,
+
+		lg.pop()
+	end
 }
 
 --- Custom Properties in Tiled are used to tell this plugin what to do.
 -- @table Properties
 -- @field collidable set to true, can be used on any Layer, Tile, or Object
 -- @field sensor set to true, can be used on any Tile or Object that is also collidable
+-- @field dynamic set to true, can be used on any Tile or Object
+-- @field friction can be used to define the friction of any Object
+-- @field restitution can be used to define the restitution of any Object
+-- @field categories can be used to set the filter Category of any Object
+-- @field mask can be used to set the filter Mask of any Object
+-- @field group can be used to set the filter Group of any Object

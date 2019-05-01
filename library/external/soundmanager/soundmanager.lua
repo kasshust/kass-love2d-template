@@ -15,6 +15,7 @@ function soundmanager:play(sndData)
    table.insert(self.queue, src)
    -- そして再生します。
    love.audio.play(src)
+   
 end
 
 -- 音楽に魔法をかけます。
@@ -47,12 +48,34 @@ function soundmanager:shuffle(first, ...)
    return unpack(playlist)
 end
 
+function soundmanager:stopMusic()
+    -- 現在再生中の音楽を全て停止します。
+    for i, v in ipairs(self.playlist) do
+        love.audio.stop(v)
+        print("audio stop!")
+    end
+    self.playlist = {}
+    
+    -- キューにある音声の再生が完了した、および削除されたか確認します。
+   local removelist = {}
+   for i, v in ipairs(self.queue) do
+      if not v:isPlaying( ) then
+         table.insert(removelist, i)
+      end
+   end
+   -- ループにあるものは削除できないため、別のループを使用します。
+   for i, v in ipairs(removelist) do
+      table.remove(self.queue, v-i+1)
+      v:release( )
+   end
+ end
+
 -- 更新
 function soundmanager:update(dt)
    -- キューにある音声の再生が完了した、および削除されたか確認します。
    local removelist = {}
    for i, v in ipairs(self.queue) do
-      if v:isStopped() then
+      if not v:isPlaying( ) then
          table.insert(removelist, i)
       end
    end
@@ -61,12 +84,14 @@ function soundmanager:update(dt)
       table.remove(self.queue, v-i+1)
    end
    -- 必要であればプレイリストを進めます。
-   if self.currentsong ~= -1 and self.playlist and self.playlist[self.currentsong]:isStopped() then
+   if self.currentsong ~= -1 and #self.playlist ~= 0  then
+    if not (self.playlist[self.currentsong]:isPlaying()) then
       self.currentsong = self.currentsong + 1
       if self.currentsong > #self.playlist then
          self.currentsong = 1
       end
       love.audio.play(self.playlist[self.currentsong])
+    end
    end
 end
 

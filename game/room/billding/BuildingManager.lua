@@ -8,6 +8,7 @@ Manager_building = {
       return obj
     end;
     update = function(dt)
+      
       if love.mouse.wasPressed(1) then
       end
       if love.mouse.wasPressed(2) then
@@ -16,16 +17,17 @@ Manager_building = {
       end
     end;
     drawGUI = function(self)
-      g.setColor(255,128,128,128)
+      g.setColor(1,0.5,0.5,0.5)
       g.rectangle("fill",math.floor(m_x/16)*16,math.floor(m_y/16)*16,16,16)
-      g.setColor(255,255,255,255)
+      g.setColor(1,1,1,1)
     end;
   
-    --[[
+    
     --save load
     save = function(self)
       love.filesystem.write("banka.lua",Tserial.pack(savedata))
     end;
+
     save_init = function(self)
       savedata = {}
       --savedataの構造
@@ -36,6 +38,7 @@ Manager_building = {
       love.filesystem.write("banka.lua",Tserial.pack(savedata))
       return savedata
     end;
+    
     load = function(self)
       savedata = {}
       if not love.filesystem.exists("banka.lua") then
@@ -44,6 +47,6 @@ Manager_building = {
         savedata = Tserial.unpack(love.filesystem.read("banka.lua"))
       end
     end;
-    ]]
-  };
+    
+};
   

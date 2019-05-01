@@ -1,6 +1,6 @@
 function love.conf(t)
     t.identity = nil                    -- The name of the save directory (string)
-    t.version = "0.10.1"                -- The LÖVE version this game was made for (string)
+    t.version = "11.1"                -- The LÖVE version this game was made for (string)
     t.console = false             -- Attach a console (boolean, Windows only)
     t.accelerometerjoystick = true      -- Enable the accelerometer on iOS and Android by exposing it as a Joystick (boolean)
     t.externalstorage = false           -- True to save files (and read from the save directory) in external storage on Android (boolean)
@@ -41,7 +41,9 @@ function love.conf(t)
     t.modules.thread = true             -- Enable the thread module (boolean)
 end
 
-----指定のディレクトリ下にあるすべてのファイルを読み込む #不要なluaファイルを入れるとマズイ
+----指定のディレクトリ下にあるすべてのファイルを読み込む #0.10.2
+
+--[[
 function require_all(filename)
     local lfs = love.filesystem
     local name = filename
@@ -54,6 +56,24 @@ function require_all(filename)
             print("FileImport:"..t)
             require(t:gsub("%.lua",""))
         elseif lfs.isDirectory(t) then
+            require_all(t)
+        end
+    end
+end
+]]
+
+function require_all(filename)
+    local lfs = love.filesystem
+    local name = filename
+    local files = lfs.getDirectoryItems(name)
+    for _,f in ipairs(files) do
+        local t = name .. "/" .. f
+
+        ----$ 文字列の末尾　 つまり 「任意の文字.lua」
+        if "file"== lfs.getInfo(t).type and t:match("%.lua$") then
+            print("FileImport:"..t)
+            require(t:gsub("%.lua",""))
+        elseif "directory" == lfs.getInfo(t).type then
             require_all(t)
         end
     end

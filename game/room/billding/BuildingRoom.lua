@@ -7,6 +7,12 @@ BuildingRoom = {
     obj.s = Select.new(1,5)
     obj.tw = {num = 1}
     obj.tween = tween.new(0.1,obj.tw, {num = obj.s.now}, tween.easing.outBounce)
+
+    local file = io.open("C:\\Users\\kassh\\Desktop\\CreateGame\\love2d-gameEngine\\game\\text\\text.csv", "r")
+    for line in file:lines() do
+      debugger:print(line)
+    end    
+
     return obj
   end;
   u = function(self,dt)
@@ -24,6 +30,7 @@ BuildingRoom = {
         trans(T_normal,ModelRoom)
       end
       switch[2] = function()
+        trans(T_normal,DebugRoom)
       end
       switch[3] = function()
       end
@@ -83,6 +90,9 @@ ModelRoom = {
       if controller.wasPressed("a") then trans(T_normal,StageRoom) end
     end;
     d = function(self)
+
+      love.graphics.setShader(sh_skydome)
+
       self.time = self.time + 1
 
       love.graphics.setColor(ASE.FRENCHGRAY)
@@ -120,6 +130,8 @@ ModelRoom = {
 
       love.graphics.circle("line",m_x,m_y,12 + (m_y-240)/10)
 
+      love.graphics.setShader()
+
     end;
 
     dg = function(self)
@@ -132,12 +144,15 @@ StageRoom = {
       local obj = instance(StageRoom,BasicRoom,property)
       obj.frame = 0
       obj.name = "stage"
-      --obj.m = love.audio.newSource("game/materials/sound/music/Ars_Sonor_-_04_-_Nitynitya_Vastu_Viveka.mp3", "stream")
-      --soundmanager:playMusic(obj.m)
-      love.audio.pause()
+      
+      soundmanager:stopMusic()
+      obj.m = love.audio.newSource("game/materials/sound/music/Nctrnm_-_Pull.mp3", "stream")
+      soundmanager:playMusic(obj.m)
+      
       obj.time = 0
       obj.char = O_Circle.new(200,200)
 
+      
       Top_Block.new(0,0,320*4,16)
       Top_Block.new(0,0,16,240*4)
       Top_Block.new(0,240*4-16,320*4-16,16)
@@ -148,7 +163,7 @@ StageRoom = {
       end
 
       obj.sub = Top_Circle.new(300,100,4*16)
-      Top_Polygon.new(400,400, 400,500, 500,550,500,350)
+      --Top_Polygon.new(400,400, 400,500, 500,550,500,350)
 
       maincam:setWorld(-320*8,-240*8,320*16,240*16)
       
@@ -157,34 +172,27 @@ StageRoom = {
       return obj
     end;
 
-    draw = function(self)
+    update = function(self,dt)
+      BasicRoom.update(self,dt)
+      drawCanvas(self.canvas,function() 
+        love.graphics.setColor(ASE.WHITE)
+        
+        if(sprite.test4~=nil)then
+          if love.mouse.isDown(1) then
+            g.draw(sprite.test4,m_x,m_y,0,1,1)
+            --print("aa")
+          end
+        end
+      end)
+    end;
 
-  
+    draw = function(self)
       
-      local cav = love.graphics.getCanvas()
-      love.graphics.push()
-      love.graphics.origin()
-      love.graphics.setScissor()
-      love.graphics.setCanvas(self.canvas)
-      love.graphics.setColor(ASE.WHITE)
-      love.graphics.setLineStyle("rough")
-      love.graphics.circle("line",320,240,24)  --??????
-      --love.graphics.circle("line",self.char.pos.x,self.char.pos.y,4)
-      --print(self.char.pos.x,self.char.pos.y)--0~480 0~320
-      --print(self.canvas:getFormat())
-      love.graphics.pop()
-      love.graphics.setCanvas(cav)
       
       love.graphics.setColor(ASE.GRAY)
-      love.graphics.rectangle("fill",maincam.x/2,maincam.y/2,320*4,240*4)
+      love.graphics.rectangle("fill",0,0,320*4,240*4)
       love.graphics.setColor(ASE.WHITE)
       love.graphics.draw(self.canvas,0,0,0,1,1,0,0)
-      love.graphics.setColor(ASE.FRENCHGRAY)
-      love.graphics.rectangle_c("fill",W/2,H/2,160,120)
-      love.graphics.rectangle_c("fill",W/2*3,H/2*3,160,120)
-      love.graphics.setColor(ASE.GREEN)
-      love.graphics.rectangle_c("fill",W/2,H/2*3,160,120)
-      love.graphics.rectangle_c("fill",W/2*3,H/2,160,120)
 
       BasicRoom:draw()
       
@@ -200,10 +208,41 @@ O_Circle = {
     obj.time = 0
     obj.posTable = {}
     obj.vpos = Vector.new(0,0)
-    obj.solid = HC.rectangle(obj.pos.x,obj.pos.y,obj.w,obj.h)
+    obj.solid = HC.rectangle(obj.pos.x-8,obj.pos.y-8,16,16)
     --obj.solid = HC.circle(obj.pos.x,obj.pos.y,16)
     obj.solid.other = obj
     obj.angle = 0
+
+    local vertices = {
+      {
+        -- top-left corner (red-tinted)
+        0, 0, -- position of the vertex
+        0, 0, -- texture coordinate at the vertex position
+        1, 0, 0, -- color of the vertex
+      },
+      {
+        -- top-right corner (green-tinted)
+        sprite.test:getWidth(), 0,
+        1, 0, -- texture coordinates are in the range of [0, 1]
+        0, 1, 0
+      },
+      {
+        -- bottom-right corner (blue-tinted)
+        sprite.test:getWidth(), sprite.test:getHeight(),
+        1, 1,
+        0, 0, 1
+      },
+      {
+        -- bottom-left corner (yellow-tinted)
+        0, sprite.test:getHeight(),
+        0, 1,
+        1, 1, 0
+      },
+    }
+   
+    -- the Mesh DrawMode "fan" works well for 4-vertex Meshes.
+    obj.mesh = love.graphics.newMesh(vertices, "fan")
+    obj.mesh:setTexture(sprite.test)
 
     obj.tww = {scale = 1}
     obj.tween = tween.new(1/5, obj.tww, {scale = 1}, tween.easing.outBounce)
@@ -224,9 +263,7 @@ O_Circle = {
 
   step = function(self,dt)
     
-
-
-    if(love.keyboard.isDown("e"))then
+    if(controller.isDown("y"))then
       self.tween = tween.new(1/5, self.tww, {scale = 0.6}, tween.easing.outBounce)
     else
       self.tween = tween.new(1/5, self.tww, {scale = 1}, tween.easing.outBounce)
@@ -249,8 +286,8 @@ O_Circle = {
 
     local sum = 0.3
 
-    if controller.isDown("right")then self.angle = self.angle + 0.1 end;
-    if controller.isDown("left")then self.angle = self.angle - 0.1 end;
+    if controller.isDown("right")then self.angle = self.angle + 0.1 self.solid:rotate(0.1) end;
+    if controller.isDown("left")then self.angle = self.angle - 0.1 self.solid:rotate(-0.1) end;
 
     if controller.isDown("up")then self.vpos = self.vpos + Vector.new(sum*math.cos(-self.angle),-sum*math.sin(-self.angle))end;
     if controller.isDown("down")then self.vpos = self.vpos - Vector.new(sum*math.cos(-self.angle),-sum*math.sin(-self.angle))end;
@@ -278,8 +315,8 @@ O_Circle = {
     self.cam_angle = self.cam_angle + vangle
     --maincam:setAngle(self.cam_angle + math.pi/2)
 
-    self.pos = self.pos + self.vpos
-    self.vpos = self.vpos*0.95
+    self.pos = self.pos + self.vpos*10
+    self.vpos = self.vpos*0
     
 
     if #self.posTable >102 then table.remove(self.posTable, 102) end
@@ -307,15 +344,15 @@ O_Circle = {
         local vertic = self.vpos - (projection)
         if(checkzero:len() ~=0 and self.vpos:len() ~= 0)then 
 
-            Smoke.new(self.pos.x,self.pos.y)
-            testEffect.new(self.pos.x,self.pos.y)
+            --Smoke.new(self.pos.x,self.pos.y)
+            --testEffect.new(self.pos.x,self.pos.y)
             print(delta.x,delta.y)
-            self.vpos = -1*projection + vertic
-            --self.vpos = vertic
+            --self.vpos = -1*projection + vertic
+            self.vpos = vertic
             self.pos = self.pos + delta
             
             --self.pos = self.pos + self.vpos*0.1
-            soundmanager:play("game/materials/sound/se/se_walk.wav")
+            --soundmanager:play("game/materials/sound/se/se_walk.wav")
             self.saveDelta = de
             self.solid:moveTo(self.pos.x,self.pos.y)
             print(other.id)
@@ -331,6 +368,21 @@ O_Circle = {
 
   draw = function(self)
     O_Entity.draw(self)
+
+    --[[
+    self.mesh:setVertex(1, 64*math.cos(self.time/math.pi/5) , 64*math.sin(self.time/math.pi) , 0, 0, 1, 1, 1, 1 )
+    self.mesh:setVertex(2, sprite.test:getWidth() , 0 , 1, 0, 1, 1, 1, 1 )
+    self.mesh:setVertex(3, 64*math.cos(self.time/math.pi/5+math.pi/2*2) + sprite.test:getWidth() , 64*math.sin(self.time/math.pi+math.pi/2*2) + sprite.test:getHeight() , 1, 1, 1, 1, 1, 1 )
+    self.mesh:setVertex(4, 0, sprite.test:getHeight() , 0, 1, 1, 1, 1, 1 )
+    love.graphics.draw(self.mesh, self.pos.x, self.pos.y)
+    ]]
+
+    
+    if(sprite.test4~=nil)then
+      --print("表示中")
+      g.draw(sprite.dtest4,self.pos.x,self.pos.y,self.angle,1,1,8,8)
+    end
+
     love.graphics.setColor(ASE.WHITE)
 
     if self.saveDelta ~= nil then 
@@ -339,7 +391,6 @@ O_Circle = {
       love.graphics.line(self.pos.x,self.pos.y,self.pos.x+self.saveDelta.x,self.pos.y+self.saveDelta.y)
       --love.graphics.line(self.pos.x,self.pos.y,self.pos.x+perpendicular.x,self.pos.y+perpendicular.y)
     end 
-    
     
     local normal = self.vpos:perpendicular():normalize()*5
     --love.graphics.circle("line",self.pos.x+normal.x,self.pos.y+normal.y,2)
@@ -358,11 +409,11 @@ O_Circle = {
           p = (self.posTable[i+1]-self.posTable[i]):normalize():perpendicular()*12 - self.vpos:len()*Vector.new(math.cos((self.time+i)/math.pi),math.sin((self.time+i)/math.pi))
           p2 = (self.posTable[i+2]-self.posTable[i+1]):normalize():perpendicular()*12 - self.vpos:len()*Vector.new(math.cos((self.time+i)/math.pi),math.sin((self.time+i)/math.pi))
           
-          love.graphics.line(self.posTable[i].x,self.posTable[i].y,self.posTable[i].x+p.x,self.posTable[i].y+p.y)
-          love.graphics.line(self.posTable[i].x,self.posTable[i].y,self.posTable[i].x-p.x,self.posTable[i].y-p.y)
+          --love.graphics.line(self.posTable[i].x,self.posTable[i].y,self.posTable[i].x+p.x,self.posTable[i].y+p.y)
+          --love.graphics.line(self.posTable[i].x,self.posTable[i].y,self.posTable[i].x-p.x,self.posTable[i].y-p.y)
           
-        love.graphics.line(self.posTable[i+1].x+p2.x,self.posTable[i+1].y+p2.y,self.posTable[i].x+p.x,self.posTable[i].y+p.y)
-        love.graphics.line(self.posTable[i+1].x-p2.x,self.posTable[i+1].y-p2.y,self.posTable[i].x-p.x,self.posTable[i].y-p.y)
+        --love.graphics.line(self.posTable[i+1].x+p2.x,self.posTable[i+1].y+p2.y,self.posTable[i].x+p.x,self.posTable[i].y+p.y)
+        --love.graphics.line(self.posTable[i+1].x-p2.x,self.posTable[i+1].y-p2.y,self.posTable[i].x-p.x,self.posTable[i].y-p.y)
         --p2 = (self.posTable[1]-self.posTable[i]):perpendicular():normalize()
         --love.graphics.setColor(math.random(255),math.random(255),math.random(255))
         --love.graphics.line(self.posTable[1].x,self.posTable[1].y,self.posTable[i].x,self.posTable[i].y)
@@ -482,3 +533,16 @@ O_Entity = {
     end
   end;
 };
+
+function drawCanvas(canvas,f)
+  local cav = love.graphics.getCanvas()
+  love.graphics.push()
+  love.graphics.origin()
+  love.graphics.setScissor()
+  love.graphics.setCanvas(canvas)
+
+  f()
+
+  love.graphics.pop()
+  love.graphics.setCanvas(cav)
+end

@@ -80,12 +80,14 @@ Transition = {
       local t = self.tw.frame
       g.setColor(16,16,32,t*255)
       love.graphics.rectangle("fill", g_x+W/2*(1-t), g_y+H/2*(1-t),W*t,H*t)
+      g.setColor(0,0,0,255)
     end;
 
     drawOUT = function(self)
       local t = self.tw.frame
       g.setColor(16,16,32,t*255)
       love.graphics.rectangle("fill", g_x+W/2*(1-t), g_y+H/2*(1-t),W*t,H*t)
+      g.setColor(0,0,0,255)
     end;
 }
 
@@ -97,10 +99,10 @@ T_normal = {
   end;
   drawIN = function(self)
     local t = self.tw.frame
-    g.setColor(8,8,24)
+    g.setColor(0,0,0)
     for j = 0,H/16 do
       for i = 0,W/16 do
-        g.setColor(8,8,32)
+        g.setColor(0,0,0)
         if t < 0.5 then
           if (i+j) % 2 == 0 then
             local scale = math.clamp( ((W + H) * 16)/( i + j ) * t,0,16)
@@ -116,7 +118,7 @@ T_normal = {
   end;
   drawOUT = function(self)
     local t = self.tw.frame
-    g.setColor(8,8,32)
+    g.setColor(0,0,0)
     for j = 0,H/16 do
       for i = 0,W/16 do
         if t < 0.5 then

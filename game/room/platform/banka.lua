@@ -198,7 +198,7 @@ BankaRoom = {
     --オブジェクト
     self:objectDraw();
     --タイル
-    if self.map ~= nil then self.map:draw() end
+    --if self.map ~= nil then self.map:draw() end
     --背景
   end;
   drawGUI = function(self)
