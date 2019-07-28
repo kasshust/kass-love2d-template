@@ -28,7 +28,7 @@ Top_Block = {
     table.insert(obj.tag ,"top_block")
     obj.pos = Vector.new((x+w)/2,(y+h)/2);
     obj.vpos = Vector.new(0,0);
-    obj.h,obj.w = h,w;
+    obj.w,obj.h = w,h;
     obj.solid = HC.rectangle(x,y,w,h)
     obj.solid.other = obj
 
@@ -41,9 +41,9 @@ Top_Block = {
   end;
 
   draw = function(self)
-    g.setColor(255,0,0,128)
-    self.solid:draw("fill")
-    g.setColor(255,255,255,255)
+    --g.setColor(255,0,0,128)
+    --self.solid:draw("fill")
+    --g.setColor(255,255,255,255)
   end
 };
 

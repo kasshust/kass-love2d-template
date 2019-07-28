@@ -200,4 +200,10 @@ do
         t[k] = nil
         return k, v
     end
+
+    table.empty = function(t) for _,_ in pairs(t) do
+            return false
+        end
+        return true
+    end
 end

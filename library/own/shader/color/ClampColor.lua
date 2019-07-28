@@ -10,24 +10,24 @@
 
 Sh_ClampColor = love.graphics.newShader [[
         extern float Time;
-        extern vec2 mouse;
+        extern vec2 resolution;
 
         vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 pixel_coords)
             {
 
                 //中心座標
-                vec2 p = pixel_coords/vec2(800,600) - 0.5;
+                vec2 p = pixel_coords/resolution - 0.5;
 
                 //texture の　uvを手に入れる
                 vec2 uv = texture_coords;
                 //時間
                 float t = Time;
                 //マウス位置正規化
-                vec2 m_pos = (mouse/vec2(800,600) - 0.5);
+                //vec2 m_pos = (mouse/resolution - 0.5);
 
-                //テクスチャの色
-                vec4 pix = Texel(texture, uv);
-                vec3 texture_color = pix.rgb;
+                //テクスチャの色colorセットのまぜもの
+                vec4 pix = Texel(texture, uv) * color;
+                vec3 texture_color = pix.rgb  ;
 
                 float gamma = 0.5;
                 texture_color.r = pow(texture_color.r, gamma);
@@ -36,8 +36,8 @@ Sh_ClampColor = love.graphics.newShader [[
 
 
                 ///液体、マウス部分
-                texture_color -= 0.5 * 2 * sin(-sin(p.y + 0.01*sin(p.x * 10.0 + Time * 10.0 ) + 0.01 * sin(p.y * 1.0 - Time * 10.0)));
-                //texture_color += 0.01 / length( p -  m_pos);
+                //texture_color -= 0.5 * 2 * sin(-sin(p.y + 0.01*sin(p.x * 10.0 + Time * 10.0 ) + 0.01 * sin(p.y * 1.0 - Time * 10.0)));
+                texture_color += -length( p )*0.4;
 
                  vec3 col1 = vec3(0.078, 0.047, 0.109); // BLACK
                  vec3 col2 = vec3(0.266, 0.141, 0.203); // PURPLE
@@ -141,7 +141,7 @@ Sh_ClampColor = love.graphics.newShader [[
                 }
 
 
-                return vec4(texture_color.rgb, pix.a).rgba * color;
+                return vec4(texture_color.rgb, pix.a).rgba;
             }
 
     ]]

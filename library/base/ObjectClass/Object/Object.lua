@@ -54,6 +54,7 @@ Object = {
       if self.solid ~= nil then HC.remove(self.solid) end
       self = nil
     end;
+
     --shapeとタグの衝突検知
     collideWith = function(self,tag,col,f)
       for shape, delta in pairs(HC.collisions(col)) do
@@ -67,6 +68,7 @@ Object = {
         end
       end
     end;
+    
     checkPoint = function(self,tag,x,y)
        local temp = HC.point(x,y)
        for shape, delta in pairs(HC.collisions(temp)) do

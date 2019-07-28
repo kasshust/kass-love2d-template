@@ -8,6 +8,8 @@ require_all("library/base")
 --ゲーム読み込み
 require_all("game")
 
+print("----------load luafile---------")
+
 --外部ライブラリの読み込み
   maid64 = require("library/external/maid64/maid64")
   HC = require("library/external/HC")
@@ -41,6 +43,9 @@ function love.load()
 
   --デバッグ
   DEBUG = false
+
+  --ジョイスティック
+  p1joystick = nil
 
   --------kass Engine Manager-----------------
   --1,汎用的マネージャー
@@ -103,6 +108,10 @@ function love.draw()
   --デバッガー
   love.window.setTitle(window_title .. " " ..tostring(love.timer.getFPS()))
   if DEBUG == true then debugger:draw() end
+end
+
+function love.joystickadded(joystick)
+  p1joystick = joystick
 end
 
 function love.resize(w, h)

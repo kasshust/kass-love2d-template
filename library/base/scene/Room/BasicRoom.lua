@@ -4,6 +4,7 @@ BasicRoom = {
       obj.frame = 0
       obj.name = "ベーシック"
       obj.pause = false ---objectのupdateを停止する
+      obj.m_drawDistance = 600
       return obj
     end;
     update = function(self,dt)
@@ -33,10 +34,11 @@ BasicRoom = {
         v:draw()
       end
   
+
       local t = {}
       for i,v in pairs(ObjectTable) do
          local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
-        if dis < 300 or v.persist == true or v.allvisible == true then table.insert(t,v) end
+        if dis < self.m_drawDistance or v.persist == true or v.allvisible == true then table.insert(t,v) end
       end
   
       table.sort(t,function(a,b)

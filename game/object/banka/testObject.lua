@@ -95,9 +95,9 @@ testEffect = {
       end
     end;
     draw = function(self)
-      --g.setColor(self.tw.color,math.random(230,255),self.tw.color)
+      g.setColor(self.tw.color,math.random(230,255),self.tw.color)
       g.setColor(255,255,self.tw.color)
-      --g.setColor(math.random(230,255),self.tw.color,math.random(230,255))
+      g.setColor(math.random(230,255),self.tw.color,math.random(230,255))
       love.graphics.ellipse("fill", self.x, self.y, self.tw.w, self.tw.h)
       g.setColor(255,255,255)
     end;

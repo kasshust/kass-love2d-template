@@ -95,23 +95,24 @@ Transition = {
 T_normal = {
   new = function(room,property)
     local obj = instance(T_normal,Transition,room,property,1,1,tween.easing.inSine,tween.easing.inSine)
+    obj.size = W/16 
     return obj
   end;
   drawIN = function(self)
     local t = self.tw.frame
     g.setColor(0,0,0)
-    for j = 0,H/16 do
-      for i = 0,W/16 do
+    for j = 0,H/self.size do
+      for i = 0,W/self.size do
         g.setColor(0,0,0)
         if t < 0.5 then
           if (i+j) % 2 == 0 then
-            local scale = math.clamp( ((W + H) * 16)/( i + j ) * t,0,16)
-             g.rectangle("fill",g_x + i*16,g_y + j*16,scale,16)
+            local scale = math.clamp( ((W + H) * self.size)/( i + j ) * t,0,self.size)
+             g.rectangle("fill",g_x + i*self.size,g_y + j*self.size,scale,self.size)
           end
         else
-          local scale = math.clamp( ((W + H) * 16)/( i + j ) * t,0,16)
-          if (i+j) % 2 == 0 then g.rectangle("fill",g_x + i*16,g_y + j*16,16,16) end
-          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*16,g_y + j*16,scale,16) end
+          local scale = math.clamp( ((W + H) * self.size)/( i + j ) * t,0,self.size)
+          if (i+j) % 2 == 0 then g.rectangle("fill",g_x + i*self.size,g_y + j*self.size,self.size,self.size) end
+          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*self.size,g_y + j*self.size,scale,self.size) end
         end
       end
     end
@@ -119,13 +120,13 @@ T_normal = {
   drawOUT = function(self)
     local t = self.tw.frame
     g.setColor(0,0,0)
-    for j = 0,H/16 do
-      for i = 0,W/16 do
+    for j = 0,H/self.size do
+      for i = 0,W/self.size do
         if t < 0.5 then
-          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*16,g_y + j*16,16*t*2,16) end
+          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*self.size,g_y + j*self.size,self.size*t*2,self.size) end
         else
-          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*16,g_y + j*16,16,16) end
-          if (i+j) % 2 == 0 then g.rectangle("fill",g_x + (i+1)*16,g_y + j*16,-16*2*(t-0.5),16) end
+          if (i+j) % 2 == 1 then g.rectangle("fill",g_x + i*self.size,g_y + j*self.size,self.size,self.size) end
+          if (i+j) % 2 == 0 then g.rectangle("fill",g_x + (i+1)*self.size,g_y + j*self.size,-self.size*2*(t-0.5),self.size) end
         end
       end
     end

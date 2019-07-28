@@ -18,13 +18,13 @@ PreRoom = {
       sprite.test = load_image("game/materials/images/test/sprite_test2.png")
      
       --manager作成
-      manager:apply(M_textGame.new())
+      manager:apply(M_FreedomGame.new())
       --if(DEBUG) then trans(T_normal,BuildingRoom,{})end
       return obj
     end;
     u = function(self,dt)
       --なんかムービーとかロゴとか
-      trans(T_normal,Room_TextGameTitle,{})
+      trans(T_normal,DebugRoom_FreedomGame,{})
     end;
     dg = function(self)
       g.print("なんかロゴとか",W/2,H/2)

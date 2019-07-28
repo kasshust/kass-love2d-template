@@ -1,6 +1,22 @@
+function HSV(h, s, v ,a)
+    if s <= 0 then return v,v,v end
+    h, s, v = h*6, s, v
+    local c = v*s
+    local x = (1-math.abs((h%2)-1))*c
+    local m,r,g,b = (v-c), 0,0,0
+    if h < 1     then r,g,b = c,x,0
+    elseif h < 2 then r,g,b = x,c,0
+    elseif h < 3 then r,g,b = 0,c,x
+    elseif h < 4 then r,g,b = 0,x,c
+    elseif h < 5 then r,g,b = x,0,c
+    else              r,g,b = c,0,x
+    end return (r+m),(g+m),(b+m),a
+end
+
 function love.graphics.rectangle_c(mode,x,y,width,height)
     love.graphics.rectangle(mode,x-width/2,y-height/2,width,height)
 end
+
 function love.graphics.rectangle_d(mode,x,y,width,height,deg)
     love.graphics.polygon(mode, x + width*math.cos(deg + math.pi/4), y - height*math.sin(deg+ math.pi/4), x + width*math.cos(deg+ math.pi*3/4), y - height*math.sin(deg+ math.pi*3/4), x + width*math.cos(deg+ math.pi*5/4), y - height*math.sin(deg+ math.pi*5/4), x + width*math.cos(deg+ math.pi*7/4), y - height*math.sin(deg+ math.pi*7/4))
 end
@@ -63,3 +79,17 @@ function love.graphics.cut(_x,_y,_w,_h,f)
     f()
   love.graphics.setScissor(x,y,w,h)
 end
+
+function drawCanvas(canvas,f)
+    local cav = love.graphics.getCanvas()
+    love.graphics.push()
+    love.graphics.origin()
+    love.graphics.setScissor()
+    love.graphics.setCanvas(canvas)
+  
+    f()
+  
+    love.graphics.pop()
+    love.graphics.setCanvas(cav)
+  end
+  

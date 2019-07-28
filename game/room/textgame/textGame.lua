@@ -120,7 +120,8 @@ DebugRoom_TextGame = {
   }
 
   -- textGameのタイトル
-Room_TextGameTitle = {
+
+  Room_TextGameTitle = {
   new = function(property)
     local obj = instance(Room_TextGameTitle,OtherRoom,property)
     obj.frame = 0
@@ -193,7 +194,7 @@ DebugRoom_TextGame_GameRoom = {
     local obj = instance(DebugRoom_TextGame_GameRoom,OtherRoom,property)
     obj.frame = 0
     obj.name = "TextGame_Room"
-    obj.picture = load_image("game/materials/images/test/spr_bug.png")
+    obj.picture = load_image("game/materials/images/test/spr_post.png")
     obj.title = load_image("game/materials/images/test/spr_jld.png")
     obj.pict = load_image("game/materials/images/test/spr_building_background.png")
 
@@ -213,13 +214,23 @@ DebugRoom_TextGame_GameRoom = {
       --print(line)
     end
 
+    --文頭4byteを除去
     obj.texts[1] = string.sub(obj.texts[1], 4)
+    obj.window = TextWindow.new(nil,obj.texts,W/2,H/2,W-30,H-30,0,0)
 
     return obj
   end;
 
   u = function(self,dt)
     self.time = self.time+1
+    self.window:update(dt)
+
+    if(controller.wasPressed("a"))then
+      --camStand:shake(-10,10,2)
+      --camStand:shake(10,10,2)
+      --camStand:flashLight(2)
+      --soundmanager:play("game/materials/sound/se/se_explosion2.wav")
+    end;
   end;
 
   d = function(self)
@@ -244,19 +255,21 @@ DebugRoom_TextGame_GameRoom = {
       
       love.graphics.draw(self.picture, 0, 0)
 
-      love.graphics.draw(self.pict,m_x,m_y,self.time/60,0.6,0.6,self.pict:getWidth()/2,self.pict:getHeight()/2)
+      --love.graphics.draw(self.pict,m_x,m_y,self.time/60,0.6,0.6,self.pict:getWidth()/2,self.pict:getHeight()/2)
+      
+      
+
       love.graphics.setShader()
     else
-
       love.graphics.setShader(Sh_ClampColor)
       love.graphics.setColor(1,1,0.4,0.6)
       love.graphics.draw(self.picture, 0, 0)
-      
       love.graphics.setShader()
       love.graphics.setColor(1,1,1,1)
     end
   end;
 
   dg = function(self)
+    self.window:drawGUI()
   end;
 }

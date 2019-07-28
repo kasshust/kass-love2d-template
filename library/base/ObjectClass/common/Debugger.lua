@@ -102,13 +102,13 @@ Debugger ={
     local count = 0
     for i,v in pairs(ObjectTable) do
       love.graphics.setColor(1,1,1)
-      g.print(v.name,self.x + self.width-70,self.y + 120 + count*10)
+      g.print(v.name,self.x + self.width-100,self.y + 120 + count*10)
       
       count = count + 1
       O = O + 1
     end
 
-    g.print("Object : " .. O,self.x + self.width-70,self.y + 70)
+    g.print("Object : " .. O,self.x + self.width-100,self.y + 70)
 
     love.graphics.setColor(0.4,0.4,0.4,0.4)
     love.graphics.setScissor()
