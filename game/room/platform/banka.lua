@@ -253,7 +253,7 @@ DebugRoom = {
     obj.s = Select.new(1,5)
     obj.tw = {num = 1}
     obj.tween = tween.new(0.1,obj.tw, {num = obj.s.now}, tween.easing.outBounce)
-    obj.picture = load_image("game/materials/images/test/sprite_test2.png")
+    --obj.picture = load_image("game/materials/images/test/sprite_test2.png")
     return obj
   end;
   u = function(self,dt)

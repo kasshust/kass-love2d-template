@@ -62,6 +62,7 @@ function love.graphics.wq_quarter(_mode,_x,_y,i,j,width_per,height_per,_width,_h
     love.graphics.w_quarter(_mode,_x - i*width_per*math.cos(angle) + j*height_per*math.cos(angle),_y + (i-1)*width_per*math.sin(angle) + (j-1)*height_per*math.sin(angle),_width,_height,_depth,_z)
 end
 
+-- x,yを中心にテキストを描画
 function love.graphics.print_c(text,x,y,r,sx,sy,ox,oy,kx,ky)
     local font = love.graphics.getFont()
     local width =font:getWidth(text)
@@ -80,6 +81,7 @@ function love.graphics.cut(_x,_y,_w,_h,f)
   love.graphics.setScissor(x,y,w,h)
 end
 
+-- 設定を無視してcanvasを描画
 function drawCanvas(canvas,f)
     local cav = love.graphics.getCanvas()
     love.graphics.push()
@@ -93,3 +95,12 @@ function drawCanvas(canvas,f)
     love.graphics.setCanvas(cav)
   end
   
+  function love.graphics.lineVector(pos1,pos2)
+    love.graphics.line(pos1.x,pos1.y,pos2.x,pos2.y)
+  end
+
+--頂点を指定したポリゴンの描画 時計回り
+function love.graphics.rectangle_a(mode,x1,y1,x2,y2,x3,y3,x4,y4)
+    love.graphics.polygon(mode, x1, y1, x2, y2, x4, y4)
+    love.graphics.polygon(mode, x2, y2, x3, y3, x4, y4)
+end

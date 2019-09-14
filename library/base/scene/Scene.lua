@@ -26,14 +26,14 @@ SceneManager = {
       HC.resetHash()
       --camStandの初期化
       camStand:init()
-      --GC駆動
     end;
     changeScene = function(scene,property)
       --例外
-      if scene == nil then error("scene is nil! Please specify scene") end
+      if scene == nil then error("scene is nil! Please specify this scene") end
       --シーン初期化
       SceneManager.init()
       --シーン変更
+      SceneManager.c_scene:destroy()
       SceneManager.c_scene = nil
       SceneManager.c_scene = scene.new(property)
       local str = "ChangeScene! : " .. " -> " .. SceneManager.c_scene.name
@@ -95,5 +95,9 @@ Scene ={
     for i,v in pairs(StaticObjectTable) do
       v:drawGUI()
     end
+  end;
+
+  -- ルーム破棄時の処理
+  destroy = function(self)
   end;
 }

@@ -21,6 +21,7 @@ Manager = {
 }
 
 --各々のゲームマネージャーはこれを継承
+--これをmanagerにapply
 GameManager = {
   new = function(x,y)
     local obj = instance(GameManager)

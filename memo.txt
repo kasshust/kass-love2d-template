@@ -1,0 +1,183 @@
+love.graphics.newArrayImage で深度を指定した描画が可能
+love.graphics.newSpriteBatchで繰り返し背景が高速で描画できる？
+love.graphics.draw( drawable, transform )で変形したtextureを描画できる？
+雑魚
+
+・コルーチン
+テーブルにファンクションを入れてtrueを返すまで処理させる
+終わったらpopして次の処理へ->これイベント処理じゃん
+
+・イベント作り方
+    eventmanager:add(E_CamMoveTo.new(self.pos.x,self.pos.y,0.1))
+    eventmanager:add(E_Pause.new(true))
+    eventmanager:add(E_CamMoveTo.new(42*16,28*16,3))
+    eventmanager:add(E_CamMoveTo.new(self.pos.x,self.pos.y,2))
+    eventmanager:add(E_Pause.new(false))
+
+・エネミーメモ
+
+すばやい　ネズミ
+{
+	move
+]
+
+なんか弾っぽいの飛ばしてくる　タコ　
+水鉄砲　テッポウウオ
+ヨーヨー　カメレオン
+電撃を出す↪︎ゴムでしか無理
+{
+	move
+	Shot Enemy_String
+}
+
+モノを掴んで飛ぶ　落とす　カラス
+{
+	move
+	Catch
+	Fall
+}
+
+鳴き声がデカイだけ　子犬　
+{
+	move
+	Attack
+}
+
+ジャンプして踏んでくる　バッタ
+{
+	jamp
+}
+
+スモークを撒く　スカンク
+{
+	move
+	smoke
+}
+
+地中に潜って接近してくる　もぐら
+{
+	dig
+	appear
+}
+
+自爆してくる<-本体ごと投げる
+{
+	move
+	countdown
+	explode
+}
+
+猿みたいな物掴んで投げてくる->キャッチボールできる　猿
+{
+	move
+	catch
+	throw
+}
+
+
+仲間を食べてでかくなる　
+{
+	move
+	eat
+	growth
+}
+
+パワーアップアイテムを食べてしまう　ペリカン
+{
+	move
+	eat
+}
+
+拿捕された他船
+{
+	nil
+}
+
+分裂　だんだん小さくなる　スライム
+{
+	move
+	division
+}
+
+攻撃しながら後方移動　イカ
+まっすぐ突っ込んでくる　イノシシ
+{
+	move
+	atttack
+}
+
+・地雷的なやつ
+{
+	explosion
+}
+
+死ぬと四方八方に弾を撒き散らす
+{
+	move
+	explosion
+}
+
+擬態してる
+{
+	move
+transform on
+transform off	
+}
+
+跳ね返ってくるやつ
+{
+move
+reflect
+}　
+
+ゴムを切っちゃうやつ　カミキリムシ
+{
+	move
+	cut
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ボス
+1
+{
+
+}
+
+2
+{
+
+}
+
+3
+{
+
+}
+
+4
+{
+
+]
+
+5
+{
+
+}
+
+・デカすぎて脚しか見えない
+・デカイ動物・虫
+・でかいムカデ

@@ -130,5 +130,6 @@ T_normal = {
         end
       end
     end
+    g.setColor(1,1,1,1)
   end;
 };

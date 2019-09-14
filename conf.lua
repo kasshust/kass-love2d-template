@@ -68,7 +68,7 @@ function require_all(filename)
     local files = lfs.getDirectoryItems(name)
     for _,f in ipairs(files) do
         local t = name .. "/" .. f
-
+  
         ----$ 文字列の末尾　 つまり 「任意の文字.lua」
         if "file"== lfs.getInfo(t).type and t:match("%.lua$") then
             print("FileImport:"..t)
@@ -77,4 +77,6 @@ function require_all(filename)
             require_all(t)
         end
     end
-end
+  end
+  
+

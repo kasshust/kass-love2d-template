@@ -49,7 +49,7 @@ Object = {
 
     --メモリから破棄する
     destroy = function(self)
-      debugger:print("削除id:" .. self.id)
+      print("destroy id:" .. self.id)
       ObjectTable[self.id] = nil
       if self.solid ~= nil then HC.remove(self.solid) end
       self = nil
@@ -61,7 +61,7 @@ Object = {
         --相手がnilの場合は無視
         if shape.other ~= nil then
           local type = type(shape.other.tag)
-          if type ~= "table" then error("tag must be table!") do break end; end
+          if type ~= "table" then error("tag type must be table!") do break end; end
           if array.search(shape.other.tag,tag) then
             f(shape.other,delta)
           end

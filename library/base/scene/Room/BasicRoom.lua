@@ -4,12 +4,13 @@ BasicRoom = {
       obj.frame = 0
       obj.name = "ベーシック"
       obj.pause = false ---objectのupdateを停止する
-      obj.m_drawDistance = 600
+      obj.m_drawDistance = 1000
       return obj
     end;
     update = function(self,dt)
       self:staticObjectUpdate(dt)
       if not self.pause then self:objectUpdate(dt) end
+      self:u(dt)
       self.frame = self.frame + 1
     end;
     draw = function(self)
@@ -48,5 +49,15 @@ BasicRoom = {
         v:draw()
       end
     end;
+
+    -- 描画限界距離
+    setDrawDistance = function(self,distance)
+      self.m_drawDistance = distance
+    end;
+
+    -- 上書き
+    u = function(self,dt)
+
+    end
   }
   

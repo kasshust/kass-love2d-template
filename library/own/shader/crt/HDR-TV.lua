@@ -10,4 +10,5 @@ HDR_TV = love.graphics.newShader [[
             intens.a = 1.0;
         return intens;
         }
+        
     ]]

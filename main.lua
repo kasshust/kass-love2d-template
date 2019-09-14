@@ -23,11 +23,12 @@ print("----------load luafile---------")
   gamera = require("library/external/gamera/gamera")
   json = require("library/external/json/json")
 
+
 --GC実行閾値初期化
 gc_threshold = 1000
 
 function love.load()
-  -----------起動前の初期設定-------------------------
+  -----------システム設定-------------------------
   --Windowサイズの設定 コレ基準
   window_title = love.window.getTitle( )
   W,H = love.window.getMode( )
@@ -42,13 +43,12 @@ function love.load()
   m_x,g_x = 0,0
 
   --デバッグ
-  DEBUG = false
-
+  DEBUG = true
+  
   --ジョイスティック
   p1joystick = nil
 
-  --------kass Engine Manager-----------------
-  --1,汎用的マネージャー
+  --1,ゲームシステムマネージャー
   manager = Manager.new()
   addS(manager)
   --2,イベントマネージャー
@@ -57,7 +57,7 @@ function love.load()
 
   --3メインのカメラ
   --stageの大きさを設定 ->各ルームで上書きして
-  maincam = gamera.new(0,0,640,480)
+  maincam = gamera.new(0,0,W,H)
   --カメラwindowの大きさを設定
   camWindowScale = 1
   maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
@@ -70,6 +70,10 @@ function love.load()
   --5シーンのマネージャー
   --最初のシーンを指定
   scenemanager = SceneManager:new(PreRoom.new())
+
+  --6 描画バッファ
+  buffer = love.graphics.newCanvas(W, H)
+  buffer2 = love.graphics.newCanvas(W, H)
 
 end
 
@@ -88,10 +92,21 @@ function love.update(dt)
     if collectgarbage("count") > gc_threshold then
     	collectgarbage("step",2000)
     	gc_threshold = collectgarbage("count") + 250
-    	--print( "threshold set to "..gc_threshold)
+    	--print( "threshold set to ".have.gc_threshold)
     else
     	gc_threshold = gc_threshold - 1
     end
+
+    -- debugコマンド
+    --[[
+    if DEBUG then 
+      if love.keyboard.isDown( "d" ) then
+        debug.debug()
+      end
+    end
+    ]]
+
+    if debuggee then debuggee.poll() end
 end
 
 function love.draw()
@@ -100,14 +115,35 @@ function love.draw()
   g_x,g_y = x-W/2,y-H/2
   m_x,m_y = g_x+maid64.mouse.getX(),g_y+maid64.mouse.getY()
 
+  -- first 
+  love.graphics.setCanvas(buffer)
+  love.graphics.clear()
+  scenemanager:draw()
+  love.graphics.setCanvas()
+
+  -- second
+  love.graphics.setCanvas(buffer2)
+  love.graphics.clear()
+  
+  Sh_ClampColor:send("resolution",{W,H})
+  Sh_ClampColor:send("Time",0/600)
+  love.graphics.setShader(Sh_ClampColor)
+  
+  
+  love.graphics.draw(buffer,0,0)
+  love.graphics.setShader()
+  love.graphics.setCanvas()
+
+  -- third
   --ゲームのdraw
   maid64.start()
-  scenemanager:draw()
+  love.graphics.draw(buffer2,0,0)
   maid64.finish()
 
   --デバッガー
   love.window.setTitle(window_title .. " " ..tostring(love.timer.getFPS()))
   if DEBUG == true then debugger:draw() end
+  
 end
 
 function love.joystickadded(joystick)
@@ -137,4 +173,37 @@ function love.filedropped( file )
   success = love.filesystem.remove(f:getFilename())
   print("remove")
 
+end
+
+
+-------------------debug.debug()用------------------------
+
+-- tableの中身を展開
+function pt( table )
+  for i,v in pairs(table)do
+    print( i ,' = ', v )
+  end
+end
+
+-- tableの中身を全て展開
+function ptAll( table , tab)
+  
+  if tab == nil then tab = ''
+  else tab = tab .. "     " end
+
+  for i,v in pairs(table)do
+    if type(v) ~= "table" then 
+      print( tab .. i .. ' = ' , v )
+    else 
+      print( tab .. i .. ' = ', v )
+      ptAll( v , tab ) 
+    end
+  end
+end
+
+-- ObjectTableの一覧表示
+function ptOT( )
+  for i,v in pairs(ObjectTable)do
+    print( i ,' = ', v.name )
+  end
 end

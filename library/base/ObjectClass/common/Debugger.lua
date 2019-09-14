@@ -107,8 +107,13 @@ Debugger ={
       count = count + 1
       O = O + 1
     end
-
     g.print("Object : " .. O,self.x + self.width-100,self.y + 70)
+
+    local player = manager.game.playerManager:getPlayer()
+
+    if player ~= nil then
+      g.print("player : " .. player.name ,self.x + self.width-140,self.y + 100)
+    end
 
     love.graphics.setColor(0.4,0.4,0.4,0.4)
     love.graphics.setScissor()
@@ -118,6 +123,7 @@ Debugger ={
     else love.graphics.setColor(0.4,0.4,0.4,0.4) end
     love.graphics.rectangle("fill", self.x+self.width, self.y+self.height, 10,10)
     love.graphics.setColor(1,1,1,1)
+
   end;
 
   print = function(self,...)
