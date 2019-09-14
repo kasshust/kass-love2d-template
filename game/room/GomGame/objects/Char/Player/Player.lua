@@ -64,7 +64,7 @@ O_Player = {
       else
         self.tween = tween.new(1/5, self.tww, {scale = 0.5}, tween.easing.outBounce)
       end
-      maincam:setScale(self.tww.scale)
+      g_maincam:setScale(self.tww.scale)
       self.tween:update(dt)
   
       local sum = 0.3
@@ -128,7 +128,7 @@ O_Player = {
       ---加速度加算
       local vangle = self.cam_vangle + aangle
       self.cam_angle = self.cam_angle + vangle
-      --maincam:setAngle(self.cam_angle + math.pi/2)
+      --g_maincam:setAngle(self.cam_angle + math.pi/2)
   
       self.pos = self.pos + self.vpos*10
       self.vpos = self.vpos*0.90
@@ -206,9 +206,9 @@ O_Player = {
     damage = function(self)
       soundmanager:play(ADDRESS.se.."se_walk.wav")
       soundmanager:play(ADDRESS.se.."se_explosion.wav")
-      camStand:shake(10,4,4)
-      camStand:flashLight(3)
-      debugger:print("プレイヤー攻撃食らった")
+      g_camStand:shake(10,4,4)
+      g_camStand:flashLight(3)
+      g_debugger:print("プレイヤー攻撃食らった")
       self.life = self.life - 1
     end;
   

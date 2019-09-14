@@ -23,7 +23,7 @@ BankaRoom = {
     --マップ作成
     obj.map = sti(property.map, {})
     obj.size = {width = obj.map.width*16,height = obj.map.height*16}
-    maincam:setWorld(0,0,obj.size.width,obj.size.height)
+    g_maincam:setWorld(0,0,obj.size.width,obj.size.height)
 
     ------------------------------------------------------------------
 
@@ -165,7 +165,7 @@ BankaRoom = {
     -- property経由プレイヤー
     obj:create(obj.map.layers.door,function(o)
         TouchDoor.new(o.x,o.y,o.properties["room"],o.properties["num"])
-        if manager.game.player.num == o.name then
+        if g_manager.game.player.num == o.name then
           --managerのプレイヤーを上書き
           ev_property["player"] = {x = o.x + 8, y = o.y + 8}
           return true
@@ -185,7 +185,7 @@ BankaRoom = {
   draw = function(self)
     --背景
     if self.map.layers["bg"] ~= nil then
-      self.map.layers["bg"].x ,self.map.layers["bg"].y = maincam.x/4,maincam.y/4
+      self.map.layers["bg"].x ,self.map.layers["bg"].y = g_maincam.x/4,g_maincam.y/4
       self.map.layers["bg"]:draw()
     end
 
@@ -209,7 +209,7 @@ BankaRoom = {
   objectUpdate = function(self,dt)
     --オブジェクトのupdate
     for i,v in pairs(ObjectTable) do
-      local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
+      local dis = (math.pow(g_maincam.x - v.pos.x,2) + math.pow(g_maincam.y - v.pos.y,2) )^0.5
       --if dis < 400 or v.persist == true then
       v:update(dt)
       --end
@@ -223,7 +223,7 @@ BankaRoom = {
 
     local t = {}
     for i,v in pairs(ObjectTable) do
-      local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
+      local dis = (math.pow(g_maincam.x - v.pos.x,2) + math.pow(g_maincam.y - v.pos.y,2) )^0.5
       if dis < 300 or v.persist == true then table.insert(t,v) end
     end
 

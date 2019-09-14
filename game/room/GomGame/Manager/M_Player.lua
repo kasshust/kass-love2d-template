@@ -49,7 +49,7 @@ M_Player = {
 
     drawMap = function(self,x,y,width,height)
         --地図
-        local l,t,w,h = maincam:getWorld() 
+        local l,t,w,h = g_maincam:getWorld() 
 
         g.setColor(ASE.SALMON)
         love.graphics.rectangle("fill",g_x + x,g_y + y,width,height)

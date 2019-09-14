@@ -1,7 +1,10 @@
+
 -- エネミー親クラス
 O_Enemy = {
     new = function(x,y)
       local obj = instance(O_Enemy,Object,x,y)
+      table.insert(EnemyTable,obj)
+      
       --継承時に探索用のため必要
       obj.name = "O_Enemy"
       obj.tag = {"enemy"}
@@ -68,9 +71,10 @@ O_Enemy = {
     damage = function(self)
       soundmanager:play(ADDRESS.se .. "se_explosion2.wav")
       testEffect.new(self.pos.x,self.pos.y)
-      --camStand:shake(10,4,4)
+      --g_camStand:shake(10,4,4)
       Smoke.new(self.pos.x,self.pos.y)
       O_Effect.new(self.pos.x,self.pos.y)
       self.kill = true
     end;
   }
+

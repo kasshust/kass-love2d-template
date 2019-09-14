@@ -40,8 +40,8 @@ TouchEvent = {
   step = function(self,dt)
     --if controller.wasPressed("down") then
       self:collideWith("player",self.solid,function(other,delta)
-          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) other.operation = false obj.kill = true end end))
-          eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) other.operation = true obj.kill = true end end))
+          g_eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) other.operation = false obj.kill = true end end))
+          g_eventmanager:add(CustomEvent.new(function(obj) obj.init = function(obj) other.operation = true obj.kill = true end end))
           self.kill = true
       end)
     --end
@@ -63,7 +63,7 @@ TouchDoor = {
   step = function(self)
     if controller.wasPressed("down") then
       self:collideWith("player",self.solid,function(other,delta)
-        manager.game.player.num = self.num
+        g_manager.game.player.num = self.num
         trans(T_normal,BankaRoom,BankaMap[self.room])
       end)
     end
@@ -108,14 +108,14 @@ Wheel = {
      local obj = instance(Wheel,Object,x,y)
      obj.name = "wheel"
      obj.pos = Vector.new(x,y)
-     obj.animator = Animator.new(spr_test,16,16,1,1)
+     --obj.animator = Animator.new(spr_test,16,16,1,1)
      obj.frame = 0
      obj.p_angle = 0
      obj.angle = 0
      obj.vangle = 0
      obj.aangle = 0
      obj.child = {}
-     obj.p = p
+     --obj.p = p
      obj.r = r
      obj.l = 2 * r * math.pi
      return obj
@@ -137,7 +137,7 @@ Plate = {
    new = function(x,y,r)
      local obj = instance(Plate,Object,x,y,r)
      obj.pos = Vector.new(x,y)
-     obj.animator = Animator.new(spr_test,16,16)
+     --obj.animator = Animator.new(spr_test,16,16)
      obj.frame = 0
      obj.p_angle = 0
      obj.angle = 0

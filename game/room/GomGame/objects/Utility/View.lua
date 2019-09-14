@@ -10,9 +10,9 @@ O_TopView = {
       obj.destination = {x = 0,y = 0}
       obj.tween = tween.new(1/5,obj.destination, {x = 0,y = 0}, tween.easing.inOutQubic)
       obj.pre = {dir = {angle = obj.focus.angle }}
-      camStand:setfocus(obj)
-      camStand:moveFocusSeq(0.3)
-      camStand:setPos(obj.focus.pos.x,obj.focus.pos.y)
+      g_camStand:setfocus(obj)
+      g_camStand:moveFocusSeq(0.3)
+      g_camStand:setPos(obj.focus.pos.x,obj.focus.pos.y)
   
       return obj
     end;

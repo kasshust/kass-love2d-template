@@ -17,17 +17,17 @@ BankaEvent = {
     flag = not BankaFlag["debug"]["test1"]
     if flag then
       local player = nil
-      eventmanager:add(E_CamMoveTo.new(p.player.x,p.player.y,0.1))
-      eventmanager:add(E_Pause.new(true))
-      eventmanager:add(E_CamMoveTo.new(42*16,28*16,3))
-      eventmanager:add(E_CamMoveTo.new(p.player.x,p.player.y,2))
-      eventmanager:add(E_Pause.new(false))
+      g_eventmanager:add(E_CamMoveTo.new(p.player.x,p.player.y,0.1))
+      g_eventmanager:add(E_Pause.new(true))
+      g_eventmanager:add(E_CamMoveTo.new(42*16,28*16,3))
+      g_eventmanager:add(E_CamMoveTo.new(p.player.x,p.player.y,2))
+      g_eventmanager:add(E_Pause.new(false))
 
-      eventmanager:add(CustomEventInit.new(function(obj) TestEnemy.new(p.player.x,p.player.y) end))
-      eventmanager:add(CustomEventInit.new(function(obj) camStand:shake(2,2,3) end))
-      eventmanager:add(CustomEventInit.new(function(obj) player = TestPlayer.new(p.player.x,p.player.y) end))
-      eventmanager:add(CustomEventInit.new(function(obj) player.vpos.y = -5 end))
-      eventmanager:add(E_CamMoveFocusSeq.new(0.2))
+      g_eventmanager:add(CustomEventInit.new(function(obj) TestEnemy.new(p.player.x,p.player.y) end))
+      g_eventmanager:add(CustomEventInit.new(function(obj) g_camStand:shake(2,2,3) end))
+      g_eventmanager:add(CustomEventInit.new(function(obj) player = TestPlayer.new(p.player.x,p.player.y) end))
+      g_eventmanager:add(CustomEventInit.new(function(obj) player.vpos.y = -5 end))
+      g_eventmanager:add(E_CamMoveFocusSeq.new(0.2))
       BankaFlag["debug"]["test1"] = true
     else
       local player = TestPlayer.new(p.player.x,p.player.y)
@@ -39,9 +39,9 @@ BankaEvent = {
   end;
 
   ev_debug3 = function(p)
-    eventmanager:add(TestEvent.new())
-    eventmanager:add(CustomEventInit.new(function(obj) player = TestPlayer.new(p.player.x,p.player.y) end))
-    eventmanager:add(CustomEventInit.new(function(obj) camStand:shake(2,2,3) end))
+    g_eventmanager:add(TestEvent.new())
+    g_eventmanager:add(CustomEventInit.new(function(obj) player = TestPlayer.new(p.player.x,p.player.y) end))
+    g_eventmanager:add(CustomEventInit.new(function(obj) g_camStand:shake(2,2,3) end))
   end;
 }
 --map情報を記述

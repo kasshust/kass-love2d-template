@@ -44,7 +44,7 @@ EventManager = {
       self:start()
     else
       --破棄して再度生成
-      debugger:print("全てのeventが終了しました")
+      g_debugger:print("全てのeventが終了しました")
       self.queue = nil
       self.queue = Queue.new()
     end

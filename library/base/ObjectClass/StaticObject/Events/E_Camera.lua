@@ -10,17 +10,17 @@ E_CamMoveTo = {
     return obj
   end;
   init = function(self)
-    debugger:print("---E:CamMoveTo:発火" .. self.x .. " : " .. self.y)
-    camStand:moveTo(self.x,self.y,self.time,self.type)
+    g_debugger:print("---E:CamMoveTo:発火" .. self.x .. " : " .. self.y)
+    g_camStand:moveTo(self.x,self.y,self.time,self.type)
   end;
   update = function(self,dt)
     --割り込みが入った
-    if camStand:getStatus() ~= camStand.status.MOVETO then
-      debugger:print("---E:CamMoveTo:割り込みを検知しました。強制終了します")
+    if g_camStand:getStatus() ~= g_camStand.status.MOVETO then
+      g_debugger:print("---E:CamMoveTo:割り込みを検知しました。強制終了します")
       self.kill = true
     end
     --終了した
-    if camStand.moveTo_finish == true then self.kill = true end
+    if g_camStand.moveTo_finish == true then self.kill = true end
   end;
 };
 
@@ -34,18 +34,18 @@ E_CamMoveFocus = {
     return obj
   end;
   init = function(self)
-    debugger:print("---E:CamMoveFocus:発火")
-    if camStand.focus == nil then
-      debugger:print("---E:CamMoveFocus:focusが設定されていません。削除します。")
+    g_debugger:print("---E:CamMoveFocus:発火")
+    if g_camStand.focus == nil then
+      g_debugger:print("---E:CamMoveFocus:focusが設定されていません。削除します。")
       self.kill = true
     else
-      camStand:moveTo(camStand.focus.pos.x,camStand.focus.pos.y,self.time,self.type)
+      g_camStand:moveTo(g_camStand.focus.pos.x,g_camStand.focus.pos.y,self.time,self.type)
     end
   end;
   update = function(self,dt)
-    if camStand.moveTo_finish == true then
+    if g_camStand.moveTo_finish == true then
       self.kill = true
-      camStand:moveFocus()
+      g_camStand:moveFocus()
     end
   end;
 };
@@ -59,12 +59,12 @@ E_CamMoveFocusSeq = {
     return obj
   end;
   init = function(self)
-    debugger:print("---E:CamMoveFocusSeq:発火")
-    if camStand.focus == nil then
-      debugger:print("---E:CamMoveFocusSeq:focusが設定されていません。削除します。")
+    g_debugger:print("---E:CamMoveFocusSeq:発火")
+    if g_camStand.focus == nil then
+      g_debugger:print("---E:CamMoveFocusSeq:focusが設定されていません。削除します。")
       self.kill = true
     else
-      camStand:moveFocusSeq(self.speed)
+      g_camStand:moveFocusSeq(self.speed)
       self.kill = true
     end
   end;

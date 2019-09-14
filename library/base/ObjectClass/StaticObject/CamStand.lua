@@ -128,7 +128,7 @@ CamStand = {
   --------------------statusを変更する--------------------
   --MOVETOに設定して移動
   moveTo = function(self,_x,_y,time,_type)
-    debugger:print("MOVETOカメラ移動".. _x .. "," .. _y)
+    g_debugger:print("MOVETOカメラ移動".. _x .. "," .. _y)
     self.status_now = self.status.MOVETO
     self.moveTo_finish = false
     self.tw.x = self.pos.x
@@ -140,7 +140,7 @@ CamStand = {
 
   --FOCUSに設定
   moveFocus = function(self)
-    debugger:print("FOCUSカメラ移動")
+    g_debugger:print("FOCUSカメラ移動")
     self.status_now = self.status.FOCUS
   end;
 
@@ -148,7 +148,7 @@ CamStand = {
   moveFocusSeq = function(self,speed,maxspeed)
     self.speed = speed or 1
     self.maxspeed = maxspeed or 1
-    debugger:print("FOCUS_SEQカメラ移動")
+    g_debugger:print("FOCUS_SEQカメラ移動")
     self.vpos = Vector.new(0,0)
     self.status_now = self.status.FOCUS_SEQ
   end;

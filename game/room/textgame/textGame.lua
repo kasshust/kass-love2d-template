@@ -226,9 +226,9 @@ DebugRoom_TextGame_GameRoom = {
     self.window:update(dt)
 
     if(controller.wasPressed("a"))then
-      --camStand:shake(-10,10,2)
-      --camStand:shake(10,10,2)
-      --camStand:flashLight(2)
+      --g_camStand:shake(-10,10,2)
+      --g_camStand:shake(10,10,2)
+      --g_camStand:flashLight(2)
       --soundmanager:play("game/materials/sound/se/se_explosion2.wav")
     end;
   end;

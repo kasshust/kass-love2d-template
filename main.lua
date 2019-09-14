@@ -2,6 +2,10 @@
 ObjectTable = {}
 StaticObjectTable = {}
 
+-- 検索用テーブル
+EnemyTable = {}
+
+
 --ライブラリと自作クラス
 require_all("library/own")
 require_all("library/base")
@@ -33,6 +37,7 @@ function love.load()
   window_title = love.window.getTitle( )
   W,H = love.window.getMode( )
   love.window.setMode(W, H, {resizable=true, minwidth = W, minheight = H})
+  
   --maid64設定
   maid64.setup(W,H)
   --wheelの初期値
@@ -40,7 +45,7 @@ function love.load()
 
   --gui,mouseの座標
   g_x,g_y = 0,0
-  m_x,g_x = 0,0
+  m_x,m_y = 0,0
 
   --デバッグ
   DEBUG = true
@@ -48,28 +53,28 @@ function love.load()
   --ジョイスティック
   p1joystick = nil
 
-  --1,ゲームシステムマネージャー
-  manager = Manager.new()
-  addS(manager)
+  --1,システムマネージャー ゲームを放り込む
+  g_manager = Manager.new()
+  addS(g_manager)
   --2,イベントマネージャー
-  eventmanager = EventManager.new()
-  addS(eventmanager)
+  g_eventmanager = EventManager.new()
+  addS(g_eventmanager)
 
   --3メインのカメラ
   --stageの大きさを設定 ->各ルームで上書きして
-  maincam = gamera.new(0,0,W,H)
+  g_maincam = gamera.new(0,0,W,H)
   --カメラwindowの大きさを設定
-  camWindowScale = 1
-  maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
+  local camWindowScale = 1
+  g_maincam:setWindow(0,0,W*camWindowScale,H*camWindowScale)
   --maincam制御
-  camStand = CamStand.new(maincam)
-  addS(camStand)
+  g_camStand = CamStand.new(g_maincam)
+  addS(g_camStand)
 
   --4デバッガ
-  debugger = Debugger.new()
+  g_debugger = Debugger.new()
   --5シーンのマネージャー
   --最初のシーンを指定
-  scenemanager = SceneManager:new(PreRoom.new())
+  g_scenemanager = SceneManager:new(PreRoom.new())
 
   --6 描画バッファ
   buffer = love.graphics.newCanvas(W, H)
@@ -79,10 +84,10 @@ end
 
 function love.update(dt)
   ----ゲームのupdate----
-    scenemanager:update(dt)
+    g_scenemanager:update(dt)
   ----マネージャー-------
     --デバッガー
-    if DEBUG == true then debugger:update(dt) end
+    if DEBUG == true then g_debugger:update(dt) end
     --最小音声管理
     soundmanager:update(dt)
     --入力機器
@@ -111,38 +116,41 @@ end
 
 function love.draw()
   --gui用座標の取得
-  local x,y = maincam:getPosition()
+  local x,y = g_maincam:getPosition()
   g_x,g_y = x-W/2,y-H/2
   m_x,m_y = g_x+maid64.mouse.getX(),g_y+maid64.mouse.getY()
 
-  -- first 
+  -- 描画フローを再確認すべき
+
+  -- bufferにシーンを書き込み
   love.graphics.setCanvas(buffer)
-  love.graphics.clear()
-  scenemanager:draw()
+    love.graphics.clear()
+    g_scenemanager:draw()
   love.graphics.setCanvas()
 
-  -- second
+  -- ポストエフェクト1
   love.graphics.setCanvas(buffer2)
   love.graphics.clear()
-  
-  Sh_ClampColor:send("resolution",{W,H})
-  Sh_ClampColor:send("Time",0/600)
-  love.graphics.setShader(Sh_ClampColor)
-  
-  
-  love.graphics.draw(buffer,0,0)
-  love.graphics.setShader()
+    
+    Sh_ClampColor:send("resolution",{W,H})
+    Sh_ClampColor:send("Time",0/600)
+    love.graphics.setShader(Sh_ClampColor)
+    love.graphics.draw(buffer,0,0)
+    love.graphics.setShader()
+
   love.graphics.setCanvas()
 
-  -- third
+  -- ピクセルパーフェクト
   --ゲームのdraw
   maid64.start()
-  love.graphics.draw(buffer2,0,0)
+    love.graphics.draw(buffer2,0,0)
   maid64.finish()
+
+  
 
   --デバッガー
   love.window.setTitle(window_title .. " " ..tostring(love.timer.getFPS()))
-  if DEBUG == true then debugger:draw() end
+  if DEBUG == true then g_debugger:draw() end
   
 end
 

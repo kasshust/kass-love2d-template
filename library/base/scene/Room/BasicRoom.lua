@@ -23,7 +23,7 @@ BasicRoom = {
     objectUpdate = function(self,dt)
       --オブジェクトのupdate
       for i,v in pairs(ObjectTable) do
-        local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
+        local dis = (math.pow(g_maincam.x - v.pos.x,2) + math.pow(g_maincam.y - v.pos.y,2) )^0.5
         --if dis < 400 or v.persist == true then
           v:update(dt)
         --end
@@ -38,7 +38,7 @@ BasicRoom = {
 
       local t = {}
       for i,v in pairs(ObjectTable) do
-         local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
+         local dis = (math.pow(g_maincam.x - v.pos.x,2) + math.pow(g_maincam.y - v.pos.y,2) )^0.5
         if dis < self.m_drawDistance or v.persist == true or v.allvisible == true then table.insert(t,v) end
       end
   

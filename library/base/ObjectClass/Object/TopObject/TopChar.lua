@@ -73,7 +73,7 @@ Top_Char = {
           local dis1,dis2 = y2 - other.pos.y , other.pos.y + other.h - y1
             if dis1 > 2 and dis2 > 2 then
               self.vpos = self.vpos * Vector.new(0,1)
-            else  debugger:print("下" .. tostring(dis1),"上" .. tostring(dis2))
+            else  g_debugger:print("下" .. tostring(dis1),"上" .. tostring(dis2))
             end
         end
       end

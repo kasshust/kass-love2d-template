@@ -19,7 +19,7 @@ MeRoom = {
 
     --背景
     if self.map.layers["bg"] ~= nil then
-      self.map.layers["bg"].x ,self.map.layers["bg"].y  = maincam.x/4,maincam.y/4
+      self.map.layers["bg"].x ,self.map.layers["bg"].y  = g_maincam.x/4,g_maincam.y/4
       self.map.layers["bg"]:draw()
     end
 
@@ -35,7 +35,7 @@ MeRoom = {
   objectUpdate = function(self,dt)
     --オブジェクトのupdate
     for i,v in pairs(ObjectTable) do
-      local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
+      local dis = (math.pow(g_maincam.x - v.pos.x,2) + math.pow(g_maincam.y - v.pos.y,2) )^0.5
       --if dis < 400 or v.persist == true then
         v:update(dt)
       --end
@@ -49,7 +49,7 @@ MeRoom = {
 
     local t = {}
     for i,v in pairs(ObjectTable) do
-       local dis = (math.pow(maincam.x - v.pos.x,2) + math.pow(maincam.y - v.pos.y,2) )^0.5
+       local dis = (math.pow(g_maincam.x - v.pos.x,2) + math.pow(g_maincam.y - v.pos.y,2) )^0.5
       if dis < 300 or v.persist == true then table.insert(t,v) end
     end
 

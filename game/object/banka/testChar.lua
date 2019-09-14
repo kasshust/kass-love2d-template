@@ -43,7 +43,7 @@ TestPlayer = {
 
      self.solid:moveTo(self.pos.x,self.pos.y)
      self:collideWith("block",self.solid,function(other,delta)
-       if delta.y > 0 and self.vpos.y < 0 then debugger:print(delta.y) soundmanager:play("game/materials/sound/se/se_head.wav")  end
+       if delta.y > 0 and self.vpos.y < 0 then g_debugger:print(delta.y) soundmanager:play("game/materials/sound/se/se_head.wav")  end
      end)
    end;
    operate = function(self,dt)
@@ -122,9 +122,9 @@ TestView = {
       obj.destination = {x = 0,y = 0} --移動量
       obj.tween = tween.new(1,obj.destination, {x = obj.focus.dir.x * 75,y = 0}, tween.easing.inOutQubic)
       obj.pre = {dir = {x = obj.focus.dir.x ,y = obj.focus.dir.x }}
-      camStand:setfocus(obj)
-      camStand:moveFocusSeq(0.7)
-      camStand:setPos(obj.focus.pos.x,obj.focus.pos.y)
+      g_camStand:setfocus(obj)
+      g_camStand:moveFocusSeq(0.7)
+      g_camStand:setPos(obj.focus.pos.x,obj.focus.pos.y)
 
       return obj
     end;
@@ -135,7 +135,7 @@ TestView = {
 
       --print(self.destination.x)
 
-      --camStand:setPos(self.focus.pos.x,self.focus.pos.y)
+      --g_camStand:setPos(self.focus.pos.x,self.focus.pos.y)
 
       self.pre.dir.x = self.focus.dir.x
       self.pre.dir.y = self.focus.dir.y

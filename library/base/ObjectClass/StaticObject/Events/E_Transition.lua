@@ -7,10 +7,10 @@ E_Transition = {
     obj.transition = class.new(room,property)
     return obj
   end;
-  init = function(self) debugger:print("---E:遷移イベントが発火しました") end;
+  init = function(self) g_debugger:print("---E:遷移イベントが発火しました") end;
   update = function(self,dt)
     self.transition:update(dt)
-    if self.transition.kill == true then self.kill = true debugger:print("---E:遷移イベントが終了しました") end
+    if self.transition.kill == true then self.kill = true g_debugger:print("---E:遷移イベントが終了しました") end
   end;
   drawGUI = function(self)
     self.transition:drawGUI()

@@ -36,7 +36,7 @@ O_EnemyShot = {
         self:collideWithEnemy(function(other,delta)
           self.pos = self.pos + delta
           testEffect.new(self.pos.x,self.pos.y)
-          --camStand:shake(10,4,4)
+          --g_camStand:shake(10,4,4)
           Smoke.new(self.pos.x,self.pos.y)
           O_Effect.new(self.pos.x,self.pos.y)
           self.kill = true

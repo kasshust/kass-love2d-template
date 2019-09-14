@@ -18,15 +18,16 @@ PreRoom = {
       --sprite.test = load_image("game/materials/images/test/sprite_test2.png")
      
       --manager作成
-      manager:apply(M_GomGame.new())
+      g_manager:apply(M_GomGame.new())
       --if(DEBUG) then trans(T_normall,BuildingRoom,{})end
       return obj
     end;
     u = function(self,dt)
       --なんかムービーとかロゴとか
-      trans(T_normal,DebugRoom_GomGame_GameRoom,{})
+      trans(Transition,Room_GomGameOpening,{})
     end;
     dg = function(self)
-      g.print("なんかロゴとか",W/2,H/2)
+      g.clear(ASE.WHITE)
+      g.print("初期化",W/2,H/2)
     end;
   }

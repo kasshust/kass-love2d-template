@@ -18,7 +18,7 @@ O_Em0001 = {
       O_Enemy.step(self,dt)
 
       --move
-      local p = manager.game.playerManager:getPlayer()
+      local p = g_manager.game.playerManager:getPlayer()
 
       if p ~= nil then
         local dist = p.pos - self.pos
@@ -69,7 +69,7 @@ O_Em0001 = {
     damage = function(self)
       soundmanager:play(ADDRESS.se .. "se_explosion2.wav")
       testEffect.new(self.pos.x,self.pos.y)
-      --camStand:shake(10,4,4)
+      --g_camStand:shake(10,4,4)
       Smoke.new(self.pos.x,self.pos.y)
       O_Effect.new(self.pos.x,self.pos.y)
       self.kill = true

@@ -1,6 +1,5 @@
 -- GomGameのデバッグルーム
 DebugRoom_GomGame = {
-
     new = function(property)
       local obj = instance(DebugRoom_GomGame,OtherRoom,property)
       obj.frame = 0
@@ -66,65 +65,93 @@ DebugRoom_GomGame = {
     end;
   }
 
-  -- GomGameのタイトル
 
+  -- タイトル
 Room_GomGameTitle = {
   new = function(property)
   local obj = instance(Room_GomGameTitle,OtherRoom,property)
   obj.frame = 0
   obj.name = "model"
   --obj.title = load_image("game/materials/images/test/spr_jld.png")
+  
+  local music = love.audio.newSource("game/materials/sound/music/Music_Sea.mp3","stream")
+  soundmanager:playMusic({music})
+  
   obj.time = 0
   obj.line1 = {}
   obj.line2 = {}
   return obj
   end;
   u = function(self,dt)
-    if controller.wasPressed("a") then trans(T_normal,DebugRoom_GomGame_GameRoom) end
+    if controller.wasPressed("a") then 
+      trans(T_normal,DebugRoom_GomGame_GameRoom) 
+      --　ボリューム下げて止めたり
+    end
   end;
   d = function(self)
   end;
   dg = function(self)
     self.time = self.time + 1
 
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.setColor(ASE.BLACK)
     love.graphics.rectangle("fill",0,0,W,H)
     love.graphics.setColor(ASE.GREEN)
     love.graphics.setLineStyle( "rough")
     love.graphics.setLineWidth(1)
     love.graphics.setColor(ASE.WHITE)
-  --[[
-    
-      for y = 1,1 do
-      for x = 1, 20 do
-          love.graphics.setLineWidth(32)
-          love.graphics.setColor(1,1,1,0.3)
-          self.line1[x*2-1] = (x-1)*32
-          self.line1[x*2] = 32*math.sin(x+self.time/10) +32*11
-          self.line2[x*2-1] = W-(x-1)*32
-          self.line2[x*2] = 32*math.sin(x-self.time/10) +32*4
-          
-          love.graphics.line(self.line1[x*2-1],self.line1[x*2],self.line1[x*2-1],self.line1[x*2]+320)
-          love.graphics.line(self.line2[x*2-1],self.line2[x*2],self.line2[x*2-1],self.line2[x*2]-320)
-    
-          love.graphics.setColor(ASE.GREEN)
-          love.graphics.setLineWidth(1)
-        
-      end
-      end
-    ]]
-    love.graphics.setColor(ASE.WHITE)
-    love.graphics.setColor(1,1,1,1)
-    --love.graphics.draw(self.title,W/2,H/2+1*math.sin(self.time/10),0,1+0.02*math.cos(self.time/10),1+0.02*math.sin(self.time/10),160,120)
-    love.graphics.setColor(0.5,0.5,0.5,1)
-    --love.graphics.draw(self.title,W/2,H/2+2+1*math.sin(self.time/10),0,1+0.02*math.cos(self.time/10),1+0.02*math.sin(self.time/10),160,120)
-    love.graphics.setColor(0.5,0.5,0.5,1)
-    --love.graphics.draw(self.title,W/2,H/2+4+1*math.sin(self.time/10),0,1+0.02*math.cos(self.time/10),1+0.02*math.sin(self.time/10),160,120)
-    love.graphics.setColor(1,1,1,1)
+    love.graphics.print("Title Press A",W/2,H/2)
+
+
   end;
 }
 
---Room
+-- オープニング
+Room_GomGameOpening = {
+  new = function(property)
+    local obj = instance(Room_GomGameOpening,OtherRoom,property)
+    obj.frame = 0
+    obj.name = "model"
+    obj.time = 0
+    return obj
+    end;
+    u = function(self,dt)
+      if controller.wasPressed("a") then 
+        trans(Transition,Room_GomGameTitle) 
+        --　ボリューム下げて止めたり
+      end
+    end;
+    d = function(self)
+    end;
+    dg = function(self)
+      love.graphics.setColor(ASE.BLACK)
+      love.graphics.rectangle("fill",0,0,W,H)
+      love.graphics.setColor(ASE.GREEN)
+      love.graphics.setLineStyle( "rough")
+      love.graphics.setLineWidth(1)
+      love.graphics.setColor(ASE.WHITE)
+      love.graphics.print("Opennig",W/2,H/2)
+    end;
+}
+
+-- エンディング
+Room_GomGameEnding = {
+    new = function(property)
+    local obj = instance(Room_GomGameEnding,OtherRoom,property)
+    obj.frame = 0
+    obj.name = ""
+    obj.time = 0
+    return obj
+  end;
+  u = function(self,dt)
+  end;
+  d = function(self)
+  end;
+  dg = function(self)
+  end;
+}
+
+
+--デバッグ　ゲームルーム
 DebugRoom_GomGame_GameRoom = {
   new = function(property)
     local obj = instance(DebugRoom_GomGame_GameRoom,BasicRoom,property)
@@ -136,11 +163,11 @@ DebugRoom_GomGame_GameRoom = {
     obj.h = H*12
     obj.size = 16
 
-    maincam:setWorld(0,0,obj.w,obj.h)    
+    g_maincam:setWorld(0,0,obj.w,obj.h)    
 
     -- プレイヤー生成
     obj.player = O_Player.new(obj.w/2,obj.h/2)
-    manager.game.playerManager:setPlayer(obj.player)
+    g_manager.game.playerManager:setPlayer(obj.player)
 
     --背景作成
     local image  = load_image("game/materials/images/test/grass.png")
@@ -148,7 +175,6 @@ DebugRoom_GomGame_GameRoom = {
     obj.backCanvas[0] = love.graphics.newCanvas(obj.w, obj.h)
     obj.backCanvas[1] = love.graphics.newCanvas(obj.w, obj.h)
     obj.backCanvas[2] = love.graphics.newCanvas(obj.w, obj.h)
-
 
     obj.col  = {}
     obj.col[0] = ASE.GREEN
@@ -182,6 +208,11 @@ DebugRoom_GomGame_GameRoom = {
     --　敵生成
     for i=0,6 do
       O_Em0001.new(math.random(obj.w),math.random(obj.h))
+    end
+
+    -- 弾生成
+    for i=0,64 do
+      O_PlayerShot.new(math.random(obj.w),math.random(obj.h))
     end
 
     -- ルームフラグ
@@ -225,7 +256,8 @@ DebugRoom_GomGame_GameRoom = {
     Sh_Noise:send("CameraPos",{0,0})
     Sh_Noise:send("Time",t/60)
     love.graphics.setShader(Sh_Noise)
-    for i = 0,2 do
+    
+    for i = 0,1 do
       love.graphics.draw(self.backCanvas[i],0, 0)
     end
     g.setShader()
@@ -254,9 +286,11 @@ DebugRoom_GomGame_GameRoom = {
   end;
 
   destroy = function(self)
-    manager.game.playerManager:resetPlayer()
+    g_manager.game.playerManager:resetPlayer()
     if self.roomFlag.clear == true then
       --次ステージへ
     end
   end;
 }
+
+-- ゲームルーム

@@ -11,10 +11,10 @@ SceneManager = {
         self.c_scene:update(dt)
     end;
     draw = function(self)
-      maincam:draw(function(t,l,w,h)
+      g_maincam:draw(function(t,l,w,h)
         self.c_scene:draw()
       end)
-      maincam:drawGUI(function(t,l,w,h)
+      g_maincam:drawGUI(function(t,l,w,h)
         self.c_scene:drawGUI()
       end)
     end;
@@ -22,10 +22,13 @@ SceneManager = {
       --各table初期化
       ObjectTable = nil
       ObjectTable = {}
+
+      EnemyTable = nil
+      EnemyTable = {}
       --HC空間の初期化
       HC.resetHash()
       --camStandの初期化
-      camStand:init()
+      g_camStand:init()
     end;
     changeScene = function(scene,property)
       --例外
@@ -37,7 +40,7 @@ SceneManager = {
       SceneManager.c_scene = nil
       SceneManager.c_scene = scene.new(property)
       local str = "ChangeScene! : " .. " -> " .. SceneManager.c_scene.name
-      debugger:print(str ..":")
+      g_debugger:print(str ..":")
     end;
 }
 
@@ -51,8 +54,8 @@ Scene ={
     obj.name = "Scene";
     obj.pause = false
     obj.size = {width = W,height = H}
-    --maincam-worldをステージの大きさに合わせる(自動でバウンダリーが設定される)
-    maincam:setWorld(0,0,obj.size.width,obj.size.height)
+    --g_maincam-worldをステージの大きさに合わせる(自動でバウンダリーが設定される)
+    g_maincam:setWorld(0,0,obj.size.width,obj.size.height)
     return obj
   end;
   update = function(self,dt)

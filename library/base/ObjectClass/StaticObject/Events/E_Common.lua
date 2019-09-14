@@ -7,8 +7,8 @@ E_Pause = {
     return obj
   end;
   init = function(self)
-    scenemanager.c_scene.pause = self.bool
-    debugger:print("---E:PAUSE : ", self.bool )
+    g_scenemanager.c_scene.pause = self.bool
+    g_debugger:print("---E:PAUSE : ", self.bool )
     self.kill = true
   end
 }

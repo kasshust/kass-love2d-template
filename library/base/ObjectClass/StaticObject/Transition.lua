@@ -24,8 +24,8 @@ Transition = {
         --tween用
         obj.time1 = time1 or 1
         obj.time2 = time2 or 1
-        obj.type1 = type1 or tween.easing.outBounce
-        obj.type2 = type2 or tween.easing.outBounce
+        obj.type1 = type1 or tween.easing.inQuad
+        obj.type2 = type2 or tween.easing.inQuad
         obj.tw = {frame = 0}
         obj.tween = tween.new(obj.time1,obj.tw, {frame = 1}, obj.type1)
         return obj
@@ -38,7 +38,7 @@ Transition = {
           Transition.c_transition = self
         else
           self.kill = true
-          debugger:print("すでにシーンの遷移中です。次フレームでこのトランジションを削除します")
+          g_debugger:print("すでにシーンの遷移中です。次フレームでこのトランジションを削除します")
         end
 
         local switch={}
@@ -68,7 +68,7 @@ Transition = {
         self:drawOUT();
       end
       switch[self.status_now]()
-      g.setColor(255,255,255)
+      g.setColor(1,1,1)
     end;
     transition = function(room,class)
         if class == nil then addS(Transition.new(room))
@@ -78,14 +78,14 @@ Transition = {
     -------上書き----------
     drawIN = function(self)
       local t = self.tw.frame
-      g.setColor(16,16,32,t*255)
+      g.setColor(16/255,16/255,32/255,t)
       love.graphics.rectangle("fill", g_x+W/2*(1-t), g_y+H/2*(1-t),W*t,H*t)
       g.setColor(0,0,0,255)
     end;
 
     drawOUT = function(self)
       local t = self.tw.frame
-      g.setColor(16,16,32,t*255)
+      g.setColor(16/255,16/255,32/255,t)
       love.graphics.rectangle("fill", g_x+W/2*(1-t), g_y+H/2*(1-t),W*t,H*t)
       g.setColor(0,0,0,255)
     end;

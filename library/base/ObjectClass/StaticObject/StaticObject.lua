@@ -13,7 +13,7 @@ StaticObject = {
   end;
   destroy = function(self)
     removeFromTable(self,StaticObjectTable)
-    debugger:print("Static削除:" .. self.name)
+    g_debugger:print("Static削除:" .. self.name)
   end;
 }
 

@@ -109,7 +109,7 @@ Debugger ={
     end
     g.print("Object : " .. O,self.x + self.width-100,self.y + 70)
 
-    local player = manager.game.playerManager:getPlayer()
+    local player = g_manager.game.playerManager:getPlayer()
 
     if player ~= nil then
       g.print("player : " .. player.name ,self.x + self.width-140,self.y + 100)

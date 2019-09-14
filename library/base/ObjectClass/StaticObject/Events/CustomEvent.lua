@@ -18,7 +18,7 @@ CustomEventInit = {
     return obj
   end;
   init = function(self)
-    debugger:print("---E:CustomEventInit:発火")
+    g_debugger:print("---E:CustomEventInit:発火")
     self:f()
     self.kill = true
   end;
