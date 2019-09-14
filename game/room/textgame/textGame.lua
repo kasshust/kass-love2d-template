@@ -68,7 +68,7 @@ DebugRoom_TextGame = {
       local bool2 = self.s:check()
       if bool2 then
         self.tween = tween.new(0.1,self.tw, {num = self.s.now}, tween.easing.outBounce)
-        soundmanager:play("game/materials/sound/se/se_test.wav")
+        g_soundmanager:play("game/materials/sound/se/se_test.wav")
       end
   
       local bool = controller.wasPressed("a")
@@ -204,8 +204,8 @@ DebugRoom_TextGame_GameRoom = {
     obj.light = true
 
     obj.m = love.audio.newSource("game/materials/sound/music/m_drum.wav", "stream")
-    soundmanager:playMusic(obj.m)
-    soundmanager:stopMusic()
+    g_soundmanager:playMusic(obj.m)
+    g_soundmanager:stopMusic()
 
     --csvの読み込み
     local file = io.open("C:\\Users\\kassh\\Desktop\\CreateGame\\love2d-gameEngine\\game\\text\\text.csv", "r")
@@ -229,7 +229,7 @@ DebugRoom_TextGame_GameRoom = {
       --g_camStand:shake(-10,10,2)
       --g_camStand:shake(10,10,2)
       --g_camStand:flashLight(2)
-      --soundmanager:play("game/materials/sound/se/se_explosion2.wav")
+      --g_soundmanager:play("game/materials/sound/se/se_explosion2.wav")
     end;
   end;
 
@@ -237,11 +237,11 @@ DebugRoom_TextGame_GameRoom = {
     
     if math.random(100) > 99  then 
       --self.light = not self.light 
-      --soundmanager:play("game/materials/sound/se/se_walk.wav")
+      --g_soundmanager:play("game/materials/sound/se/se_walk.wav")
     end 
 
     if(math.random(1000)>999) then
-      soundmanager:play("game/materials/sound/music/silen.mp3")
+      g_soundmanager:play("game/materials/sound/music/silen.mp3")
     end
     
 

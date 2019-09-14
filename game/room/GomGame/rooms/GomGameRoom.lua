@@ -14,7 +14,7 @@ DebugRoom_GomGame = {
       local bool2 = self.s:check()
       if bool2 then
         self.tween = tween.new(0.1,self.tw, {num = self.s.now}, tween.easing.outBounce)
-        soundmanager:play("game/materials/sound/se/se_test.wav")
+        g_soundmanager:play("game/materials/sound/se/se_test.wav")
       end
   
       local bool = controller.wasPressed("a")
@@ -75,7 +75,7 @@ Room_GomGameTitle = {
   --obj.title = load_image("game/materials/images/test/spr_jld.png")
   
   local music = love.audio.newSource("game/materials/sound/music/Music_Sea.mp3","stream")
-  soundmanager:playMusic({music})
+  g_soundmanager:playMusic({music})
   
   obj.time = 0
   obj.line1 = {}

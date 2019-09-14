@@ -12,7 +12,7 @@ BankaRoom = {
     --BGM
     if property["music"] ~= nil then
       obj.m = love.audio.newSource(property["music"], "stream")
-      soundmanager:playMusic(obj.m)
+      g_soundmanager:playMusic(obj.m)
     else
       love.audio.stop()
     end
@@ -260,7 +260,7 @@ DebugRoom = {
     local bool2 = self.s:check()
     if bool2 then
       self.tween = tween.new(0.1,self.tw, {num = self.s.now}, tween.easing.outBounce)
-      soundmanager:play("game/materials/sound/se/se_test.wav")
+      g_soundmanager:play("game/materials/sound/se/se_test.wav")
     end
 
     local bool = controller.wasPressed("a")

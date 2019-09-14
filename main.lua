@@ -22,7 +22,7 @@ print("----------load luafile---------")
   polygon = require 'library/external/HC.polygon'
   sti = require("library/external/sti")
   sfxr = require("library/external/sfxrlua/sfxr")
-  soundmanager = require("library/external/soundmanager/soundmanager")
+  g_soundmanager = require("library/external/soundmanager/soundmanager")
   tween = require("library/external/tween/tween")
   gamera = require("library/external/gamera/gamera")
   json = require("library/external/json/json")
@@ -89,7 +89,7 @@ function love.update(dt)
     --デバッガー
     if DEBUG == true then g_debugger:update(dt) end
     --最小音声管理
-    soundmanager:update(dt)
+    g_soundmanager:update(dt)
     --入力機器
     controller.updateKeys()
 

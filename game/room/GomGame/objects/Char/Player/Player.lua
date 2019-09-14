@@ -92,7 +92,7 @@ O_Player = {
   
       if controller.wasPressed("l1")then 
         --table.insert(self.ball,O_String.new(self.pos.x,self.pos.y,self) )
-        --soundmanager:play(ADDRESS.se .. "se_shot.wav")
+        --g_soundmanager:play(ADDRESS.se .. "se_shot.wav")
       end
   
       if controller.wasReleased("r1")then 
@@ -100,7 +100,7 @@ O_Player = {
           self.ball[1].vpos = self.ball[1].vpos * 1.5
           self.ball[1].gom = false
           table.remove(self.ball,1)
-          soundmanager:play(ADDRESS.se .. "se_hit.wav")
+          g_soundmanager:play(ADDRESS.se .. "se_hit.wav")
         end
       end
   
@@ -113,7 +113,7 @@ O_Player = {
         if(table.empty(self.ball)) then
           local o = O_Gum.new(self.pos.x,self.pos.y,self)
           o.vpos = self.vpos:normalized()*8.0
-          soundmanager:play(ADDRESS.se .. "se_shot.wav")
+          g_soundmanager:play(ADDRESS.se .. "se_shot.wav")
         end
       end
   
@@ -146,8 +146,8 @@ O_Player = {
           if self.c_legs_tw[i]:update(dt) then 
             self.c_legs_tw[i] = tween.new(1/4, self.c_legs[i], {x = self.legs[i].x, y = self.legs[i].y}, tween.easing.outBounce) 
             --Smoke.new(self.c_legs[i].x,self.c_legs[i].y)
-            --soundmanager:play(ADDRESS.se .. "se_walk.wav")
-            --soundmanager:play(ADDRESS.se .. "se_hit.wav")
+            --g_soundmanager:play(ADDRESS.se .. "se_walk.wav")
+            --g_soundmanager:play(ADDRESS.se .. "se_hit.wav")
           end
         end
       end
@@ -189,7 +189,7 @@ O_Player = {
               self.pos = self.pos + delta
               
               --self.pos = self.pos + self.vpos*0.1
-              --soundmanager:play("game/materials/sound/se/se_walk.wav")
+              --g_soundmanager:play("game/materials/sound/se/se_walk.wav")
               self.saveDelta = de
               self.solid:moveTo(self.pos.x,self.pos.y)
               --deltaの表示をする
@@ -204,8 +204,8 @@ O_Player = {
 
     -- ダメージ食らったときのアニメーション遷移とか書く
     damage = function(self)
-      soundmanager:play(ADDRESS.se.."se_walk.wav")
-      soundmanager:play(ADDRESS.se.."se_explosion.wav")
+      g_soundmanager:play(ADDRESS.se.."se_walk.wav")
+      g_soundmanager:play(ADDRESS.se.."se_explosion.wav")
       g_camStand:shake(10,4,4)
       g_camStand:flashLight(3)
       g_debugger:print("プレイヤー攻撃食らった")

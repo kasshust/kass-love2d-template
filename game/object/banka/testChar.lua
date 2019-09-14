@@ -30,7 +30,7 @@ TestPlayer = {
      --操作
      if self.operation == true then self:operate(dt) end;
      --効果音
-     if self.animator:isrenew(3,"run") == true or self.animator:isrenew(5,"run") then soundmanager:play("game/materials/sound/se/se_walk.wav") end
+     if self.animator:isrenew(3,"run") == true or self.animator:isrenew(5,"run") then g_soundmanager:play("game/materials/sound/se/se_walk.wav") end
 
      if controller.isDown("a") and self.vpos.y < 0 then self.gravity = 0.12 * 0.7 else self.gravity = 0.12 end
 
@@ -43,7 +43,7 @@ TestPlayer = {
 
      self.solid:moveTo(self.pos.x,self.pos.y)
      self:collideWith("block",self.solid,function(other,delta)
-       if delta.y > 0 and self.vpos.y < 0 then g_debugger:print(delta.y) soundmanager:play("game/materials/sound/se/se_head.wav")  end
+       if delta.y > 0 and self.vpos.y < 0 then g_debugger:print(delta.y) g_soundmanager:play("game/materials/sound/se/se_head.wav")  end
      end)
    end;
    operate = function(self,dt)
@@ -174,7 +174,7 @@ TestEnemy = {
        local bool3 = self:checkPoint("block",self.pos.x + self.dir.x * 15,self.pos.y - 48)
        if bool1 and bool2 and bool3 then self.dir.x = self.dir.x * - 1 else if self.islanding then
          self.vpos = Vector.new(self.vpos.x,-3.2)
-         soundmanager:play("game/materials/sound/se/se_test_jump.wav")
+         g_soundmanager:play("game/materials/sound/se/se_test_jump.wav")
        end
      end
      end)
@@ -238,7 +238,7 @@ TestEnemy2 = {
       self:collideWith("shot",self.solid,function(other,delta)
         other.pos = other.pos - delta
         self.kill = true
-        soundmanager:play(ADDRESS.se .. "se_hit.wav")
+        g_soundmanager:play(ADDRESS.se .. "se_hit.wav")
       end)
 
       self.vpos = self.vpos * Vector.new(0.87,1.00) + Vector.new(0.0,0.1)

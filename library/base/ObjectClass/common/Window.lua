@@ -203,7 +203,7 @@ TextWindow = {
     self.frame = self.frame + 1
     --効果音
     
-    if self.frame % 3 == 0 then soundmanager:play("game/materials/sound/se/se_shot.wav") end
+    if self.frame % 3 == 0 then g_soundmanager:play("game/materials/sound/se/se_shot.wav") end
   end;
 
   -------------------------以下任意--------------------------

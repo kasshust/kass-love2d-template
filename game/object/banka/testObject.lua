@@ -243,7 +243,7 @@ TestShot = {
        self.pos = self.pos + delta
        testEffect.new(self.pos.x,self.pos.y)
        self.kill = true
-       soundmanager:play(ADDRESS.se .. "se_hit.wav")
+       g_soundmanager:play(ADDRESS.se .. "se_hit.wav")
      end)
    end;
    collision = function(self)

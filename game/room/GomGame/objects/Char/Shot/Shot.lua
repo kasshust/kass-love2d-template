@@ -68,7 +68,7 @@ O_String = {
         --g_camStand:shake(10,4,4)
         Smoke.new(self.pos.x,self.pos.y)
         O_Effect.new(self.pos.x,self.pos.y)
-        soundmanager:play(ADDRESS.se .. "se_hit.wav")
+        g_soundmanager:play(ADDRESS.se .. "se_hit.wav")
         self.kill = true
         --　反射
         --[[

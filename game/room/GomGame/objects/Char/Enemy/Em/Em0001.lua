@@ -67,7 +67,7 @@ O_Em0001 = {
     end;
 
     damage = function(self)
-      soundmanager:play(ADDRESS.se .. "se_explosion2.wav")
+      g_soundmanager:play(ADDRESS.se .. "se_explosion2.wav")
       testEffect.new(self.pos.x,self.pos.y)
       --g_camStand:shake(10,4,4)
       Smoke.new(self.pos.x,self.pos.y)

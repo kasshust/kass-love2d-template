@@ -10,7 +10,7 @@ Manager_banka = {
   update = function(dt)
     if love.mouse.wasPressed(1) then
        TestShot.new(math.floor(m_x/16)*16,math.floor(m_y/16)*16,16,0)
-       soundmanager:play(ADDRESS.se .. "se_shot.wav")
+       g_soundmanager:play(ADDRESS.se .. "se_shot.wav")
     end
     if love.mouse.wasPressed(2) then
        TestEnemy2.new(math.floor(m_x/16)*16,math.floor(m_y/16)*16)
