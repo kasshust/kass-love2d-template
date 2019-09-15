@@ -23,8 +23,8 @@ SceneManager = {
       ObjectTable = nil
       ObjectTable = {}
 
-      EnemyTable = nil
-      EnemyTable = {}
+      g_entityManager:init()
+
       --HC空間の初期化
       HC.resetHash()
       --camStandの初期化

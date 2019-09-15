@@ -106,7 +106,6 @@ O_Player = {
   
       if controller.wasPressed("l1")then 
         self.vpos = self.vpos + self.vpos:normalized()
-        print(self.vpos)
       end
   
       if controller.wasPressed("r1")then 
@@ -260,6 +259,10 @@ O_Player = {
       end
   
       love.graphics.setColor(1, 1, 1, 1)
+
+      local p = self
+      local nearEnemy = g_entityManager:searchNearObj("enemy",p.pos.x,p.pos.y)
+      if nearEnemy ~= nil then love.graphics.line(p.pos.x,p.pos.y,nearEnemy.pos.x,nearEnemy.pos.y) end
   
     end;
 

@@ -3,7 +3,10 @@
 O_Enemy = {
     new = function(x,y)
       local obj = instance(O_Enemy,Object,x,y)
-      table.insert(EnemyTable,obj)
+      
+      -- 検索用
+      g_entityManager:add("enemy",obj)
+      
       
       --継承時に探索用のため必要
       obj.name = "O_Enemy"
@@ -75,6 +78,14 @@ O_Enemy = {
       Smoke.new(self.pos.x,self.pos.y)
       O_Effect.new(self.pos.x,self.pos.y)
       self.kill = true
+    end;
+
+    destroy = function(self)
+      Object.destroy(self)
+
+      --検索用テーブルからも削除
+      print("search destroy id:" .. self.id)
+      g_entityManager:delete("enemy",self.id)
     end;
   }
 

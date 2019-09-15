@@ -32,17 +32,28 @@ M_Player = {
         self.player = nil
     end;
 
+    draw = function(self)
+
+    end;
+
     drawGUI = function(self)
         if self.player ~= nil then
+            
+            local p = self.player
+
+            -- プレイヤーのライフを描画
             for i = 0 , self.player.life do 
                 g.setColor(ASE.PURPLE)
                 love.graphics.circle("fill", g_x + i*16 + 30, g_y + 30, 8, 4)
                 g.setColor(ASE.WHITE)
             end
+
+
         end
 
-        local  width , height = 128 , 128
-        local dx,dy = W - width, H - height
+        -- マップ表示
+        --local  width , height = 128 , 128
+        --local dx,dy = W - width, H - height
         --self:drawMap(dx,dy,width,height)
 
     end;

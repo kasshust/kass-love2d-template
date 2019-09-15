@@ -2,10 +2,6 @@
 ObjectTable = {}
 StaticObjectTable = {}
 
--- 検索用テーブル
-EnemyTable = {}
-
-
 --ライブラリと自作クラス
 require_all("library/own")
 require_all("library/base")
@@ -53,12 +49,16 @@ function love.load()
   --ジョイスティック
   p1joystick = nil
 
+
+  --Manager生成
   --1,システムマネージャー ゲームを放り込む
   g_manager = Manager.new()
   addS(g_manager)
   --2,イベントマネージャー
   g_eventmanager = EventManager.new()
   addS(g_eventmanager)
+  --3,エンティティマネージャの作成
+  g_entityManager = EntityManager.new()
 
   --3メインのカメラ
   --stageの大きさを設定 ->各ルームで上書きして
