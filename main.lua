@@ -7,6 +7,7 @@ require_all("library/own")
 require_all("library/base")
 --ゲーム読み込み
 require_all("game")
+socket = require "socket"
 
 print("----------load luafile---------")
 
@@ -25,7 +26,13 @@ print("----------load luafile---------")
 
 
 --GC実行閾値初期化
-gc_threshold = 1000
+gc_threshold = 40000
+
+--処理速度計測用
+clockSpeed = {
+  update = 0,
+  draw = 0
+}
 
 function love.load()
   -----------システム設定-------------------------
@@ -44,8 +51,9 @@ function love.load()
   m_x,m_y = 0,0
 
   --デバッグ
-  DEBUG = true
-  
+  DEBUG = false
+  CLOCK = true
+   
   --ジョイスティック
   p1joystick = nil
 
@@ -80,9 +88,16 @@ function love.load()
   buffer = love.graphics.newCanvas(W, H)
   buffer2 = love.graphics.newCanvas(W, H)
 
+  
+
 end
 
 function love.update(dt)
+
+  -- 速度計測準備
+  local clock
+  if CLOCK then clock = socket.gettime() end
+
   ----ゲームのupdate----
     g_scenemanager:update(dt)
   ----マネージャー-------
@@ -112,9 +127,18 @@ function love.update(dt)
     ]]
 
     if debuggee then debuggee.poll() end
+    
+    --クロック計測
+    if CLOCK then clockSpeed.update  = socket.gettime() - clock end
+
 end
 
 function love.draw()
+
+  --速度計測準備
+  local clock
+  if CLOCK then clock = socket.gettime() end
+
   --gui用座標の取得
   local x,y = g_maincam:getPosition()
   g_x,g_y = x-W/2,y-H/2
@@ -146,12 +170,31 @@ function love.draw()
     love.graphics.draw(buffer2,0,0)
   maid64.finish()
 
-  
-
   --デバッガー
   love.window.setTitle(window_title .. " " ..tostring(love.timer.getFPS()))
   if DEBUG == true then g_debugger:draw() end
   
+  if CLOCK then 
+    --クロック計測
+    clockSpeed.draw  = socket.gettime() - clock
+
+    --クロック枠
+    local scale = 30000
+    g.setColor(ASE.BROWN)
+    g.rectangle("fill",0,0,scale*(1/60),10)
+    --クロック表示
+    local upd = scale*clockSpeed.update
+    local dr = scale*clockSpeed.draw + upd
+    g.setColor(ASE.YELLOW)
+    g.rectangle("fill",0,0,upd,10)
+    g.setColor(ASE.RED)
+    g.rectangle("fill",upd,0,dr,10)
+    g.setColor(ASE.WHITE)
+    if(math.floor((clockSpeed.update + clockSpeed.draw) / (1/60) * 100) > 80) then
+      love.graphics.print("80% over!",0,30)
+    end
+    g.setColor(ASE.WHITE)
+  end
 end
 
 function love.joystickadded(joystick)
@@ -180,6 +223,8 @@ function love.filedropped( file )
 
   success = love.filesystem.remove(f:getFilename())
   print("remove")
+
+
 
 end
 

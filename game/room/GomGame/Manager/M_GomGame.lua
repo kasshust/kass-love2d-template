@@ -8,6 +8,12 @@ M_GomGame = {
     end;
     update = function(self,dt)
 
+      -- バックスペースでエネミーを全部殺す
+      if love.keyboard.wasPressed("backspace") then
+        for key, value in pairs(g_entityManager.EnemyTable) do
+          value:damage()
+        end
+      end
 
       self.playerManager:update() 
       if controller.wasPressed("start") then

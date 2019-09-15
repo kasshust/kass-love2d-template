@@ -213,6 +213,7 @@ Smoke = {
       self.vpos = self.vpos * 0.90
       self.pos = self.pos + self.vpos
       --if self.animator:isfinish() then  self.kill = true end
+      self.kill = true
     end;
     draw = function(self)
       --self.animator:draw(self.pos.x,self.pos.y,0,1,1,8,8)

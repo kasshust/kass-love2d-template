@@ -49,7 +49,7 @@ Object = {
 
     --メモリから破棄する
     destroy = function(self)
-      print("destroy id:" .. self.id)
+      --print("destroy id:" .. self.id)
       ObjectTable[self.id] = nil
       if self.solid ~= nil then HC.remove(self.solid) end
       self = nil

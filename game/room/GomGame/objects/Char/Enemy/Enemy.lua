@@ -84,7 +84,7 @@ O_Enemy = {
       Object.destroy(self)
 
       --検索用テーブルからも削除
-      print("search destroy id:" .. self.id)
+      --print("search destroy id:" .. self.id)
       g_entityManager:delete("enemy",self.id)
     end;
   }

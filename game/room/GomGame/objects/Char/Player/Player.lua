@@ -260,9 +260,11 @@ O_Player = {
   
       love.graphics.setColor(1, 1, 1, 1)
 
-      local p = self
-      local nearEnemy = g_entityManager:searchNearObj("enemy",p.pos.x,p.pos.y)
-      if nearEnemy ~= nil then love.graphics.line(p.pos.x,p.pos.y,nearEnemy.pos.x,nearEnemy.pos.y) end
+
+      --　近くの敵を探索
+      --local p = self
+      --local nearEnemy = g_entityManager:searchNearObj("enemy",p.pos.x,p.pos.y)
+      --if nearEnemy ~= nil then love.graphics.line(p.pos.x,p.pos.y,nearEnemy.pos.x,nearEnemy.pos.y) end
   
     end;
 

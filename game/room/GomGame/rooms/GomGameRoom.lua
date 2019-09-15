@@ -173,14 +173,14 @@ DebugRoom_GomGame_GameRoom = {
     local image  = load_image("game/materials/images/test/grass.png")
     obj.backCanvas = {}
     obj.backCanvas[0] = love.graphics.newCanvas(obj.w, obj.h)
-    obj.backCanvas[1] = love.graphics.newCanvas(obj.w, obj.h)
-    obj.backCanvas[2] = love.graphics.newCanvas(obj.w, obj.h)
+    --obj.backCanvas[1] = love.graphics.newCanvas(obj.w, obj.h)
+    --obj.backCanvas[2] = love.graphics.newCanvas(obj.w, obj.h)
 
     obj.col  = {}
     obj.col[0] = ASE.GREEN
     obj.col[1] = ASE.BLUE
     obj.col[2] = ASE.RED
-    for k = 0,2 do
+    for k = 0,0 do
     g.setCanvas(obj.backCanvas[k])
       --love.graphics.draw(image,0,0)
     --love.graphics.clear(ASE.Black)
@@ -194,10 +194,13 @@ DebugRoom_GomGame_GameRoom = {
           --love.graphics.circle("fill", Image:getWidth()*i*size,Image:getHeight()*j*size, width, height)
         end
       end
+
      --love.graphics.rectangle("fill", 0, 0, 640*4, 640*4)
     g.setCanvas()
     obj.backCanvas[k]:setWrap("repeat","repeat")
-    end
+    
+  end
+
     
     -- 四方壁
     O_RectCollision.new(0,0,obj.w,obj.size)
@@ -206,12 +209,12 @@ DebugRoom_GomGame_GameRoom = {
     O_RectCollision.new(obj.w-obj.size,0,16,obj.h-obj.size)
 
     --　敵生成
-    for i=0,6 do
+    for i=0,100 do
       O_Em0001.new(math.random(obj.w),math.random(obj.h))
     end
 
     -- 弾生成
-    for i=0,64 do
+    for i=0,30 do
       O_PlayerShot.new(math.random(obj.w),math.random(obj.h))
     end
 
@@ -225,7 +228,7 @@ DebugRoom_GomGame_GameRoom = {
 
   u = function(self,dt)
     -- クリア
-    if true then
+    if false then
       self.roomFlag.clear = true
     end
 
@@ -247,9 +250,10 @@ DebugRoom_GomGame_GameRoom = {
     love.graphics.setColor(ASE.WHITE)
 
     love.graphics.setColor(ASE.PINK)
-    drawCanvas(self.backCanvas, function()
-      local vec = perlinNoise(t/30)*200
-    end)
+    
+    --drawCanvas(self.backCanvas, function()
+      --local vec = perlinNoise(t/30)*200
+    --end)
     love.graphics.setColor(ASE.WHITE)
 
     --love.graphics.setScissor( g_x, g_y, W, H)
@@ -257,9 +261,10 @@ DebugRoom_GomGame_GameRoom = {
     Sh_Noise:send("Time",t/60)
     love.graphics.setShader(Sh_Noise)
     
-    for i = 0,1 do
+    for i = 0,0 do
       love.graphics.draw(self.backCanvas[i],0, 0)
     end
+
     g.setShader()
     --love.graphics.setScissor()
 
@@ -273,11 +278,11 @@ DebugRoom_GomGame_GameRoom = {
 
   drawGUI = function(self)
     if self.roomFlag.clear == true then
-      --love.graphics.setColor(ASE.GREEN)
-      --love.graphics.rectangle_c("fill",g_x+W/2,g_y+H/2,300,200)
-      --love.graphics.setColor(ASE.WHITE)
-      --love.graphics.rectangle_c("line",g_x+W/2,g_y+H/2,300,200)
-      --love.graphics.print_c("Complete extinction",g_x+W/2,g_y+H/2)
+      love.graphics.setColor(ASE.GREEN)
+      love.graphics.rectangle_c("fill",g_x+W/2,g_y+H/2,300,200)
+      love.graphics.setColor(ASE.WHITE)
+      love.graphics.rectangle_c("line",g_x+W/2,g_y+H/2,300,200)
+      love.graphics.print_c("Complete extinction",g_x+W/2,g_y+H/2)
     end
 
     BasicRoom.drawGUI(self)

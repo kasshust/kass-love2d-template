@@ -26,15 +26,15 @@ O_Em0001 = {
         self.pos = self.pos + self.vpos
       end
 
-      if self.frame % 10 == 0 then
-        -- self:shot()
+      if self.frame % math.floor(math.random(100,250)) == 0 then
+        self:shot()
       end
 
     end;
 
     shot = function(self)
       local shot = O_EnemyShot.new(self.pos.x,self.pos.y)
-      shot.vpos = self.vpos*10
+      shot.vpos = self.vpos*26
     end;
 
     collision = function(self)
@@ -62,7 +62,7 @@ O_Em0001 = {
 
     draw = function(self)
         love.graphics.setColor(ASE.RED)
-        love.graphics.circle("line", self.pos.x, self.pos.y , 128 , 8)
+        love.graphics.circle("fill", self.pos.x, self.pos.y , 128 , 8)
         love.graphics.setColor(ASE.WHITE)
     end;
 
